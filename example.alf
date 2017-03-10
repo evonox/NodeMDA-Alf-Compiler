@@ -1,0 +1,41 @@
+abstract + :: ( ) += 
+
+>>>=
+
+/* 
+    Inline comment
+
+*/
+
+hello 
+
+++  // One-line comment
+
+createLink   switch
+--
+'Ahoj, světe !!!'
+
+this
+
+true false
+
+" Hel\"lo * Wo\\rl\nd"
+
+0
+
+125
+
+0b11_11 0xff    0XFF_FF
+010
+
+/** Hello doc comment */
+
+/**
+    This is a multi-line
+    documentation
+    comment
+*/
+
+abstract
+
+identifier

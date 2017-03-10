@@ -1,0 +1,30 @@
+1. Nahodit GitHub repo
+    1. Git Init
+    2. Create GitHub repo
+    3. add remote origin
+    4. Git fetch
+    5. Git add and commit
+    6. git push
+2. Otestovat Mixins v Node
+    1. Test file
+    2. without mixing
+    3. With mixin
+3. Generovat Mixins
+    1. Stereotyp pro AlfMappingMixin
+    2. Test Stereotyp override
+    3. Nastavit Stereotyp do Alf classes
+    4. Override import - add imporing mixin
+    5. Override base class declaration - extend with mixin
+    6. Test running
+    7. Vyjimka - kdyz neni Base class, add empty Object {}
+4. Generovat fUML Abstract Syntax
+    1. Stahnout a importovat XMI
+    2. Reset code-generation settings
+    3. Generovat fUML
+    4. Generovaci Tool pro fUML Facade dle vzoru Alfa
+    5. Spustit generovani
+5. BAT file pro generovani parseru
+    1. Generovat Lexer
+    2. Concatenate Parser.pegjs
+    3. Generate Parser
+6. Start preparing the Big picture analysis
