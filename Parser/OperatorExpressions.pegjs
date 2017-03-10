@@ -1,4 +1,70 @@
 /*
+    Binary operator expressions
+*/
+
+
+ClassificationOrEqualityExpression = RelationalOrClassificationExpression / EqualityExpression
+EqualityExpression = operand1:ClassificationOrEqualityExpression operator:EqualityOperator operand2:RelationalOrClassificationExpression {
+    let obj = new alf.EqualityExpression();
+    obj.operand1 = operand1;
+    obj.operator = operator;
+    obj.operand2 = operand2;
+    return obj;
+}
+EqualityOperator = opEqual / opNotEqual
+EqualityOrAndExpression = ClassificationOrEqualityExpression / AndExpression
+
+RelationalOrClassificationExpression = ArithmeticOrRelationalExpression / ClassificationExpression
+ClassificationExpression = operand:ShiftOrRelationalExpression operator:ClassificationOperator typeName:QualifiedName {
+    let obj = new alf.ClassificationExpression();
+    obj.operand = operand;
+    obj.operator = operator;
+    obj.typeName = typeName;
+    return obj;
+}
+ClassificationOperator = kwInstanceOf / kwHasType
+
+ShiftOrRelationalExpression = ArithmeticOrShiftExpression / RelationalExpression
+RelationalExpression = operand1:ArithmeticOrShiftExpression operator:RelationalOperator operand2:ArithmeticOrShiftExpression {
+    let obj = new alf.RelationalExpression();
+    obj.operand1 = operand1;
+    obj.operator = operator;
+    obj.operand2 = operand2;
+    return obj;
+}
+RelationalOperator = opLessOrEqual / opGreaterOrEqual / opGreater / opLess
+
+ArithmeticOrShiftExpression = UnaryOrArithmeticExpression / ShiftExpression
+ShiftExpression = operand1:ArithmeticOrShiftExpression operator:ShiftOperator operand2:UnaryOrArithmeticExpression {
+    let obj = new alf.ShiftExpression();
+    obj.operand1 = operand1;
+    obj.operator = operator;
+    obj.operand2 = operand2;
+    return obj;
+}
+ShiftOperator = opLeftShift / opRightShift / opZeroShiftRight
+
+UnaryOrArithmeticExpression = UnaryOrMultiplicativeExpression / AdditiveExpression
+AdditiveExpression = operand1:UnaryOrMultiplicativeExpression operator:AdditiveOperator operand2:UnaryOrMultiplicativeExpression {
+    let obj = new alf.ArithmeticExpression();
+    obj.operand1 = operand1;
+    obj.operator = operator;
+    obj.operand2 = operand2;
+    return obj;
+}
+AdditiveOperator = opAdd / opSub
+
+UnaryOrMultiplicativeExpression = UnaryExpression / MultiplicativeExpression
+MultiplicativeExpression = operand1:UnaryOrMultiplicativeExpression operator:MultiplicativeOperator operand2:UnaryExpression {
+    let obj = new alf.ArithmeticExpression();
+    obj.operand1 = operand1;
+    obj.operator = operator;
+    obj.operand2 = operand2;
+    return obj;
+}
+MultiplicativeOperator = opMult / opDiv / opMod
+
+/*
     Unary operator expressions
 */
 UnaryExpression = PrimaryExpression
