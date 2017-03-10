@@ -1,5 +1,3 @@
-Expression = ConditionalExpression / AssignmentExpression
-
 /*
     Primary expressions
 */
@@ -238,7 +236,8 @@ ExtentOrExpression = name:QualifiedName {
     return obj;
 }
 
-ReductionExpression = primary:ExtentOrExpression pSlimArrow kwReduce ordered:( kwOrdered )? behavior:QualifiedName
+// SequenceReductionExpression
+SequenceReductionExpression = primary:ExtentOrExpression pSlimArrow kwReduce ordered:( kwOrdered )? behavior:QualifiedName
 {
     let obj = new alf.ReductionExpression();
     obj.primary = primary;
