@@ -1,10 +1,11 @@
 const base = require("./SequenceElements");
+const mappingMixin = require("../MappingMixins/SequenceRange");
 
 
 /// <summary>
 /// A specification of the elements of a sequence as a range of integers.
 /// </summary>
-class SequenceRange extends base.SequenceElements {
+class SequenceRange extends mappingMixin(base.SequenceElements) {
 
 	constructor() {
 

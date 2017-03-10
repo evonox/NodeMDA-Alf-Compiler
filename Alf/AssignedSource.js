@@ -1,10 +1,12 @@
 
+const mappingMixin = require("../MappingMixins/AssignedSource");
+
 
 /// <summary>
 /// An assignment of a source element that gives the value of a local name, along
 /// with a record of the defined type (if any) and multiplicity of the local name.
 /// </summary>
-class AssignedSource  {
+class AssignedSource extends mappingMixin(Object) {
 
 	constructor() {
 

@@ -1,4 +1,5 @@
 const base = require("./BinaryExpression");
+const mappingMixin = require("../MappingMixins/ConditionalLogicalExpression");
 
 
 /// <summary>
@@ -6,7 +7,7 @@ const base = require("./BinaryExpression");
 /// evaluation of the second operand expression is conditioned on the result of
 /// evaluating the first operand expression.
 /// </summary>
-class ConditionalLogicalExpression extends base.BinaryExpression {
+class ConditionalLogicalExpression extends mappingMixin(base.BinaryExpression) {
 
 	constructor() {
 

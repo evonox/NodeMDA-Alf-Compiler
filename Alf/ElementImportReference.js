@@ -1,10 +1,11 @@
 const base = require("./ImportReference");
+const mappingMixin = require("../MappingMixins/ElementImportReference");
 
 
 /// <summary>
 /// An import reference to a single element to be imported into a unit.
 /// </summary>
-class ElementImportReference extends base.ImportReference {
+class ElementImportReference extends mappingMixin(base.ImportReference) {
 
 	constructor() {
 

@@ -1,11 +1,12 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/NonFinalClause");
 
 
 /// <summary>
 /// A clause of an if statement with a conditional expression and a sequence of
 /// statements that may be executed if the condition is true.
 /// </summary>
-class NonFinalClause extends base.SyntaxElement {
+class NonFinalClause extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

@@ -1,10 +1,11 @@
 const base = require("./InvocationExpression");
+const mappingMixin = require("../MappingMixins/SuperInvocationExpression");
 
 
 /// <summary>
 /// An invocation expression used to invoke an operation of a superclass.
 /// </summary>
-class SuperInvocationExpression extends base.InvocationExpression {
+class SuperInvocationExpression extends mappingMixin(base.InvocationExpression) {
 
 	constructor() {
 

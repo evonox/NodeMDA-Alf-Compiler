@@ -1,10 +1,11 @@
 const base = require("./Statement");
+const mappingMixin = require("../MappingMixins/BlockStatement");
 
 
 /// <summary>
 /// A statement that executes a block.
 /// </summary>
-class BlockStatement extends base.Statement {
+class BlockStatement extends mappingMixin(base.Statement) {
 
 	constructor() {
 

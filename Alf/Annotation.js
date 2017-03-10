@@ -1,10 +1,11 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/Annotation");
 
 
 /// <summary>
 /// An identified modification to the behavior of an annotated statement.
 /// </summary>
-class Annotation extends base.SyntaxElement {
+class Annotation extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

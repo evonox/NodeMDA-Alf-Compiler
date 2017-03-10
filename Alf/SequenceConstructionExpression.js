@@ -1,10 +1,11 @@
 const base = require("./Expression");
+const mappingMixin = require("../MappingMixins/SequenceConstructionExpression");
 
 
 /// <summary>
 /// An expression used to construct a sequence of values.
 /// </summary>
-class SequenceConstructionExpression extends base.Expression {
+class SequenceConstructionExpression extends mappingMixin(base.Expression) {
 
 	constructor() {
 

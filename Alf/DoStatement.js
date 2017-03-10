@@ -1,11 +1,12 @@
 const base = require("./Statement");
+const mappingMixin = require("../MappingMixins/DoStatement");
 
 
 /// <summary>
 /// A looping statement for which the continuation condition is first tested after
 /// the first iteration.
 /// </summary>
-class DoStatement extends base.Statement {
+class DoStatement extends mappingMixin(base.Statement) {
 
 	constructor() {
 

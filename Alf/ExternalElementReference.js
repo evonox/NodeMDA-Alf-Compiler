@@ -1,10 +1,11 @@
 const base = require("./ElementReference");
+const mappingMixin = require("../MappingMixins/ExternalElementReference");
 
 
 /// <summary>
 /// A direct reference to a UML model element.
 /// </summary>
-class ExternalElementReference extends base.ElementReference {
+class ExternalElementReference extends mappingMixin(base.ElementReference) {
 
 	constructor() {
 

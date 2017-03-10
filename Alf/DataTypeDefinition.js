@@ -1,10 +1,11 @@
 const base = require("./ClassifierDefinition");
+const mappingMixin = require("../MappingMixins/DataTypeDefinition");
 
 
 /// <summary>
 /// The definition of a data type, whose members must all be properties.
 /// </summary>
-class DataTypeDefinition extends base.ClassifierDefinition {
+class DataTypeDefinition extends mappingMixin(base.ClassifierDefinition) {
 
 	constructor() {
 

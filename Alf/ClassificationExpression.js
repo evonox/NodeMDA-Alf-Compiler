@@ -1,10 +1,11 @@
 const base = require("./UnaryExpression");
+const mappingMixin = require("../MappingMixins/ClassificationExpression");
 
 
 /// <summary>
 /// An expression used to test the dynamic type of its operand.
 /// </summary>
-class ClassificationExpression extends base.UnaryExpression {
+class ClassificationExpression extends mappingMixin(base.UnaryExpression) {
 
 	constructor() {
 

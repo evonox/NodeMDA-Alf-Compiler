@@ -1,10 +1,11 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/TaggedValue");
 
 
 /// <summary>
 /// An assignment of a value to an attribute of an applied stereotype.
 /// </summary>
-class TaggedValue extends base.SyntaxElement {
+class TaggedValue extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

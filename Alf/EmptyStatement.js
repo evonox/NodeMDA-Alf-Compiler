@@ -1,10 +1,11 @@
 const base = require("./Statement");
+const mappingMixin = require("../MappingMixins/EmptyStatement");
 
 
 /// <summary>
 /// A statement that has no affect when executed.
 /// </summary>
-class EmptyStatement extends base.Statement {
+class EmptyStatement extends mappingMixin(base.Statement) {
 
 	constructor() {
 

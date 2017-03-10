@@ -1,7 +1,8 @@
 const base = require("./Member");
+const mappingMixin = require("../MappingMixins/ImportedMember");
 
 
-class ImportedMember extends base.Member {
+class ImportedMember extends mappingMixin(base.Member) {
 
 	constructor() {
 

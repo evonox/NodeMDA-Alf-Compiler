@@ -1,7 +1,8 @@
 const base = require("./UnaryExpression");
+const mappingMixin = require("../MappingMixins/BitStringUnaryExpression");
 
 
-class BitStringUnaryExpression extends base.UnaryExpression {
+class BitStringUnaryExpression extends mappingMixin(base.UnaryExpression) {
 
 	constructor() {
 

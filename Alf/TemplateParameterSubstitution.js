@@ -1,11 +1,12 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/TemplateParameterSubstitution");
 
 
 /// <summary>
 /// A specification of the substitution of an argument type name for a template
 /// parameter.
 /// </summary>
-class TemplateParameterSubstitution extends base.SyntaxElement {
+class TemplateParameterSubstitution extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

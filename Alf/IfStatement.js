@@ -1,11 +1,12 @@
 const base = require("./Statement");
+const mappingMixin = require("../MappingMixins/IfStatement");
 
 
 /// <summary>
 /// A conditional statement that executes (at most) one of a set of clauses based
 /// on boolean conditions.
 /// </summary>
-class IfStatement extends base.Statement {
+class IfStatement extends mappingMixin(base.Statement) {
 
 	constructor() {
 

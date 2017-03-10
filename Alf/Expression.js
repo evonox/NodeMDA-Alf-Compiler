@@ -1,4 +1,5 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/Expression");
 
 
 /// <summary>
@@ -6,7 +7,7 @@ const base = require("./SyntaxElement");
 /// derivations for all properties of Expression except AssignmentsAfter are
 /// specific to its various subclasses.
 /// </summary>
-class Expression extends base.SyntaxElement {
+class Expression extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

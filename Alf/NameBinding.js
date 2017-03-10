@@ -1,10 +1,11 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/NameBinding");
 
 
 /// <summary>
 /// An unqualified name, optionally with a template binding.
 /// </summary>
-class NameBinding extends base.SyntaxElement {
+class NameBinding extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

@@ -1,10 +1,11 @@
 const base = require("./LiteralExpression");
+const mappingMixin = require("../MappingMixins/NaturalLiteralExpression");
 
 
 /// <summary>
 /// An expression that comprises a natural literal.
 /// </summary>
-class NaturalLiteralExpression extends base.LiteralExpression {
+class NaturalLiteralExpression extends mappingMixin(base.LiteralExpression) {
 
 	constructor() {
 

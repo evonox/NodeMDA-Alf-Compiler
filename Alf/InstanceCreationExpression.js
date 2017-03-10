@@ -1,10 +1,11 @@
 const base = require("./InvocationExpression");
+const mappingMixin = require("../MappingMixins/InstanceCreationExpression");
 
 
 /// <summary>
 /// An expression used to create a new instance of a class or data type.
 /// </summary>
-class InstanceCreationExpression extends base.InvocationExpression {
+class InstanceCreationExpression extends mappingMixin(base.InvocationExpression) {
 
 	constructor() {
 

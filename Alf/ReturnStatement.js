@@ -1,10 +1,11 @@
 const base = require("./Statement");
+const mappingMixin = require("../MappingMixins/ReturnStatement");
 
 
 /// <summary>
 /// A statement that provides a value for the return parameter of an activity.
 /// </summary>
-class ReturnStatement extends base.Statement {
+class ReturnStatement extends mappingMixin(base.Statement) {
 
 	constructor() {
 

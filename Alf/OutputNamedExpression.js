@@ -1,10 +1,11 @@
 const base = require("./NamedExpression");
+const mappingMixin = require("../MappingMixins/OutputNamedExpression");
 
 
 /// <summary>
 /// A named argument expression for an output parameter.
 /// </summary>
-class OutputNamedExpression extends base.NamedExpression {
+class OutputNamedExpression extends mappingMixin(base.NamedExpression) {
 
 	constructor() {
 

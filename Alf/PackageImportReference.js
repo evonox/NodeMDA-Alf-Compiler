@@ -1,11 +1,12 @@
 const base = require("./ImportReference");
+const mappingMixin = require("../MappingMixins/PackageImportReference");
 
 
 /// <summary>
 /// An import reference to a package all of whose public members are to be imported.
 /// 
 /// </summary>
-class PackageImportReference extends base.ImportReference {
+class PackageImportReference extends mappingMixin(base.ImportReference) {
 
 	constructor() {
 

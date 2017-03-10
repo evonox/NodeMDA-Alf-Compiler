@@ -1,11 +1,12 @@
 const base = require("./ClassifierDefinition");
+const mappingMixin = require("../MappingMixins/EnumerationDefinition");
 
 
 /// <summary>
 /// The definition of an enumeration, whose members must all be enumeration literal
 /// names.
 /// </summary>
-class EnumerationDefinition extends base.ClassifierDefinition {
+class EnumerationDefinition extends mappingMixin(base.ClassifierDefinition) {
 
 	constructor() {
 

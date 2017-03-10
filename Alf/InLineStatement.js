@@ -1,10 +1,11 @@
 const base = require("./Statement");
+const mappingMixin = require("../MappingMixins/InLineStatement");
 
 
 /// <summary>
 /// A statement that executes code in a language other than Alf.
 /// </summary>
-class InLineStatement extends base.Statement {
+class InLineStatement extends mappingMixin(base.Statement) {
 
 	constructor() {
 

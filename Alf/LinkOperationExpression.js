@@ -1,10 +1,11 @@
 const base = require("./InvocationExpression");
+const mappingMixin = require("../MappingMixins/LinkOperationExpression");
 
 
 /// <summary>
 /// An expression used to create or destroy the links of an association.
 /// </summary>
-class LinkOperationExpression extends base.InvocationExpression {
+class LinkOperationExpression extends mappingMixin(base.InvocationExpression) {
 
 	constructor() {
 

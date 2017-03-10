@@ -1,10 +1,11 @@
 const base = require("./DocumentedElement");
+const mappingMixin = require("../MappingMixins/UnitDefinition");
 
 
 /// <summary>
 /// The definition of a namespace as an Alf unit.
 /// </summary>
-class UnitDefinition extends base.DocumentedElement {
+class UnitDefinition extends mappingMixin(base.DocumentedElement) {
 
 	constructor() {
 

@@ -1,10 +1,11 @@
 const base = require("./UnaryExpression");
+const mappingMixin = require("../MappingMixins/BooleanUnaryExpression");
 
 
 /// <summary>
 /// A unary expression with a Boolean operator.
 /// </summary>
-class BooleanUnaryExpression extends base.UnaryExpression {
+class BooleanUnaryExpression extends mappingMixin(base.UnaryExpression) {
 
 	constructor() {
 

@@ -1,7 +1,8 @@
 const base = require("./BinaryExpression");
+const mappingMixin = require("../MappingMixins/ShiftExpression");
 
 
-class ShiftExpression extends base.BinaryExpression {
+class ShiftExpression extends mappingMixin(base.BinaryExpression) {
 
 	constructor() {
 

@@ -1,10 +1,11 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/Block");
 
 
 /// <summary>
 /// A grouped sequence of statements.
 /// </summary>
-class Block extends base.SyntaxElement {
+class Block extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

@@ -1,10 +1,11 @@
 const base = require("./Statement");
+const mappingMixin = require("../MappingMixins/AcceptStatement");
 
 
 /// <summary>
 /// A statement used to accept the receipt of instances of one or more signals.
 /// </summary>
-class AcceptStatement extends base.Statement {
+class AcceptStatement extends mappingMixin(base.Statement) {
 
 	constructor() {
 

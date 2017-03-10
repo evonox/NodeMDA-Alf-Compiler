@@ -1,11 +1,12 @@
 const base = require("./ClassifierDefinition");
+const mappingMixin = require("../MappingMixins/ClassifierTemplateParameter");
 
 
 /// <summary>
 /// The definition of a classifier template parameter, which acts as a classifier
 /// within the definition of the template.
 /// </summary>
-class ClassifierTemplateParameter extends base.ClassifierDefinition {
+class ClassifierTemplateParameter extends mappingMixin(base.ClassifierDefinition) {
 
 	constructor() {
 

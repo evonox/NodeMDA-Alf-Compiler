@@ -1,10 +1,11 @@
 const base = require("./Expression");
+const mappingMixin = require("../MappingMixins/BinaryExpression");
 
 
 /// <summary>
 /// An expression consisting of an operator acting on two operand expressions.
 /// </summary>
-class BinaryExpression extends base.Expression {
+class BinaryExpression extends mappingMixin(base.Expression) {
 
 	constructor() {
 

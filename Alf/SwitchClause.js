@@ -1,11 +1,12 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/SwitchClause");
 
 
 /// <summary>
 /// A clause in a switch statement with a set of cases and a sequence of statements
 /// that may be executed if one of the cases matches the switch value.
 /// </summary>
-class SwitchClause extends base.SyntaxElement {
+class SwitchClause extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

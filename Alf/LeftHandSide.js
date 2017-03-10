@@ -1,11 +1,12 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/LeftHandSide");
 
 
 /// <summary>
 /// The left-hand side of an assignment expression. NOTE: The derivations for the
 /// derived properties of LeftHandSide are specific to its various subclasses.
 /// </summary>
-class LeftHandSide extends base.SyntaxElement {
+class LeftHandSide extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

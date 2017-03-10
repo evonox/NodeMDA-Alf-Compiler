@@ -1,11 +1,12 @@
 const base = require("./NamespaceDefinition");
+const mappingMixin = require("../MappingMixins/PackageDefinition");
 
 
 /// <summary>
 /// The definition of a package, all of whose members must be packageable elements.
 /// 
 /// </summary>
-class PackageDefinition extends base.NamespaceDefinition {
+class PackageDefinition extends mappingMixin(base.NamespaceDefinition) {
 
 	constructor() {
 

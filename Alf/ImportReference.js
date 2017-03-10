@@ -1,10 +1,11 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/ImportReference");
 
 
 /// <summary>
 /// A reference to an element or package to be imported into a unit.
 /// </summary>
-class ImportReference extends base.SyntaxElement {
+class ImportReference extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

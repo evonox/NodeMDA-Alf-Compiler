@@ -1,11 +1,12 @@
 const base = require("./Member");
+const mappingMixin = require("../MappingMixins/EnumerationLiteralName");
 
 
 /// <summary>
 /// The definition of an enumeration literal, as a member of an enumeration
 /// definition.
 /// </summary>
-class EnumerationLiteralName extends base.Member {
+class EnumerationLiteralName extends mappingMixin(base.Member) {
 
 	constructor() {
 

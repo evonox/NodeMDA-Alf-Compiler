@@ -1,10 +1,11 @@
 const base = require("./Tuple");
+const mappingMixin = require("../MappingMixins/NamedTuple");
 
 
 /// <summary>
 /// A tuple in which the arguments are matched to parameters by name.
 /// </summary>
-class NamedTuple extends base.Tuple {
+class NamedTuple extends mappingMixin(base.Tuple) {
 
 	constructor() {
 

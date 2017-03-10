@@ -1,10 +1,11 @@
 const base = require("./Member");
+const mappingMixin = require("../MappingMixins/NamespaceDefinition");
 
 
 /// <summary>
 /// A model of the common properties of the definition of a namespace in Alf.
 /// </summary>
-class NamespaceDefinition extends base.Member {
+class NamespaceDefinition extends mappingMixin(base.Member) {
 
 	constructor() {
 

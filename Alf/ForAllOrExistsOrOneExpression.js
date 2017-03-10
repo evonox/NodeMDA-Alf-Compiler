@@ -1,10 +1,11 @@
 const base = require("./SequenceExpansionExpression");
+const mappingMixin = require("../MappingMixins/ForAllOrExistsOrOneExpression");
 
 
 /// <summary>
 /// A sequence expansion expression with a forAll, exists or one operation.
 /// </summary>
-class ForAllOrExistsOrOneExpression extends base.SequenceExpansionExpression {
+class ForAllOrExistsOrOneExpression extends mappingMixin(base.SequenceExpansionExpression) {
 
 	constructor() {
 

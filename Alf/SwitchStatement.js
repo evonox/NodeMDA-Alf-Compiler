@@ -1,11 +1,12 @@
 const base = require("./Statement");
+const mappingMixin = require("../MappingMixins/SwitchStatement");
 
 
 /// <summary>
 /// A statement that executes (at most) one of a set of statement sequences based
 /// on matching a switch value to a set of test cases.
 /// </summary>
-class SwitchStatement extends base.Statement {
+class SwitchStatement extends mappingMixin(base.Statement) {
 
 	constructor() {
 

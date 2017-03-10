@@ -1,10 +1,11 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/Tuple");
 
 
 /// <summary>
 /// A list of expressions used to provide the arguments for an invocation.
 /// </summary>
-class Tuple extends base.SyntaxElement {
+class Tuple extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

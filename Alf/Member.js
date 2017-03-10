@@ -1,11 +1,12 @@
 const base = require("./DocumentedElement");
+const mappingMixin = require("../MappingMixins/Member");
 
 
 /// <summary>
 /// A model of the common properties of the definition of a member of a namespace
 /// in Alf.
 /// </summary>
-class Member extends base.DocumentedElement {
+class Member extends mappingMixin(base.DocumentedElement) {
 
 	constructor() {
 

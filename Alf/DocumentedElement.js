@@ -1,10 +1,11 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/DocumentedElement");
 
 
 /// <summary>
 /// A syntax element that has documentation comments associated with it.
 /// </summary>
-class DocumentedElement extends base.SyntaxElement {
+class DocumentedElement extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

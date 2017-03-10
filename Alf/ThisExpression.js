@@ -1,10 +1,11 @@
 const base = require("./Expression");
+const mappingMixin = require("../MappingMixins/ThisExpression");
 
 
 /// <summary>
 /// An expression comprising the keyword “this”.
 /// </summary>
-class ThisExpression extends base.Expression {
+class ThisExpression extends mappingMixin(base.Expression) {
 
 	constructor() {
 

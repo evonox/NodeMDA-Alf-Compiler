@@ -1,10 +1,11 @@
 const base = require("./Expression");
+const mappingMixin = require("../MappingMixins/IncrementOrDecrementExpression");
 
 
 /// <summary>
 /// A unary expression with either an increment or decrement operator.
 /// </summary>
-class IncrementOrDecrementExpression extends base.Expression {
+class IncrementOrDecrementExpression extends mappingMixin(base.Expression) {
 
 	constructor() {
 

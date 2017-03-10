@@ -1,10 +1,11 @@
 const base = require("./BinaryExpression");
+const mappingMixin = require("../MappingMixins/EqualityExpression");
 
 
 /// <summary>
 /// A binary expression that tests the equality of its operands.
 /// </summary>
-class EqualityExpression extends base.BinaryExpression {
+class EqualityExpression extends mappingMixin(base.BinaryExpression) {
 
 	constructor() {
 

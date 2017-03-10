@@ -1,10 +1,12 @@
 
+const mappingMixin = require("../MappingMixins/ExtentOrExpression");
+
 
 /// <summary>
 /// The target of a sequence operation, reduction or expansion expression, which
 /// may be either a primary expression or a class name denoting the class extent.
 /// </summary>
-class ExtentOrExpression  {
+class ExtentOrExpression extends mappingMixin(Object) {
 
 	constructor() {
 

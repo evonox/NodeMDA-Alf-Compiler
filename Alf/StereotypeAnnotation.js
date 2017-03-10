@@ -1,11 +1,12 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/StereotypeAnnotation");
 
 
 /// <summary>
 /// An annotation of a member definition indicating the application of a stereotype
 /// (or one of a small number of special-case annotations).
 /// </summary>
-class StereotypeAnnotation extends base.SyntaxElement {
+class StereotypeAnnotation extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

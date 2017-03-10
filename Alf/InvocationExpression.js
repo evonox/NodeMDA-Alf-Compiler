@@ -1,11 +1,12 @@
 const base = require("./Expression");
+const mappingMixin = require("../MappingMixins/InvocationExpression");
 
 
 /// <summary>
 /// An expression denoting the invocation of a behavior or operation, or the
 /// sending of a signal.
 /// </summary>
-class InvocationExpression extends base.Expression {
+class InvocationExpression extends mappingMixin(base.Expression) {
 
 	constructor() {
 

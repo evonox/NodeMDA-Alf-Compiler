@@ -1,11 +1,12 @@
 const base = require("./Expression");
+const mappingMixin = require("../MappingMixins/ConditionalTestExpression");
 
 
 /// <summary>
 /// An expression that uses the value of one operand expression to condition the
 /// evaluation of one of two other operand expressions.
 /// </summary>
-class ConditionalTestExpression extends base.Expression {
+class ConditionalTestExpression extends mappingMixin(base.Expression) {
 
 	constructor() {
 

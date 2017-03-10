@@ -1,10 +1,11 @@
 const base = require("./Expression");
+const mappingMixin = require("../MappingMixins/NameExpression");
 
 
 /// <summary>
 /// An expression that comprises a name reference.
 /// </summary>
-class NameExpression extends base.Expression {
+class NameExpression extends mappingMixin(base.Expression) {
 
 	constructor() {
 

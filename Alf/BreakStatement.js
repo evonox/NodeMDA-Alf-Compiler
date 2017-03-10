@@ -1,11 +1,12 @@
 const base = require("./Statement");
+const mappingMixin = require("../MappingMixins/BreakStatement");
 
 
 /// <summary>
 /// A statement that causes the termination of execution of an immediately
 /// enclosing block.
 /// </summary>
-class BreakStatement extends base.Statement {
+class BreakStatement extends mappingMixin(base.Statement) {
 
 	constructor() {
 

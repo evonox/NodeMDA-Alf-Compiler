@@ -1,10 +1,11 @@
 const base = require("./Member");
+const mappingMixin = require("../MappingMixins/TypedElementDefinition");
 
 
 /// <summary>
 /// The common properties of the definitions of typed elements.
 /// </summary>
-class TypedElementDefinition extends base.Member {
+class TypedElementDefinition extends mappingMixin(base.Member) {
 
 	constructor() {
 

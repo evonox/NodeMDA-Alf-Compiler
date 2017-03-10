@@ -1,10 +1,11 @@
 const base = require("./NamespaceDefinition");
+const mappingMixin = require("../MappingMixins/ClassifierDefinition");
 
 
 /// <summary>
 /// The definition of a classifier.
 /// </summary>
-class ClassifierDefinition extends base.NamespaceDefinition {
+class ClassifierDefinition extends mappingMixin(base.NamespaceDefinition) {
 
 	constructor() {
 

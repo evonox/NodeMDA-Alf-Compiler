@@ -1,10 +1,11 @@
 const base = require("./Expression");
+const mappingMixin = require("../MappingMixins/CastExpression");
 
 
 /// <summary>
 /// An expression used to filter values by type.
 /// </summary>
-class CastExpression extends base.Expression {
+class CastExpression extends mappingMixin(base.Expression) {
 
 	constructor() {
 

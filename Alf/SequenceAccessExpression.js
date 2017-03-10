@@ -1,10 +1,11 @@
 const base = require("./Expression");
+const mappingMixin = require("../MappingMixins/SequenceAccessExpression");
 
 
 /// <summary>
 /// An expression used to access a specific element of a sequence.
 /// </summary>
-class SequenceAccessExpression extends base.Expression {
+class SequenceAccessExpression extends mappingMixin(base.Expression) {
 
 	constructor() {
 

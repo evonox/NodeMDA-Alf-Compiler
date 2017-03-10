@@ -1,11 +1,12 @@
 const base = require("./InvocationExpression");
+const mappingMixin = require("../MappingMixins/SequenceOperationExpression");
 
 
 /// <summary>
 /// An expression used to invoke a behavior as if it was an operation on a target
 /// sequence as a whole.
 /// </summary>
-class SequenceOperationExpression extends base.InvocationExpression {
+class SequenceOperationExpression extends mappingMixin(base.InvocationExpression) {
 
 	constructor() {
 

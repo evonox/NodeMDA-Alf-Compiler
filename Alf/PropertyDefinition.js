@@ -1,10 +1,11 @@
 const base = require("./TypedElementDefinition");
+const mappingMixin = require("../MappingMixins/PropertyDefinition");
 
 
 /// <summary>
 /// A typed element definition for a property (attribute or association end).
 /// </summary>
-class PropertyDefinition extends base.TypedElementDefinition {
+class PropertyDefinition extends mappingMixin(base.TypedElementDefinition) {
 
 	constructor() {
 

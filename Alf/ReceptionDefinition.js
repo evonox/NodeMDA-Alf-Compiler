@@ -1,10 +1,11 @@
 const base = require("./Member");
+const mappingMixin = require("../MappingMixins/ReceptionDefinition");
 
 
 /// <summary>
 /// The declaration of the ability of an active class to receive a signal.
 /// </summary>
-class ReceptionDefinition extends base.Member {
+class ReceptionDefinition extends mappingMixin(base.Member) {
 
 	constructor() {
 

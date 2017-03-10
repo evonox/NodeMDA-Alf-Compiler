@@ -1,10 +1,11 @@
 const base = require("./ClassifierDefinition");
+const mappingMixin = require("../MappingMixins/SignalDefinition");
 
 
 /// <summary>
 /// The definition of a signal, whose members must all be properties.
 /// </summary>
-class SignalDefinition extends base.ClassifierDefinition {
+class SignalDefinition extends mappingMixin(base.ClassifierDefinition) {
 
 	constructor() {
 

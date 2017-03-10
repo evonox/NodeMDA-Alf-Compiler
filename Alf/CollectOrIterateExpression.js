@@ -1,10 +1,11 @@
 const base = require("./SequenceExpansionExpression");
+const mappingMixin = require("../MappingMixins/CollectOrIterateExpression");
 
 
 /// <summary>
 /// A sequence expansion expression with a collect or iterate operation.
 /// </summary>
-class CollectOrIterateExpression extends base.SequenceExpansionExpression {
+class CollectOrIterateExpression extends mappingMixin(base.SequenceExpansionExpression) {
 
 	constructor() {
 

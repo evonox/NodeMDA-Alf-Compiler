@@ -1,11 +1,12 @@
 const base = require("./Expression");
+const mappingMixin = require("../MappingMixins/SequenceReductionExpression");
 
 
 /// <summary>
 /// An expression used to reduce a sequence of values effectively by inserting a
 /// binary operation between the values.
 /// </summary>
-class SequenceReductionExpression extends base.Expression {
+class SequenceReductionExpression extends mappingMixin(base.Expression) {
 
 	constructor() {
 

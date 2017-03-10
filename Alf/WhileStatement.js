@@ -1,11 +1,12 @@
 const base = require("./Statement");
+const mappingMixin = require("../MappingMixins/WhileStatement");
 
 
 /// <summary>
 /// A looping statement for which the continuation condition is first tested before
 /// the first iteration.
 /// </summary>
-class WhileStatement extends base.Statement {
+class WhileStatement extends mappingMixin(base.Statement) {
 
 	constructor() {
 

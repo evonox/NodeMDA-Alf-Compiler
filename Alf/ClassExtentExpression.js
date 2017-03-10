@@ -1,10 +1,11 @@
 const base = require("./Expression");
+const mappingMixin = require("../MappingMixins/ClassExtentExpression");
 
 
 /// <summary>
 /// An expression used to obtain the objects in the extent of a class.
 /// </summary>
-class ClassExtentExpression extends base.Expression {
+class ClassExtentExpression extends mappingMixin(base.Expression) {
 
 	constructor() {
 

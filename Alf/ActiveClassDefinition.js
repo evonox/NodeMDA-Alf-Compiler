@@ -1,10 +1,11 @@
 const base = require("./ClassDefinition");
+const mappingMixin = require("../MappingMixins/ActiveClassDefinition");
 
 
 /// <summary>
 /// The definition of an active class.
 /// </summary>
-class ActiveClassDefinition extends base.ClassDefinition {
+class ActiveClassDefinition extends mappingMixin(base.ClassDefinition) {
 
 	constructor() {
 

@@ -1,11 +1,12 @@
 const base = require("./Statement");
+const mappingMixin = require("../MappingMixins/LocalNameDeclarationStatement");
 
 
 /// <summary>
 /// A statement that declares the type of a local name and assigns it an initial
 /// value.
 /// </summary>
-class LocalNameDeclarationStatement extends base.Statement {
+class LocalNameDeclarationStatement extends mappingMixin(base.Statement) {
 
 	constructor() {
 

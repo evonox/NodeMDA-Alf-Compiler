@@ -1,11 +1,12 @@
 const base = require("./ClassifierDefinition");
+const mappingMixin = require("../MappingMixins/ClassDefinition");
 
 
 /// <summary>
 /// The definition of a class, whose members may be properties, operations, signals
 /// or signal receptions.
 /// </summary>
-class ClassDefinition extends base.ClassifierDefinition {
+class ClassDefinition extends mappingMixin(base.ClassifierDefinition) {
 
 	constructor() {
 

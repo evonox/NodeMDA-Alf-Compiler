@@ -1,10 +1,11 @@
 const base = require("./LiteralExpression");
+const mappingMixin = require("../MappingMixins/StringLiteralExpression");
 
 
 /// <summary>
 /// An expression that comprises a String literal.
 /// </summary>
-class StringLiteralExpression extends base.LiteralExpression {
+class StringLiteralExpression extends mappingMixin(base.LiteralExpression) {
 
 	constructor() {
 

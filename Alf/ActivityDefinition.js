@@ -1,11 +1,12 @@
 const base = require("./ClassifierDefinition");
+const mappingMixin = require("../MappingMixins/ActivityDefinition");
 
 
 /// <summary>
 /// The definition of an activity, with any formal parameters defined as owned
 /// members.
 /// </summary>
-class ActivityDefinition extends base.ClassifierDefinition {
+class ActivityDefinition extends mappingMixin(base.ClassifierDefinition) {
 
 	constructor() {
 

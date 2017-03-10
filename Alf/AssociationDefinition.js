@@ -1,10 +1,11 @@
 const base = require("./ClassifierDefinition");
+const mappingMixin = require("../MappingMixins/AssociationDefinition");
 
 
 /// <summary>
 /// The definition of an association, whose members must all be properties.
 /// </summary>
-class AssociationDefinition extends base.ClassifierDefinition {
+class AssociationDefinition extends mappingMixin(base.ClassifierDefinition) {
 
 	constructor() {
 

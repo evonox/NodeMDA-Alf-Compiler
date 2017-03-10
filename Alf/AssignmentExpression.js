@@ -1,10 +1,11 @@
 const base = require("./Expression");
+const mappingMixin = require("../MappingMixins/AssignmentExpression");
 
 
 /// <summary>
 /// An expression used to assign a value to a local name, parameter or property.
 /// </summary>
-class AssignmentExpression extends base.Expression {
+class AssignmentExpression extends mappingMixin(base.Expression) {
 
 	constructor() {
 

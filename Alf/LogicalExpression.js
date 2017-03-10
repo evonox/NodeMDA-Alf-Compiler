@@ -1,10 +1,11 @@
 const base = require("./BinaryExpression");
+const mappingMixin = require("../MappingMixins/LogicalExpression");
 
 
 /// <summary>
 /// A binary expression with a logical operator.
 /// </summary>
-class LogicalExpression extends base.BinaryExpression {
+class LogicalExpression extends mappingMixin(base.BinaryExpression) {
 
 	constructor() {
 

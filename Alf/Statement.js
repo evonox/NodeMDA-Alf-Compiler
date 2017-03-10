@@ -1,10 +1,11 @@
 const base = require("./DocumentedElement");
+const mappingMixin = require("../MappingMixins/Statement");
 
 
 /// <summary>
 /// A model of an Alf statement.
 /// </summary>
-class Statement extends base.DocumentedElement {
+class Statement extends mappingMixin(base.DocumentedElement) {
 
 	constructor() {
 

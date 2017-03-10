@@ -1,4 +1,5 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/FeatureReference");
 
 
 /// <summary>
@@ -6,7 +7,7 @@ const base = require("./SyntaxElement");
 /// expression or a binary association end the opposite end of which is typed by
 /// the type of its target expression.
 /// </summary>
-class FeatureReference extends base.SyntaxElement {
+class FeatureReference extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

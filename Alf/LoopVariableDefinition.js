@@ -1,10 +1,11 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/LoopVariableDefinition");
 
 
 /// <summary>
 /// The definition of a loop variable in a for statement.
 /// </summary>
-class LoopVariableDefinition extends base.SyntaxElement {
+class LoopVariableDefinition extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

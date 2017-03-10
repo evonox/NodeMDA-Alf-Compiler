@@ -1,11 +1,12 @@
 const base = require("./NamespaceDefinition");
+const mappingMixin = require("../MappingMixins/OperationDefinition");
 
 
 /// <summary>
 /// The definition of an operation, with any formal parameters defined as owned
 /// members.
 /// </summary>
-class OperationDefinition extends base.NamespaceDefinition {
+class OperationDefinition extends mappingMixin(base.NamespaceDefinition) {
 
 	constructor() {
 

@@ -1,10 +1,11 @@
 const base = require("./InvocationExpression");
+const mappingMixin = require("../MappingMixins/FeatureInvocationExpression");
 
 
 /// <summary>
 /// An invocation of a feature referenced on a sequence of instances.
 /// </summary>
-class FeatureInvocationExpression extends base.InvocationExpression {
+class FeatureInvocationExpression extends mappingMixin(base.InvocationExpression) {
 
 	constructor() {
 

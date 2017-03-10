@@ -1,11 +1,12 @@
 const base = require("./TypedElementDefinition");
+const mappingMixin = require("../MappingMixins/FormalParameter");
 
 
 /// <summary>
 /// A typed element definition for the formal parameter of an activity or operation.
 /// 
 /// </summary>
-class FormalParameter extends base.TypedElementDefinition {
+class FormalParameter extends mappingMixin(base.TypedElementDefinition) {
 
 	constructor() {
 

@@ -1,10 +1,11 @@
 const base = require("./LiteralExpression");
+const mappingMixin = require("../MappingMixins/BooleanLiteralExpression");
 
 
 /// <summary>
 /// An expression that comprises a Boolean literal.
 /// </summary>
-class BooleanLiteralExpression extends base.LiteralExpression {
+class BooleanLiteralExpression extends mappingMixin(base.LiteralExpression) {
 
 	constructor() {
 

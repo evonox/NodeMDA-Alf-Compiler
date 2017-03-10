@@ -1,10 +1,11 @@
 const base = require("./InvocationExpression");
+const mappingMixin = require("../MappingMixins/BehaviorInvocationExpression");
 
 
 /// <summary>
 /// An invocation of a behavior referenced by name.
 /// </summary>
-class BehaviorInvocationExpression extends base.InvocationExpression {
+class BehaviorInvocationExpression extends mappingMixin(base.InvocationExpression) {
 
 	constructor() {
 

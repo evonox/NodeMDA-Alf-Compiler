@@ -1,11 +1,12 @@
 const base = require("./Statement");
+const mappingMixin = require("../MappingMixins/ForStatement");
 
 
 /// <summary>
 /// A looping statement that gives successive values to one or more loop variables
 /// on each iteration.
 /// </summary>
-class ForStatement extends base.Statement {
+class ForStatement extends mappingMixin(base.Statement) {
 
 	constructor() {
 

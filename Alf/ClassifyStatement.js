@@ -1,10 +1,11 @@
 const base = require("./Statement");
+const mappingMixin = require("../MappingMixins/ClassifyStatement");
 
 
 /// <summary>
 /// A statement that changes the classification of an object.
 /// </summary>
-class ClassifyStatement extends base.Statement {
+class ClassifyStatement extends mappingMixin(base.Statement) {
 
 	constructor() {
 

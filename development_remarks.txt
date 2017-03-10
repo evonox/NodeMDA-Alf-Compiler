@@ -1,15 +1,3 @@
-2. Otestovat Mixins v Node
-    1. Test file
-    2. without mixing
-    3. With mixin
-3. Generovat Mixins
-    1. Stereotyp pro AlfMappingMixin
-    2. Test Stereotyp override
-    3. Nastavit Stereotyp do Alf classes
-    4. Override import - add imporing mixin
-    5. Override base class declaration - extend with mixin
-    6. Test running
-    7. Vyjimka - kdyz neni Base class, add empty Object {}
 4. Generovat fUML Abstract Syntax
     1. Stahnout a importovat XMI
     2. Reset code-generation settings

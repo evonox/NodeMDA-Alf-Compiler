@@ -1,10 +1,11 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/AcceptBlock");
 
 
 /// <summary>
 /// A block of an accept statement that accepts one or more signals.
 /// </summary>
-class AcceptBlock extends base.SyntaxElement {
+class AcceptBlock extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

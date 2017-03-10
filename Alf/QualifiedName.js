@@ -1,11 +1,12 @@
 const base = require("./SyntaxElement");
+const mappingMixin = require("../MappingMixins/QualifiedName");
 
 
 /// <summary>
 /// The representation of a qualified name as a sequence of individual simple names.
 /// 
 /// </summary>
-class QualifiedName extends base.SyntaxElement {
+class QualifiedName extends mappingMixin(base.SyntaxElement) {
 
 	constructor() {
 

@@ -1,10 +1,11 @@
 const base = require("./LeftHandSide");
+const mappingMixin = require("../MappingMixins/NameLeftHandSide");
 
 
 /// <summary>
 /// A left-hand side that is a name.
 /// </summary>
-class NameLeftHandSide extends base.LeftHandSide {
+class NameLeftHandSide extends mappingMixin(base.LeftHandSide) {
 
 	constructor() {
 

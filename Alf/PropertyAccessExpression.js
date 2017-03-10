@@ -1,10 +1,11 @@
 const base = require("./Expression");
+const mappingMixin = require("../MappingMixins/PropertyAccessExpression");
 
 
 /// <summary>
 /// An expression comprising a reference to a structural feature.
 /// </summary>
-class PropertyAccessExpression extends base.Expression {
+class PropertyAccessExpression extends mappingMixin(base.Expression) {
 
 	constructor() {
 

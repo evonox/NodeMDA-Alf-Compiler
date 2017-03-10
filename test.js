@@ -1,4 +1,4 @@
-const lexer = require("./lexer");
+const lexer = require("./Lexer/lexer");
 const fs = require("fs");
 const alf = require("./Alf/Alf");
 
