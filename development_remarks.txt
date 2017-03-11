@@ -4,8 +4,4 @@
     3. Generovat fUML
     4. Generovaci Tool pro fUML Facade dle vzoru Alfa
     5. Spustit generovani
-5. BAT file pro generovani parseru
-    1. Generovat Lexer
-    2. Concatenate Parser.pegjs
-    3. Generate Parser
-6. Start preparing the Big picture analysis
+

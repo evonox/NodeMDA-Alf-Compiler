@@ -86,7 +86,7 @@ NamedTuple = pLParen first:NamedExpression other:( pComma ne:NamedExpression { r
     obj.namedExpression = [first].concat(other);
     return obj;
 }
-NamedExpression = name:name pFatArrow expression:ExpressionExpression {
+NamedExpression = name:name pFatArrow expression:Expression {
     let obj = new alf.NamedExpression();
     obj.name = name;
     obj.expression = expression;
@@ -267,7 +267,7 @@ SelectOrRejectOperation = operation:(fnSelect / fnReject) {
     return obj;
 }
 
-CollectOrIterateOperation = operation(fnCollect / fnIterate) {
+CollectOrIterateOperation = operation:(fnCollect / fnIterate) {
     let obj = new alf.CollectOrIterateExpression();
     obj.operation = operation;
     return obj;
@@ -346,3 +346,6 @@ TemplateParameterSubstitution = parameterName:name pFatArrow argumentName:Qualif
     obj.argumentName = argumentName;
     return obj;
 }
+
+ 
+ 

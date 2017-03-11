@@ -108,7 +108,7 @@ EqualityExpression = operand1:ClassificationOrEqualityExpression operator:Equali
 EqualityOperator = opEqual / opNotEqual
 EqualityOrAndExpression = ClassificationOrEqualityExpression / AndExpression
 
-RelationalOrClassificationExpression = ArithmeticOrRelationalExpression / ClassificationExpression
+RelationalOrClassificationExpression = ShiftOrRelationalExpression / ClassificationExpression
 ClassificationExpression = operand:ShiftOrRelationalExpression operator:ClassificationOperator typeName:QualifiedName {
     let obj = new alf.ClassificationExpression();
     obj.operand = operand;
@@ -236,3 +236,5 @@ PrefixExpression = operator:AffixOperator operand:LeftHandSide {
 }
 
 AffixOperator = opIncrement / opDecrement
+
+
