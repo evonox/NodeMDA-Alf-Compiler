@@ -53,9 +53,9 @@ opAdd = opPrefix "+"  tokenSuffix
 opSub = opPrefix "-"  tokenSuffix
 opMult = opPrefix "*"  tokenSuffix
 opDiv = opPrefix "/"  tokenSuffix
-opLogAnd = opPrefix "&"  tokenSuffix
-opLogOr = opPrefix "|"  tokenSuffix
-opLogXor = opPrefix "^"  tokenSuffix
+opBitLogAnd = opPrefix "&"  tokenSuffix
+opBitLogOr = opPrefix "|"  tokenSuffix
+opBitLogXor = opPrefix "^"  tokenSuffix
 opMod = opPrefix "%" tokenSuffix
 
 /*

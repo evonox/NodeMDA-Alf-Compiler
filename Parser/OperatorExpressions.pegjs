@@ -1,7 +1,101 @@
 /*
+    Assignment expressions
+*/
+AssignmentExpression = leftHandSide:LeftHandSide operator:AssignmentOperator rightHandSide:Expression {
+    let obj = new alf.AssignmentExpression();
+    obj.leftHandSide = leftHandSide;
+    obj.operator = operator;
+    obj.rightHandSide = rightHandSide;
+}
+
+LeftHandSide = lhs:NameLeftHandSide index:( index:Index { return index; })? {
+    lhs.index = index;
+    return lhs;
+}
+/ lhs:FeatureLeftHandSide index:( index:Index { return index; })? {
+    lhs.index = index;
+    return lhs;
+}
+/ pLParen lhs:LeftHandSide pRParen { return lhs; }
+
+NameLeftHandSide = target:PotentiallyAmbiguousQualifiedName {
+    let obj = new alf.NameLeftHandSide();
+    obj.target = target;
+    return target;
+}
+
+FeatureLeftHandSide = feature:FeatureReference {
+    let obj = new alf.FeatureLeftHandSide();
+    obj.feature = feature;
+    return obj;
+}
+
+AssignmentOperator = opAssign / opAsgnMod / opAsgnBitXor / opAsgnBitOr
+                    / opAsgnBitAnd / opAsgnDiv / opAsgnMult / opAsgnSub
+                    / opAsgnAdd / opAsgnZeroShiftRight / opAsgnRightShift / opAsgnLeftShift
+
+/*
+    Conditional-Test expressions
+*/
+ConditionalExpression = ConditionalAndOrConditionalOrExpression / ConditionalTestExpression
+ConditionalTestExpression = operand1:ConditionalAndOrConditionalOrExpression opQuestionMark
+                            operand2:Expression pColon
+                            operand3:ConditionalExpression
+{
+    let obj = new alf.ConditionalTestExpression();
+    obj.operand1 = operand1;
+    obj.operand2 = operand2;
+    obj.operand3 = operand3;
+    return obj;
+}
+
+/*
     Binary operator expressions
 */
+InclusiveOrOrConditionalAndExpression = ExclusiveOrOrInclusiveOrExpression / ConditionalAndExpression
+ConditionalAndExpression = operand1:InclusiveOrOrConditionalAndExpression operator:opLogAnd operand2:ExclusiveOrOrInclusiveOrExpression {
+    let obj = new alf.ConditionalLogicalExpression();
+    obj.operand1 = operand1;
+    obj.operator = operator;
+    obj.operand2 = operand2;
+    return obj;
+}
 
+ConditionalAndOrConditionalOrExpression = InclusiveOrOrConditionalAndExpression / ConditionalOrExpression
+ConditionalOrExpression = operand1:ConditionalAndOrConditionalOrExpression operator:opLogOr operand2:InclusiveOrOrConditionalAndExpression {
+    let obj = new alf.ConditionalLogicalExpression();
+    obj.operand1 = operand1;
+    obj.operator = operator;
+    obj.operand2 = operand2;
+    return obj;
+}
+
+EqualityOrAndExpression = ClassificationOrEqualityExpression / AndExpression
+AndExpression = operand1:EqualityOrAndExpression operator:opBitLogAnd operand2:ClassificationOrEqualityExpression {
+    let obj = new alf.LogicalExpression();
+    obj.operand1 = operand1;
+    obj.operator = operator;
+    obj.operand2 = operand2;
+    return obj;
+}
+
+AndOrExclusiveOrExpression = EqualityOrAndExpression / ExclusiveOrExpression
+ExclusiveOrExpression = operand1:AndOrExclusiveOrExpression operator:opBitLogXor operand2:EqualityOrAndExpression {
+    let obj = new alf.LogicalExpression();
+    obj.operand1 = operand1;
+    obj.operator = operator;
+    obj.operand2 = operand2;
+    return obj;
+}
+
+ExclusiveOrOrInclusiveOrExpression = AndOrExclusiveOrExpression / InclusiveOrExpression
+InclusiveOrExpression = operand1:ExclusiveOrOrInclusiveOrExpression operator:opBitLogOr operand2:AndOrExclusiveOrExpression {
+    let obj = new alf.LogicalExpression();
+    obj.operand1 = operand1;
+    obj.operator = operator;
+    obj.operand2 = operand2;
+    return obj;
+}
 
 ClassificationOrEqualityExpression = RelationalOrClassificationExpression / EqualityExpression
 EqualityExpression = operand1:ClassificationOrEqualityExpression operator:EqualityOperator operand2:RelationalOrClassificationExpression {
