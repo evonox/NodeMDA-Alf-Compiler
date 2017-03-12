@@ -117,7 +117,7 @@ kwTo = kwPrefix "to"  tokenSuffix
 kwWhile = kwPrefix "while" tokenSuffix
 
 /*
-    Function names
+    Function and annotation names
 */
 fnIsUnique = namePrefix '"' content:"isUnique" '"' tokenSuffix { return content; }
 fnForAll = namePrefix '"' content:"forAll" '"' tokenSuffix { return content; }
@@ -127,6 +127,9 @@ fnCollect = namePrefix '"' content:"collect" '"' tokenSuffix { return content; }
 fnIterate = namePrefix '"' content:"iterate" '"' tokenSuffix { return content; }
 fnSelect = namePrefix '"' content:"select" '"' tokenSuffix { return content; }
 fnReject = namePrefix '"' content:"reject" '"' tokenSuffix { return content; }
+
+annInline = namePrefix '"' content:"inline" '"' tokenSuffix { return content; }
+
 
 /*
     Remaining lexical elements
@@ -167,3 +170,20 @@ digit = [0-9]
 
 subTokenSeparator = " "
 tokenSeprator = "\n"
+
+LineTerminator = "\n" / "\r"
+InputCharacter = !(LineTerminator) character:(.) { return character; }
+
+CommentText = chars:(NotStar)+ otherText:(CommentText)? {
+    chars = chars.join("");
+    if(otherText !== null) chars += otherText;
+    chars = chars.replace(/\r/g, "");
+    chars = chars.replace(/\n/g, "\\n");
+    return chars;
+}
+StarCommentText = "*" (NotStarNotSlash CommentText )?
+
+NotAt = ! ( "@" ) InputCharacter
+NotStar = ! ( "*" ) character:InputCharacter { return character; } / LineTerminator
+NotStartNotAt = ! ( "*" / "@" ) InputCharacter / LineTerminator
+NotStarNotSlash = ! ("*/" ) InputCharacter / LineTerminator
