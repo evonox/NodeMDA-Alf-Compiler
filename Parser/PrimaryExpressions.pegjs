@@ -2,10 +2,10 @@
     Primary expressions
 */
 PrimaryExpression = NameExpression / NonNamePrimaryExpression
-NonNamePrimaryExpression = LiteralExpression / ThisExpression / ParenthesizedExpression / PropertyAccessExpression
+NonNamePrimaryExpression = LiteralExpression / ThisExpression / ParenthesizedExpression // / PropertyAccessExpression
         / InvocationExpression / InstanceCreationExpression / LinkOperationExpression / ClassExtentExpression
-        / SequenceConstructionExpression / SequenceAccessExpression / SequenceOperationExpression 
-        / SequenceReductionExpression / SequenceExpansionExpression
+  /*      / SequenceConstructionExpression / SequenceAccessExpression / SequenceOperationExpression 
+        / SequenceReductionExpression / SequenceExpansionExpression */
 
 // Literal expressions
 LiteralExpression = BooleanLiteralExpression 
@@ -47,11 +47,11 @@ ThisExpression = kwThis {
 ParenthesizedExpression = pLParen e:Expression pRParen { return e; }
 
 // PropertyAccessExpression - STUDY DISAMBIGUATION RULES
-PropertyAccessExpression = featureReference:FeatureReference {
+/*PropertyAccessExpression = featureReference:FeatureReference {
     let obj = new alf.PropertyAccessExpression();
     obj.featureReference = featureReference;
     return obj;
-}
+}*/
 FeatureReference = expression:FeatureTargetExpression pDot nameBinding:NameBinding {
     let obj = new alf.FeatureReference();
     obj.expression = expression;
@@ -67,7 +67,7 @@ NameTargetExpression = name:ColonQualifiedName {
 
 // InvocationExpression
 InvocationExpression = e:InvocationTarget tuple:Tuple { e.tuple = tuple; return e; }
-InvocationTarget = BehaviorInvocationTarget / FeatureInvocationTarget / SuperInvocationTarget;
+InvocationTarget = BehaviorInvocationTarget / /* FeatureInvocationTarget /*/  SuperInvocationTarget;
 
 // Tuple
 Tuple = PositionalTuple / NamedTuple
