@@ -3,19 +3,32 @@ const mmQueryParser = require("./MetaModelQuery");
 
 let mmQuery = null;
 
-function processPackage(parentPackage, fumlPackage) {
+function processClasses(parentPackage, fumlPackage) {
+    mmQuery.queryClasses(parentPackage).every((classHandle) => {
+        let className = mmQuery.getElementName(classHandle);
+        let fumlClass = factory.createClass(fumlPackage, className, {});
+        return true;
+    });
+}
+
+function processPackages(parentPackage, fumlPackage) {
     mmQuery.queryChildPackages(parentPackage).every((package) => {
         let packageName = mmQuery.getElementName(package);
         let fumlChildPackage = factory.createPackage(fumlPackage, packageName, {});
-        processPackage(package, fumlChildPackage);
+        processPackageChildElements(package, fumlChildPackage);
         return true;
     });
+}
+
+function processPackageChildElements(parentPackage, fumlPackage) {
+    processPackages(parentPackage, fumlPackage);
+    processClasses(parentPackage, fumlPackage);
 }
 
 function build() {
     let rootPackage = mmQuery.getRootPackage();
     let fumlPackage = factory.createPackage(null, "", {});
-    processPackage(rootPackage, fumlPackage);
+    processPackageChildElements(rootPackage, fumlPackage);
     return fumlPackage;
 }
 

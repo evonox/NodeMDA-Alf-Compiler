@@ -14,6 +14,15 @@ module.exports = {
     },
 
     createClass(parentPackage, name, parameters) {
-
+        let classUML = new fUML.Class();
+        classUML.name = name;
+        classUML.isActive = false;
+        classUML.ownedAttribute = new Array();
+        classUML.ownedOperation = new Array();
+        classUML.ownedReception = new Array();
+        classUML.superClass = new Array();
+        classUML.owner = parentPackage;
+        parentPackage.packagedElement.push(classUML);
+        return classUML;
     }
 }

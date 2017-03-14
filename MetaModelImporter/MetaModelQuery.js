@@ -300,7 +300,7 @@ class MetaModelQueryFacade {
         this.metaModel.datatypes.every ((datatype) => {
             if(! datatype.isObject) return true;
             // TODO Cannot get from NodeMDA the right delmiter in loose-coupling way
-            let packagePath = datatype.packageName.split("::"); 
+            let packagePath = datatype.packageName.split(":"); 
             this.addPackagePath(packagePath);
             let packageElement = this.rootPackage.getNamespace(packagePath);
             if(packageElement === null)
