@@ -1,11 +1,13 @@
-const base = require("./Behavior");
+const Behavior = require("./Behavior");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Activity");
 
 
 
 /// <summary>
 /// import fUML.Syntax.Activities.CompleteStructuredActivities.*;
 /// </summary>
-class Activity extends base.Behavior {
+class Activity extends codeGenMixin(Behavior) {
 
 	constructor() {
 
@@ -36,6 +38,4 @@ class Activity extends base.Behavior {
 
 }//end Activity
 
- module.exports = {
- 	Activity: Activity
- }
+ module.exports = Activity;

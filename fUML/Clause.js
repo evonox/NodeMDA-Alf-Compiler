@@ -1,8 +1,10 @@
-const base = require("./Element");
+const Element = require("./Element");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Clause");
 
 
 
-class Clause extends base.Element {
+class Clause extends codeGenMixin(Element) {
 
 	constructor() {
 
@@ -43,6 +45,4 @@ class Clause extends base.Element {
 
 }//end Clause
 
- module.exports = {
- 	Clause: Clause
- }
+ module.exports = Clause;

@@ -1,8 +1,10 @@
-const base = require("./Element");
+const Element = require("./Element");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Slot");
 
 
 
-class Slot extends base.Element {
+class Slot extends codeGenMixin(Element) {
 
 	constructor() {
 
@@ -22,6 +24,4 @@ class Slot extends base.Element {
 
 }//end Slot
 
- module.exports = {
- 	Slot: Slot
- }
+ module.exports = Slot;

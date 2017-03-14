@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var SlotCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "Slot";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

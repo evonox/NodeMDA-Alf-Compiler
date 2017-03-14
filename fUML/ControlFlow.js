@@ -1,8 +1,10 @@
-const base = require("./ActivityEdge");
+const ActivityEdge = require("./ActivityEdge");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ControlFlow");
 
 
 
-class ControlFlow extends base.ActivityEdge {
+class ControlFlow extends codeGenMixin(ActivityEdge) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class ControlFlow extends base.ActivityEdge {
 
 }//end ControlFlow
 
- module.exports = {
- 	ControlFlow: ControlFlow
- }
+ module.exports = ControlFlow;

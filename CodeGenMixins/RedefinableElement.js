@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var RedefinableElementCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "RedefinableElement";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

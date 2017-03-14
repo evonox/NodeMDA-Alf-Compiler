@@ -1,8 +1,10 @@
-const base = require("./Pin");
+const Pin = require("./Pin");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/OutputPin");
 
 
 
-class OutputPin extends base.Pin {
+class OutputPin extends codeGenMixin(Pin) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class OutputPin extends base.Pin {
 
 }//end OutputPin
 
- module.exports = {
- 	OutputPin: OutputPin
- }
+ module.exports = OutputPin;

@@ -1,8 +1,9 @@
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Comment");
 
 
 
-
-class Comment extends Object {
+class Comment extends codeGenMixin(Object) {
 
 	constructor() {
 
@@ -13,6 +14,4 @@ class Comment extends Object {
 
 }//end Comment
 
- module.exports = {
- 	Comment: Comment
- }
+ module.exports = Comment;

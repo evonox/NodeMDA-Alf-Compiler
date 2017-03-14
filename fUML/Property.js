@@ -1,8 +1,10 @@
-const base = require("./StructuralFeature");
+const StructuralFeature = require("./StructuralFeature");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Property");
 
 
 
-class Property extends base.StructuralFeature {
+class Property extends codeGenMixin(StructuralFeature) {
 
 	constructor() {
 
@@ -48,6 +50,4 @@ class Property extends base.StructuralFeature {
 
 }//end Property
 
- module.exports = {
- 	Property: Property
- }
+ module.exports = Property;

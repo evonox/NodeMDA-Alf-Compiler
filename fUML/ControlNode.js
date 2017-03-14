@@ -1,8 +1,10 @@
-const base = require("./ActivityNode");
+const ActivityNode = require("./ActivityNode");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ControlNode");
 
 
 
-class ControlNode extends base.ActivityNode {
+class ControlNode extends codeGenMixin(ActivityNode) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class ControlNode extends base.ActivityNode {
 
 }//end ControlNode
 
- module.exports = {
- 	ControlNode: ControlNode
- }
+ module.exports = ControlNode;

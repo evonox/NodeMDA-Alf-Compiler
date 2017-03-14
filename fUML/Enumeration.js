@@ -1,8 +1,10 @@
-const base = require("./DataType");
+const DataType = require("./DataType");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Enumeration");
 
 
 
-class Enumeration extends base.DataType {
+class Enumeration extends codeGenMixin(DataType) {
 
 	constructor() {
 
@@ -18,6 +20,4 @@ class Enumeration extends base.DataType {
 
 }//end Enumeration
 
- module.exports = {
- 	Enumeration: Enumeration
- }
+ module.exports = Enumeration;

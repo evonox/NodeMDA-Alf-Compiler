@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var ClauseCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "Clause";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

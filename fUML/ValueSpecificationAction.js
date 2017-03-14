@@ -1,8 +1,10 @@
-const base = require("./Action");
+const Action = require("./Action");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ValueSpecificationAction");
 
 
 
-class ValueSpecificationAction extends base.Action {
+class ValueSpecificationAction extends codeGenMixin(Action) {
 
 	constructor() {
 
@@ -21,6 +23,4 @@ class ValueSpecificationAction extends base.Action {
 
 }//end ValueSpecificationAction
 
- module.exports = {
- 	ValueSpecificationAction: ValueSpecificationAction
- }
+ module.exports = ValueSpecificationAction;

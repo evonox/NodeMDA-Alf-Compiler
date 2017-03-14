@@ -1,8 +1,10 @@
-const base = require("./Class");
+const Class = require("./Class");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Behavior");
 
 
 
-class Behavior extends base.Class {
+class Behavior extends codeGenMixin(Class) {
 
 	constructor() {
 
@@ -43,6 +45,4 @@ class Behavior extends base.Class {
 
 }//end Behavior
 
- module.exports = {
- 	Behavior: Behavior
- }
+ module.exports = Behavior;

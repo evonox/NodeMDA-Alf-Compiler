@@ -1,8 +1,10 @@
-const base = require("./LinkEndData");
+const LinkEndData = require("./LinkEndData");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/LinkEndCreationData");
 
 
 
-class LinkEndCreationData extends base.LinkEndData {
+class LinkEndCreationData extends codeGenMixin(LinkEndData) {
 
 	constructor() {
 
@@ -25,6 +27,4 @@ class LinkEndCreationData extends base.LinkEndData {
 
 }//end LinkEndCreationData
 
- module.exports = {
- 	LinkEndCreationData: LinkEndCreationData
- }
+ module.exports = LinkEndCreationData;

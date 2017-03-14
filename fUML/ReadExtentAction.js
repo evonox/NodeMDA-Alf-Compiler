@@ -1,8 +1,10 @@
-const base = require("./Action");
+const Action = require("./Action");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ReadExtentAction");
 
 
 
-class ReadExtentAction extends base.Action {
+class ReadExtentAction extends codeGenMixin(Action) {
 
 	constructor() {
 
@@ -21,6 +23,4 @@ class ReadExtentAction extends base.Action {
 
 }//end ReadExtentAction
 
- module.exports = {
- 	ReadExtentAction: ReadExtentAction
- }
+ module.exports = ReadExtentAction;

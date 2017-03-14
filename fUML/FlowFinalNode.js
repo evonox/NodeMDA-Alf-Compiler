@@ -1,8 +1,10 @@
-const base = require("./FinalNode");
+const FinalNode = require("./FinalNode");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/FlowFinalNode");
 
 
 
-class FlowFinalNode extends base.FinalNode {
+class FlowFinalNode extends codeGenMixin(FinalNode) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class FlowFinalNode extends base.FinalNode {
 
 }//end FlowFinalNode
 
- module.exports = {
- 	FlowFinalNode: FlowFinalNode
- }
+ module.exports = FlowFinalNode;

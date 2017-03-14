@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var CommentCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "Comment";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

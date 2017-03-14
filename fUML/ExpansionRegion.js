@@ -1,8 +1,10 @@
-const base = require("./StructuredActivityNode");
+const StructuredActivityNode = require("./StructuredActivityNode");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ExpansionRegion");
 
 
 
-class ExpansionRegion extends base.StructuredActivityNode {
+class ExpansionRegion extends codeGenMixin(StructuredActivityNode) {
 
 	constructor() {
 
@@ -34,6 +36,4 @@ class ExpansionRegion extends base.StructuredActivityNode {
 
 }//end ExpansionRegion
 
- module.exports = {
- 	ExpansionRegion: ExpansionRegion
- }
+ module.exports = ExpansionRegion;

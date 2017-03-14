@@ -1,8 +1,10 @@
-const base = require("./Action");
+const Action = require("./Action");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ClearAssociationAction");
 
 
 
-class ClearAssociationAction extends base.Action {
+class ClearAssociationAction extends codeGenMixin(Action) {
 
 	constructor() {
 
@@ -22,6 +24,4 @@ class ClearAssociationAction extends base.Action {
 
 }//end ClearAssociationAction
 
- module.exports = {
- 	ClearAssociationAction: ClearAssociationAction
- }
+ module.exports = ClearAssociationAction;

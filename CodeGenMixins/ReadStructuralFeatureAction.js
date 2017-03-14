@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var ReadStructuralFeatureActionCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "ReadStructuralFeatureAction";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

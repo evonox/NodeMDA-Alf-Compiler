@@ -1,11 +1,13 @@
-const base = require("./BehavioralFeature");
+const BehavioralFeature = require("./BehavioralFeature");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Reception");
 
 
 
 /// <summary>
 /// A reception may not be abstract.
 /// </summary>
-class Reception extends base.BehavioralFeature {
+class Reception extends codeGenMixin(BehavioralFeature) {
 
 	constructor() {
 
@@ -20,6 +22,4 @@ class Reception extends base.BehavioralFeature {
 
 }//end Reception
 
- module.exports = {
- 	Reception: Reception
- }
+ module.exports = Reception;

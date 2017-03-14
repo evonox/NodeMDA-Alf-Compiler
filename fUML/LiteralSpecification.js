@@ -1,8 +1,10 @@
-const base = require("./ValueSpecification");
+const ValueSpecification = require("./ValueSpecification");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/LiteralSpecification");
 
 
 
-class LiteralSpecification extends base.ValueSpecification {
+class LiteralSpecification extends codeGenMixin(ValueSpecification) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class LiteralSpecification extends base.ValueSpecification {
 
 }//end LiteralSpecification
 
- module.exports = {
- 	LiteralSpecification: LiteralSpecification
- }
+ module.exports = LiteralSpecification;

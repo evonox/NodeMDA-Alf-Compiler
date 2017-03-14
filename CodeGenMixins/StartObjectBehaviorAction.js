@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var StartObjectBehaviorActionCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "StartObjectBehaviorAction";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

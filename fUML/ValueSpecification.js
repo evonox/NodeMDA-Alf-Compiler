@@ -1,8 +1,10 @@
-const base = require("./TypedElement");
+const TypedElement = require("./TypedElement");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ValueSpecification");
 
 
 
-class ValueSpecification extends base.TypedElement {
+class ValueSpecification extends codeGenMixin(TypedElement) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class ValueSpecification extends base.TypedElement {
 
 }//end ValueSpecification
 
- module.exports = {
- 	ValueSpecification: ValueSpecification
- }
+ module.exports = ValueSpecification;

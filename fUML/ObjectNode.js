@@ -1,8 +1,11 @@
-const base = require("./TypedElement, ActivityNode");
+const TypedElement = require("./TypedElement");
+const ActivityNode = require("./ActivityNode");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ObjectNode");
 
 
 
-class ObjectNode extends base.TypedElement, ActivityNode {
+class ObjectNode extends codeGenMixin(mixin(TypedElement, ActivityNode)) {
 
 	constructor() {
 
@@ -14,6 +17,4 @@ class ObjectNode extends base.TypedElement, ActivityNode {
 
 }//end ObjectNode
 
- module.exports = {
- 	ObjectNode: ObjectNode
- }
+ module.exports = ObjectNode;

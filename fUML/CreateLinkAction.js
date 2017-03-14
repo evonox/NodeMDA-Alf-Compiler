@@ -1,8 +1,10 @@
-const base = require("./WriteLinkAction");
+const WriteLinkAction = require("./WriteLinkAction");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/CreateLinkAction");
 
 
 
-class CreateLinkAction extends base.WriteLinkAction {
+class CreateLinkAction extends codeGenMixin(WriteLinkAction) {
 
 	constructor() {
 
@@ -17,6 +19,4 @@ class CreateLinkAction extends base.WriteLinkAction {
 
 }//end CreateLinkAction
 
- module.exports = {
- 	CreateLinkAction: CreateLinkAction
- }
+ module.exports = CreateLinkAction;

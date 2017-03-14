@@ -1,8 +1,10 @@
-const base = require("./InstanceSpecification");
+const InstanceSpecification = require("./InstanceSpecification");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/EnumerationLiteral");
 
 
 
-class EnumerationLiteral extends base.InstanceSpecification {
+class EnumerationLiteral extends codeGenMixin(InstanceSpecification) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class EnumerationLiteral extends base.InstanceSpecification {
 
 }//end EnumerationLiteral
 
- module.exports = {
- 	EnumerationLiteral: EnumerationLiteral
- }
+ module.exports = EnumerationLiteral;

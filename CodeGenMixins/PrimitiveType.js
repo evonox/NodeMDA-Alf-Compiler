@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var PrimitiveTypeCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "PrimitiveType";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

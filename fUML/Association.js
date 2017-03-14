@@ -1,8 +1,10 @@
-const base = require("./Classifier");
+const Classifier = require("./Classifier");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Association");
 
 
 
-class Association extends base.Classifier {
+class Association extends codeGenMixin(Classifier) {
 
 	constructor() {
 
@@ -40,6 +42,4 @@ class Association extends base.Classifier {
 
 }//end Association
 
- module.exports = {
- 	Association: Association
- }
+ module.exports = Association;

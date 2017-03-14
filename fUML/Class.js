@@ -1,4 +1,6 @@
-const base = require("./BehavioredClassifier");
+const BehavioredClassifier = require("./BehavioredClassifier");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Class");
 
 
 
@@ -6,7 +8,7 @@ const base = require("./BehavioredClassifier");
 /// Only an active class may specialize an active class.
 /// Only an abstract class may have abstract behavioral features.
 /// </summary>
-class Class extends base.BehavioredClassifier {
+class Class extends codeGenMixin(BehavioredClassifier) {
 
 	constructor() {
 
@@ -38,6 +40,4 @@ class Class extends base.BehavioredClassifier {
 
 }//end Class
 
- module.exports = {
- 	Class: Class
- }
+ module.exports = Class;

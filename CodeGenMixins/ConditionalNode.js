@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var ConditionalNodeCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "ConditionalNode";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

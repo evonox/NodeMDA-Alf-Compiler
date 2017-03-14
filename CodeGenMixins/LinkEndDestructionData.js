@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var LinkEndDestructionDataCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "LinkEndDestructionData";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

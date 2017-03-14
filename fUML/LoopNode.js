@@ -1,8 +1,10 @@
-const base = require("./StructuredActivityNode");
+const StructuredActivityNode = require("./StructuredActivityNode");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/LoopNode");
 
 
 
-class LoopNode extends base.StructuredActivityNode {
+class LoopNode extends codeGenMixin(StructuredActivityNode) {
 
 	constructor() {
 
@@ -43,6 +45,4 @@ class LoopNode extends base.StructuredActivityNode {
 
 }//end LoopNode
 
- module.exports = {
- 	LoopNode: LoopNode
- }
+ module.exports = LoopNode;

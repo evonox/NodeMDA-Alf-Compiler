@@ -1,8 +1,10 @@
-const base = require("./Classifier");
+const Classifier = require("./Classifier");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/DataType");
 
 
 
-class DataType extends base.Classifier {
+class DataType extends codeGenMixin(Classifier) {
 
 	constructor() {
 
@@ -17,6 +19,4 @@ class DataType extends base.Classifier {
 
 }//end DataType
 
- module.exports = {
- 	DataType: DataType
- }
+ module.exports = DataType;

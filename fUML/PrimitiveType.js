@@ -1,8 +1,10 @@
-const base = require("./DataType");
+const DataType = require("./DataType");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/PrimitiveType");
 
 
 
-class PrimitiveType extends base.DataType {
+class PrimitiveType extends codeGenMixin(DataType) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class PrimitiveType extends base.DataType {
 
 }//end PrimitiveType
 
- module.exports = {
- 	PrimitiveType: PrimitiveType
- }
+ module.exports = PrimitiveType;

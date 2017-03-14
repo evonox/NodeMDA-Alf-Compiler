@@ -1,8 +1,10 @@
-const base = require("./FinalNode");
+const FinalNode = require("./FinalNode");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ActivityFinalNode");
 
 
 
-class ActivityFinalNode extends base.FinalNode {
+class ActivityFinalNode extends codeGenMixin(FinalNode) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class ActivityFinalNode extends base.FinalNode {
 
 }//end ActivityFinalNode
 
- module.exports = {
- 	ActivityFinalNode: ActivityFinalNode
- }
+ module.exports = ActivityFinalNode;

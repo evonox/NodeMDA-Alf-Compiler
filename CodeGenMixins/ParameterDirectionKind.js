@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var ParameterDirectionKindCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "ParameterDirectionKind";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

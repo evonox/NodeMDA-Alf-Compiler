@@ -1,8 +1,10 @@
-const base = require("./NamedElement");
+const NamedElement = require("./NamedElement");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Trigger");
 
 
 
-class Trigger extends base.NamedElement {
+class Trigger extends codeGenMixin(NamedElement) {
 
 	constructor() {
 
@@ -17,6 +19,4 @@ class Trigger extends base.NamedElement {
 
 }//end Trigger
 
- module.exports = {
- 	Trigger: Trigger
- }
+ module.exports = Trigger;

@@ -1,8 +1,10 @@
-const base = require("./LiteralSpecification");
+const LiteralSpecification = require("./LiteralSpecification");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/LiteralBoolean");
 
 
 
-class LiteralBoolean extends base.LiteralSpecification {
+class LiteralBoolean extends codeGenMixin(LiteralSpecification) {
 
 	constructor() {
 
@@ -17,6 +19,4 @@ class LiteralBoolean extends base.LiteralSpecification {
 
 }//end LiteralBoolean
 
- module.exports = {
- 	LiteralBoolean: LiteralBoolean
- }
+ module.exports = LiteralBoolean;

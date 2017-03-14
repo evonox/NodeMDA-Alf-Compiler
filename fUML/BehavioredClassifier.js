@@ -1,8 +1,10 @@
-const base = require("./Classifier");
+const Classifier = require("./Classifier");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/BehavioredClassifier");
 
 
 
-class BehavioredClassifier extends base.Classifier {
+class BehavioredClassifier extends codeGenMixin(Classifier) {
 
 	constructor() {
 
@@ -21,6 +23,4 @@ class BehavioredClassifier extends base.Classifier {
 
 }//end BehavioredClassifier
 
- module.exports = {
- 	BehavioredClassifier: BehavioredClassifier
- }
+ module.exports = BehavioredClassifier;

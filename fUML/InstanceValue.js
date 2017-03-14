@@ -1,8 +1,10 @@
-const base = require("./ValueSpecification");
+const ValueSpecification = require("./ValueSpecification");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/InstanceValue");
 
 
 
-class InstanceValue extends base.ValueSpecification {
+class InstanceValue extends codeGenMixin(ValueSpecification) {
 
 	constructor() {
 
@@ -17,6 +19,4 @@ class InstanceValue extends base.ValueSpecification {
 
 }//end InstanceValue
 
- module.exports = {
- 	InstanceValue: InstanceValue
- }
+ module.exports = InstanceValue;

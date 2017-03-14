@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var NamespaceCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "Namespace";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

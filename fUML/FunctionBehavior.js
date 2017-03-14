@@ -1,8 +1,10 @@
-const base = require("./OpaqueBehavior");
+const OpaqueBehavior = require("./OpaqueBehavior");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/FunctionBehavior");
 
 
 
-class FunctionBehavior extends base.OpaqueBehavior {
+class FunctionBehavior extends codeGenMixin(OpaqueBehavior) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class FunctionBehavior extends base.OpaqueBehavior {
 
 }//end FunctionBehavior
 
- module.exports = {
- 	FunctionBehavior: FunctionBehavior
- }
+ module.exports = FunctionBehavior;

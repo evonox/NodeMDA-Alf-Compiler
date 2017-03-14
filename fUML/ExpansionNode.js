@@ -1,8 +1,10 @@
-const base = require("./ObjectNode");
+const ObjectNode = require("./ObjectNode");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ExpansionNode");
 
 
 
-class ExpansionNode extends base.ObjectNode {
+class ExpansionNode extends codeGenMixin(ObjectNode) {
 
 	constructor() {
 
@@ -21,6 +23,4 @@ class ExpansionNode extends base.ObjectNode {
 
 }//end ExpansionNode
 
- module.exports = {
- 	ExpansionNode: ExpansionNode
- }
+ module.exports = ExpansionNode;

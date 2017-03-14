@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var ClassifierCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "Classifier";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

@@ -1,8 +1,11 @@
-const base = require("./PackageableElement, Namespace");
+const PackageableElement = require("./PackageableElement");
+const Namespace = require("./Namespace");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Package");
 
 
 
-class Package extends base.PackageableElement, Namespace {
+class Package extends codeGenMixin(mixin(PackageableElement, Namespace)) {
 
 	constructor() {
 
@@ -17,6 +20,4 @@ class Package extends base.PackageableElement, Namespace {
 
 }//end Package
 
- module.exports = {
- 	Package: Package
- }
+ module.exports = Package;

@@ -1,8 +1,9 @@
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/AggregationKind");
 
 
 
-
-class AggregationKind extends Object {
+class AggregationKind extends codeGenMixin(Object) {
 
 	constructor() {
 
@@ -25,6 +26,4 @@ class AggregationKind extends Object {
 
 }//end AggregationKind
 
- module.exports = {
- 	AggregationKind: AggregationKind
- }
+ module.exports = AggregationKind;

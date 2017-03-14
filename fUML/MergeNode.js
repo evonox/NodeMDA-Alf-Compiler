@@ -1,8 +1,10 @@
-const base = require("./ControlNode");
+const ControlNode = require("./ControlNode");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/MergeNode");
 
 
 
-class MergeNode extends base.ControlNode {
+class MergeNode extends codeGenMixin(ControlNode) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class MergeNode extends base.ControlNode {
 
 }//end MergeNode
 
- module.exports = {
- 	MergeNode: MergeNode
- }
+ module.exports = MergeNode;

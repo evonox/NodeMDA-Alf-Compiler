@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var PackageCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "Package";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());
@@ -13,7 +15,7 @@ var PackageCodeGenMixin = (Base) => class extends Base {
 
         json.classes = this.packagedElement
         .filter((element) => {
-            return element instanceof fUML.Class;
+            return element.getType() === "Class";
         })
         .map((element) => {
                 return element.genJson();

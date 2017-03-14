@@ -1,8 +1,10 @@
-const base = require("./LinkAction");
+const LinkAction = require("./LinkAction");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ReadLinkAction");
 
 
 
-class ReadLinkAction extends base.LinkAction {
+class ReadLinkAction extends codeGenMixin(LinkAction) {
 
 	constructor() {
 
@@ -18,6 +20,4 @@ class ReadLinkAction extends base.LinkAction {
 
 }//end ReadLinkAction
 
- module.exports = {
- 	ReadLinkAction: ReadLinkAction
- }
+ module.exports = ReadLinkAction;

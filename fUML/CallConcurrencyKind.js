@@ -1,8 +1,9 @@
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/CallConcurrencyKind");
 
 
 
-
-class CallConcurrencyKind extends Object {
+class CallConcurrencyKind extends codeGenMixin(Object) {
 
 	constructor() {
 
@@ -12,6 +13,4 @@ class CallConcurrencyKind extends Object {
 
 }//end CallConcurrencyKind
 
- module.exports = {
- 	CallConcurrencyKind: CallConcurrencyKind
- }
+ module.exports = CallConcurrencyKind;

@@ -1,8 +1,11 @@
-const base = require("./MultiplicityElement, ObjectNode");
+const MultiplicityElement = require("./MultiplicityElement");
+const ObjectNode = require("./ObjectNode");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Pin");
 
 
 
-class Pin extends base.MultiplicityElement, ObjectNode {
+class Pin extends codeGenMixin(mixin(MultiplicityElement, ObjectNode)) {
 
 	constructor() {
 
@@ -14,6 +17,4 @@ class Pin extends base.MultiplicityElement, ObjectNode {
 
 }//end Pin
 
- module.exports = {
- 	Pin: Pin
- }
+ module.exports = Pin;

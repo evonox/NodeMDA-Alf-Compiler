@@ -1,8 +1,10 @@
-const base = require("./Action");
+const Action = require("./Action");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ReduceAction");
 
 
 
-class ReduceAction extends base.Action {
+class ReduceAction extends codeGenMixin(Action) {
 
 	constructor() {
 
@@ -31,6 +33,4 @@ class ReduceAction extends base.Action {
 
 }//end ReduceAction
 
- module.exports = {
- 	ReduceAction: ReduceAction
- }
+ module.exports = ReduceAction;

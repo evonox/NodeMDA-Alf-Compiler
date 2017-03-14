@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var LiteralSpecificationCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "LiteralSpecification";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

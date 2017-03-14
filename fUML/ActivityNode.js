@@ -1,8 +1,10 @@
-const base = require("./RedefinableElement");
+const RedefinableElement = require("./RedefinableElement");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ActivityNode");
 
 
 
-class ActivityNode extends base.RedefinableElement {
+class ActivityNode extends codeGenMixin(RedefinableElement) {
 
 	constructor() {
 
@@ -21,6 +23,4 @@ class ActivityNode extends base.RedefinableElement {
 
 }//end ActivityNode
 
- module.exports = {
- 	ActivityNode: ActivityNode
- }
+ module.exports = ActivityNode;

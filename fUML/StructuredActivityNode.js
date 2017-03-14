@@ -1,4 +1,6 @@
-const base = require("./Action");
+const Action = require("./Action");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/StructuredActivityNode");
 
 
 
@@ -6,7 +8,7 @@ const base = require("./Action");
 /// import fUML.Syntax.Activities.IntermediateActivities.*;
 /// import fUML.Syntax.Actions.BasicActions.*;
 /// </summary>
-class StructuredActivityNode extends base.Action {
+class StructuredActivityNode extends codeGenMixin(Action) {
 
 	constructor() {
 
@@ -32,6 +34,4 @@ class StructuredActivityNode extends base.Action {
 
 }//end StructuredActivityNode
 
- module.exports = {
- 	StructuredActivityNode: StructuredActivityNode
- }
+ module.exports = StructuredActivityNode;

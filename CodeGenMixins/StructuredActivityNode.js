@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var StructuredActivityNodeCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "StructuredActivityNode";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

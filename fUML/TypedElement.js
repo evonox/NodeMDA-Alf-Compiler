@@ -1,8 +1,10 @@
-const base = require("./NamedElement");
+const NamedElement = require("./NamedElement");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/TypedElement");
 
 
 
-class TypedElement extends base.NamedElement {
+class TypedElement extends codeGenMixin(NamedElement) {
 
 	constructor() {
 
@@ -19,6 +21,4 @@ class TypedElement extends base.NamedElement {
 
 }//end TypedElement
 
- module.exports = {
- 	TypedElement: TypedElement
- }
+ module.exports = TypedElement;

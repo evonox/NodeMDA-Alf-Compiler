@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var ElementImportCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "ElementImport";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

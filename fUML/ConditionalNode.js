@@ -1,8 +1,10 @@
-const base = require("./StructuredActivityNode");
+const StructuredActivityNode = require("./StructuredActivityNode");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ConditionalNode");
 
 
 
-class ConditionalNode extends base.StructuredActivityNode {
+class ConditionalNode extends codeGenMixin(StructuredActivityNode) {
 
 	constructor() {
 
@@ -29,6 +31,4 @@ class ConditionalNode extends base.StructuredActivityNode {
 
 }//end ConditionalNode
 
- module.exports = {
- 	ConditionalNode: ConditionalNode
- }
+ module.exports = ConditionalNode;

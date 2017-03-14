@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var ReclassifyObjectActionCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "ReclassifyObjectAction";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

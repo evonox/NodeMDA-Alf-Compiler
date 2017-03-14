@@ -1,8 +1,10 @@
-const base = require("./ActivityEdge");
+const ActivityEdge = require("./ActivityEdge");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ObjectFlow");
 
 
 
-class ObjectFlow extends base.ActivityEdge {
+class ObjectFlow extends codeGenMixin(ActivityEdge) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class ObjectFlow extends base.ActivityEdge {
 
 }//end ObjectFlow
 
- module.exports = {
- 	ObjectFlow: ObjectFlow
- }
+ module.exports = ObjectFlow;

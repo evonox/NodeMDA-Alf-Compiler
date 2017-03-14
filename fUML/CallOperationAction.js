@@ -1,8 +1,10 @@
-const base = require("./CallAction");
+const CallAction = require("./CallAction");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/CallOperationAction");
 
 
 
-class CallOperationAction extends base.CallAction {
+class CallOperationAction extends codeGenMixin(CallAction) {
 
 	constructor() {
 
@@ -23,6 +25,4 @@ class CallOperationAction extends base.CallAction {
 
 }//end CallOperationAction
 
- module.exports = {
- 	CallOperationAction: CallOperationAction
- }
+ module.exports = CallOperationAction;

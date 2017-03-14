@@ -1,8 +1,9 @@
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Element");
 
 
 
-
-class Element extends Object {
+class Element extends codeGenMixin(Object) {
 
 	constructor() {
 
@@ -16,6 +17,4 @@ class Element extends Object {
 
 }//end Element
 
- module.exports = {
- 	Element: Element
- }
+ module.exports = Element;

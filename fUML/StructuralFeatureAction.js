@@ -1,8 +1,10 @@
-const base = require("./Action");
+const Action = require("./Action");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/StructuralFeatureAction");
 
 
 
-class StructuralFeatureAction extends base.Action {
+class StructuralFeatureAction extends codeGenMixin(Action) {
 
 	constructor() {
 
@@ -22,6 +24,4 @@ class StructuralFeatureAction extends base.Action {
 
 }//end StructuralFeatureAction
 
- module.exports = {
- 	StructuralFeatureAction: StructuralFeatureAction
- }
+ module.exports = StructuralFeatureAction;

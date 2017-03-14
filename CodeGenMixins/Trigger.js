@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var TriggerCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "Trigger";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

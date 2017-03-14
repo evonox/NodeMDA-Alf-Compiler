@@ -1,8 +1,10 @@
-const base = require("./Element");
+const Element = require("./Element");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Generalization");
 
 
 
-class Generalization extends base.Element {
+class Generalization extends codeGenMixin(Element) {
 
 	constructor() {
 
@@ -24,6 +26,4 @@ class Generalization extends base.Element {
 
 }//end Generalization
 
- module.exports = {
- 	Generalization: Generalization
- }
+ module.exports = Generalization;

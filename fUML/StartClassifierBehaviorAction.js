@@ -1,8 +1,10 @@
-const base = require("./Action");
+const Action = require("./Action");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/StartClassifierBehaviorAction");
 
 
 
-class StartClassifierBehaviorAction extends base.Action {
+class StartClassifierBehaviorAction extends codeGenMixin(Action) {
 
 	constructor() {
 
@@ -17,6 +19,4 @@ class StartClassifierBehaviorAction extends base.Action {
 
 }//end StartClassifierBehaviorAction
 
- module.exports = {
- 	StartClassifierBehaviorAction: StartClassifierBehaviorAction
- }
+ module.exports = StartClassifierBehaviorAction;

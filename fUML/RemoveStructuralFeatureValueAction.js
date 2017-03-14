@@ -1,8 +1,10 @@
-const base = require("./WriteStructuralFeatureAction");
+const WriteStructuralFeatureAction = require("./WriteStructuralFeatureAction");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/RemoveStructuralFeatureValueAction");
 
 
 
-class RemoveStructuralFeatureValueAction extends base.WriteStructuralFeatureAction {
+class RemoveStructuralFeatureValueAction extends codeGenMixin(WriteStructuralFeatureAction) {
 
 	constructor() {
 
@@ -24,6 +26,4 @@ class RemoveStructuralFeatureValueAction extends base.WriteStructuralFeatureActi
 
 }//end RemoveStructuralFeatureValueAction
 
- module.exports = {
- 	RemoveStructuralFeatureValueAction: RemoveStructuralFeatureValueAction
- }
+ module.exports = RemoveStructuralFeatureValueAction;

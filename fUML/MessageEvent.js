@@ -1,8 +1,10 @@
-const base = require("./Event");
+const Event = require("./Event");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/MessageEvent");
 
 
 
-class MessageEvent extends base.Event {
+class MessageEvent extends codeGenMixin(Event) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class MessageEvent extends base.Event {
 
 }//end MessageEvent
 
- module.exports = {
- 	MessageEvent: MessageEvent
- }
+ module.exports = MessageEvent;

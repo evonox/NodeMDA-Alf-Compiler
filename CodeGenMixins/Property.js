@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var PropertyCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "Property";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var InputPinCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "InputPin";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

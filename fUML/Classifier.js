@@ -1,8 +1,11 @@
-const base = require("./Namespace, Type");
+const Namespace = require("./Namespace");
+const Type = require("./Type");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Classifier");
 
 
 
-class Classifier extends base.Namespace, Type {
+class Classifier extends codeGenMixin(mixin(Namespace, Type)) {
 
 	constructor() {
 
@@ -45,6 +48,4 @@ class Classifier extends base.Namespace, Type {
 
 }//end Classifier
 
- module.exports = {
- 	Classifier: Classifier
- }
+ module.exports = Classifier;

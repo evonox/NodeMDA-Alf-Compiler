@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var ClearAssociationActionCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "ClearAssociationAction";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

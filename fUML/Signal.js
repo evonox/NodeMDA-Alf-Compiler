@@ -1,8 +1,10 @@
-const base = require("./Classifier");
+const Classifier = require("./Classifier");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Signal");
 
 
 
-class Signal extends base.Classifier {
+class Signal extends codeGenMixin(Classifier) {
 
 	constructor() {
 
@@ -18,6 +20,4 @@ class Signal extends base.Classifier {
 
 }//end Signal
 
- module.exports = {
- 	Signal: Signal
- }
+ module.exports = Signal;

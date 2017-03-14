@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var CallOperationActionCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "CallOperationAction";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

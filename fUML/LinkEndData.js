@@ -1,8 +1,10 @@
-const base = require("./Element");
+const Element = require("./Element");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/LinkEndData");
 
 
 
-class LinkEndData extends base.Element {
+class LinkEndData extends codeGenMixin(Element) {
 
 	constructor() {
 
@@ -22,6 +24,4 @@ class LinkEndData extends base.Element {
 
 }//end LinkEndData
 
- module.exports = {
- 	LinkEndData: LinkEndData
- }
+ module.exports = LinkEndData;

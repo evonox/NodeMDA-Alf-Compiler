@@ -1,8 +1,11 @@
-const base = require("./MultiplicityElement, TypedElement");
+const MultiplicityElement = require("./MultiplicityElement");
+const TypedElement = require("./TypedElement");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Parameter");
 
 
 
-class Parameter extends base.MultiplicityElement, TypedElement {
+class Parameter extends codeGenMixin(mixin(MultiplicityElement, TypedElement)) {
 
 	constructor() {
 
@@ -18,6 +21,4 @@ class Parameter extends base.MultiplicityElement, TypedElement {
 
 }//end Parameter
 
- module.exports = {
- 	Parameter: Parameter
- }
+ module.exports = Parameter;

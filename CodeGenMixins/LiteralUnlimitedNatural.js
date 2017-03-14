@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var LiteralUnlimitedNaturalCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "LiteralUnlimitedNatural";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

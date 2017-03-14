@@ -1,8 +1,10 @@
-const base = require("./PackageableElement");
+const PackageableElement = require("./PackageableElement");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Event");
 
 
 
-class Event extends base.PackageableElement {
+class Event extends codeGenMixin(PackageableElement) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class Event extends base.PackageableElement {
 
 }//end Event
 
- module.exports = {
- 	Event: Event
- }
+ module.exports = Event;

@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var ExpansionRegionCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "ExpansionRegion";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

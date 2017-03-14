@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var LoopNodeCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "LoopNode";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

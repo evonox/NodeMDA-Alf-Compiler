@@ -1,8 +1,10 @@
-const base = require("./ObjectNode");
+const ObjectNode = require("./ObjectNode");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ActivityParameterNode");
 
 
 
-class ActivityParameterNode extends base.ObjectNode {
+class ActivityParameterNode extends codeGenMixin(ObjectNode) {
 
 	constructor() {
 
@@ -17,6 +19,4 @@ class ActivityParameterNode extends base.ObjectNode {
 
 }//end ActivityParameterNode
 
- module.exports = {
- 	ActivityParameterNode: ActivityParameterNode
- }
+ module.exports = ActivityParameterNode;

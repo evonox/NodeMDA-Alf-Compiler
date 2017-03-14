@@ -1,8 +1,10 @@
-const base = require("./Action");
+const Action = require("./Action");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ReadIsClassifiedObjectAction");
 
 
 
-class ReadIsClassifiedObjectAction extends base.Action {
+class ReadIsClassifiedObjectAction extends codeGenMixin(Action) {
 
 	constructor() {
 
@@ -29,6 +31,4 @@ class ReadIsClassifiedObjectAction extends base.Action {
 
 }//end ReadIsClassifiedObjectAction
 
- module.exports = {
- 	ReadIsClassifiedObjectAction: ReadIsClassifiedObjectAction
- }
+ module.exports = ReadIsClassifiedObjectAction;

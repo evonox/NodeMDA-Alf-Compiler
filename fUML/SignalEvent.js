@@ -1,8 +1,10 @@
-const base = require("./MessageEvent");
+const MessageEvent = require("./MessageEvent");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/SignalEvent");
 
 
 
-class SignalEvent extends base.MessageEvent {
+class SignalEvent extends codeGenMixin(MessageEvent) {
 
 	constructor() {
 
@@ -17,6 +19,4 @@ class SignalEvent extends base.MessageEvent {
 
 }//end SignalEvent
 
- module.exports = {
- 	SignalEvent: SignalEvent
- }
+ module.exports = SignalEvent;

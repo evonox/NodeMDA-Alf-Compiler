@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var CallConcurrencyKindCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "CallConcurrencyKind";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

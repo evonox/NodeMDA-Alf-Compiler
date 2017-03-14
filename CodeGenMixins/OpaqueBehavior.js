@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var OpaqueBehaviorCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "OpaqueBehavior";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

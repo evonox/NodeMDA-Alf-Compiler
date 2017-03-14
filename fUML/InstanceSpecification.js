@@ -1,8 +1,10 @@
-const base = require("./NamedElement");
+const NamedElement = require("./NamedElement");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/InstanceSpecification");
 
 
 
-class InstanceSpecification extends base.NamedElement {
+class InstanceSpecification extends codeGenMixin(NamedElement) {
 
 	constructor() {
 
@@ -26,6 +28,4 @@ class InstanceSpecification extends base.NamedElement {
 
 }//end InstanceSpecification
 
- module.exports = {
- 	InstanceSpecification: InstanceSpecification
- }
+ module.exports = InstanceSpecification;

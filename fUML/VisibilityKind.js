@@ -1,8 +1,9 @@
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/VisibilityKind");
 
 
 
-
-class VisibilityKind extends Object {
+class VisibilityKind extends codeGenMixin(Object) {
 
 	constructor() {
 
@@ -15,6 +16,4 @@ class VisibilityKind extends Object {
 
 }//end VisibilityKind
 
- module.exports = {
- 	VisibilityKind: VisibilityKind
- }
+ module.exports = VisibilityKind;

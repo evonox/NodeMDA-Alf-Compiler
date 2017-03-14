@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var DestroyObjectActionCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "DestroyObjectAction";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

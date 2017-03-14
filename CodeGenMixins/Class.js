@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var ClassCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "Class";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());
@@ -16,7 +18,7 @@ var ClassCodeGenMixin = (Base) => class extends Base {
         json.operations = this.ownedOperation.map((operation) => {
             return operation.genJson();
         });       
-
+      
         return json;
     }
 }

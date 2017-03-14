@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var BehavioredClassifierCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "BehavioredClassifier";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

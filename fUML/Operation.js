@@ -1,8 +1,10 @@
-const base = require("./BehavioralFeature");
+const BehavioralFeature = require("./BehavioralFeature");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Operation");
 
 
 
-class Operation extends base.BehavioralFeature {
+class Operation extends codeGenMixin(BehavioralFeature) {
 
 	constructor() {
 
@@ -54,6 +56,4 @@ class Operation extends base.BehavioralFeature {
 
 }//end Operation
 
- module.exports = {
- 	Operation: Operation
- }
+ module.exports = Operation;

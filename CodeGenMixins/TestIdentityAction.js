@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var TestIdentityActionCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "TestIdentityAction";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

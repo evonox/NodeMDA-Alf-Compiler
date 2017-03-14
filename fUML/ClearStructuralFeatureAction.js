@@ -1,8 +1,10 @@
-const base = require("./StructuralFeatureAction");
+const StructuralFeatureAction = require("./StructuralFeatureAction");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ClearStructuralFeatureAction");
 
 
 
-class ClearStructuralFeatureAction extends base.StructuralFeatureAction {
+class ClearStructuralFeatureAction extends codeGenMixin(StructuralFeatureAction) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class ClearStructuralFeatureAction extends base.StructuralFeatureAction {
 
 }//end ClearStructuralFeatureAction
 
- module.exports = {
- 	ClearStructuralFeatureAction: ClearStructuralFeatureAction
- }
+ module.exports = ClearStructuralFeatureAction;

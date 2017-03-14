@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var ActivityParameterNodeCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "ActivityParameterNode";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

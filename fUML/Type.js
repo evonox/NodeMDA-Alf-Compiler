@@ -1,8 +1,10 @@
-const base = require("./PackageableElement");
+const PackageableElement = require("./PackageableElement");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Type");
 
 
 
-class Type extends base.PackageableElement {
+class Type extends codeGenMixin(PackageableElement) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class Type extends base.PackageableElement {
 
 }//end Type
 
- module.exports = {
- 	Type: Type
- }
+ module.exports = Type;

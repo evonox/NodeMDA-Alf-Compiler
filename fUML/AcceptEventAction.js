@@ -1,4 +1,6 @@
-const base = require("./Action");
+const Action = require("./Action");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/AcceptEventAction");
 
 
 
@@ -8,7 +10,7 @@ const base = require("./Action");
 /// An accept event action may not be contained directly or indirectly in the test
 /// part of a clause or loop node.
 /// </summary>
-class AcceptEventAction extends base.Action {
+class AcceptEventAction extends codeGenMixin(Action) {
 
 	constructor() {
 
@@ -35,6 +37,4 @@ class AcceptEventAction extends base.Action {
 
 }//end AcceptEventAction
 
- module.exports = {
- 	AcceptEventAction: AcceptEventAction
- }
+ module.exports = AcceptEventAction;

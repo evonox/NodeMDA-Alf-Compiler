@@ -1,8 +1,10 @@
-const base = require("./CallAction");
+const CallAction = require("./CallAction");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/StartObjectBehaviorAction");
 
 
 
-class StartObjectBehaviorAction extends base.CallAction {
+class StartObjectBehaviorAction extends codeGenMixin(CallAction) {
 
 	constructor() {
 
@@ -14,6 +16,4 @@ class StartObjectBehaviorAction extends base.CallAction {
 
 }//end StartObjectBehaviorAction
 
- module.exports = {
- 	StartObjectBehaviorAction: StartObjectBehaviorAction
- }
+ module.exports = StartObjectBehaviorAction;

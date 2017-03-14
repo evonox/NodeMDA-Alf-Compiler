@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var DecisionNodeCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "DecisionNode";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

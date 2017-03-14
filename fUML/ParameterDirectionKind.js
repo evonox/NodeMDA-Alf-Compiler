@@ -1,8 +1,9 @@
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ParameterDirectionKind");
 
 
 
-
-class ParameterDirectionKind extends Object {
+class ParameterDirectionKind extends codeGenMixin(Object) {
 
 	constructor() {
 
@@ -31,6 +32,4 @@ class ParameterDirectionKind extends Object {
 
 }//end ParameterDirectionKind
 
- module.exports = {
- 	ParameterDirectionKind: ParameterDirectionKind
- }
+ module.exports = ParameterDirectionKind;

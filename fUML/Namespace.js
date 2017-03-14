@@ -1,8 +1,10 @@
-const base = require("./NamedElement");
+const NamedElement = require("./NamedElement");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Namespace");
 
 
 
-class Namespace extends base.NamedElement {
+class Namespace extends codeGenMixin(NamedElement) {
 
 	constructor() {
 
@@ -18,6 +20,4 @@ class Namespace extends base.NamedElement {
 
 }//end Namespace
 
- module.exports = {
- 	Namespace: Namespace
- }
+ module.exports = Namespace;

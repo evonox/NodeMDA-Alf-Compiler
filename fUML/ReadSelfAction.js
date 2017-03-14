@@ -1,8 +1,10 @@
-const base = require("./Action");
+const Action = require("./Action");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/ReadSelfAction");
 
 
 
-class ReadSelfAction extends base.Action {
+class ReadSelfAction extends codeGenMixin(Action) {
 
 	constructor() {
 
@@ -17,6 +19,4 @@ class ReadSelfAction extends base.Action {
 
 }//end ReadSelfAction
 
- module.exports = {
- 	ReadSelfAction: ReadSelfAction
- }
+ module.exports = ReadSelfAction;

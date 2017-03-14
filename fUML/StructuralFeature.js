@@ -1,8 +1,12 @@
-const base = require("./MultiplicityElement, TypedElement, Feature");
+const MultiplicityElement = require("./MultiplicityElement");
+const TypedElement = require("./TypedElement");
+const Feature = require("./Feature");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/StructuralFeature");
 
 
 
-class StructuralFeature extends base.MultiplicityElement, TypedElement, Feature {
+class StructuralFeature extends codeGenMixin(mixin(MultiplicityElement, mixin(TypedElement, Feature))) {
 
 	constructor() {
 
@@ -18,6 +22,4 @@ class StructuralFeature extends base.MultiplicityElement, TypedElement, Feature 
 
 }//end StructuralFeature
 
- module.exports = {
- 	StructuralFeature: StructuralFeature
- }
+ module.exports = StructuralFeature;

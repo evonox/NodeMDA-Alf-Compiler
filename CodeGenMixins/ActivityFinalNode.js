@@ -1,7 +1,9 @@
 
-const fUML = require("../fUML/fUML");
-
 var ActivityFinalNodeCodeGenMixin = (Base) => class extends Base {
+
+    getType() {
+        return "ActivityFinalNode";
+    }
 
     genJson() {
         let json = Object.assign(super.genJson());

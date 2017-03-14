@@ -1,8 +1,10 @@
-const base = require("./ExecutableNode");
+const ExecutableNode = require("./ExecutableNode");
+const mixin = require("mixin");
+const codeGenMixin = require("../CodeGenMixins/Action");
 
 
 
-class Action extends base.ExecutableNode {
+class Action extends codeGenMixin(ExecutableNode) {
 
 	constructor() {
 
@@ -24,6 +26,4 @@ class Action extends base.ExecutableNode {
 
 }//end Action
 
- module.exports = {
- 	Action: Action
- }
+ module.exports = Action;
