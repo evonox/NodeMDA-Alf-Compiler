@@ -6,7 +6,7 @@ var ElementCodeGenMixin = (Base) => class extends Base {
     }
 
     genJson() {
-        let json = Object.assign(super.genJson());
+        let json = {};
         json.type = "";
 
         

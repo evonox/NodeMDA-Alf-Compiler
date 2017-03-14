@@ -1,0 +1,1 @@
+xcopy .\*.* "c:\Users\Viktor\AppData\Roaming\npm\node_modules\nodemda-executable\" /s /y

@@ -6,6 +6,7 @@ const codeGenMixin = require("../CodeGenMixins/Element");
 class Element extends codeGenMixin(Object) {
 
 	constructor() {
+		super();
 
 		this.ownedComment=null;
 		/**

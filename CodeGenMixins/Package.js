@@ -9,8 +9,8 @@ var PackageCodeGenMixin = (Base) => class extends Base {
         let json = Object.assign(super.genJson());
         json.type = "package";
 
-        json.childPackages = this.nestedPackage.map((package) => {
-            return package.genJson();
+        json.childPackages = this.nestedPackage.map((childPackage) => {
+            return childPackage.genJson();
         });
 
         json.classes = this.packagedElement

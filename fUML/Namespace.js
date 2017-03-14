@@ -7,9 +7,8 @@ const codeGenMixin = require("../CodeGenMixins/Namespace");
 class Namespace extends codeGenMixin(NamedElement) {
 
 	constructor() {
-
 		super();
-
+		
 		this.importedMember=null;
 		this.packageImport=null;
 		this.elementImport=null;

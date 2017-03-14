@@ -9,7 +9,7 @@ var BehavioralFeatureCodeGenMixin = (Base) => class extends Base {
         let json = Object.assign(super.genJson());
         json.type = "";
 
-        
+        json.isAbstract = this.isAbstract;
 
         return json;
     }

@@ -9,9 +9,14 @@ var ClassCodeGenMixin = (Base) => class extends Base {
         let json = Object.assign(super.genJson());
         json.type = "class";
 
-        json.superClassName = this.superClass[0].name;
-        json.superClassPath = this.superClass[0].qualifiedName;
-
+        if(this.hasSuperclass()) {
+            json.superClassName = this.superClass[0].name;
+            json.superClassPath = this.superClass[0].qualifiedName;
+        } else {
+            json.superClassName = null;
+            json.superClassPath = null;
+        }
+        
         json.attributes = this.ownedAttribute.map((attribute) => {
             return attribute.genJson();
         });
@@ -20,6 +25,11 @@ var ClassCodeGenMixin = (Base) => class extends Base {
         });       
       
         return json;
+    }
+
+    hasSuperclass() {
+        return this.superClass.length !== undefined && this.superClass !== null
+            && this.superClass instanceof Array && this.superClass.length > 0;
     }
 }
 

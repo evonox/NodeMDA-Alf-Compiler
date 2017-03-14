@@ -5,7 +5,7 @@ class UMLElement {
     }
 
     addChildElement(childElement) {
-        this.childElements(childElement);
+        this.childElements.push(childElement);
     }
 
     get name() {
@@ -24,7 +24,7 @@ class UMLElement {
     getNamespace(namespace) {
         namespace = namespace.slice(0);
         if(namespace.length === 0) return this;
-        let name = namespace.unshift();
+        let name = namespace.shift();
         let childElement = this.getChildElementByName(name);
         if(childElement === null) return null;
         else return childElement.getNamespace(namespace);
@@ -245,13 +245,13 @@ class MetaModelQueryFacade {
 
     parseClasses() {
         this.metaModel.classes.every((classElement) => {
-            let packagePath = classElement._package.nameAsArray();
+            let packagePath = classElement._package === null ? [] : classElement._package.nameAsArray;
             this.addPackagePath(packagePath);
-            let package = this.rootPackage.getNamespace(packagePath);
-            if(package === null)
+            let packageElement = this.rootPackage.getNamespace(packagePath);
+            if(packageElement === null)
                 throw new Error("Cannot add class to a package. Package not found.");
             let umlClass = new Class(classElement)
-            package.addChildElement(umlClass);
+            packageElement.addChildElement(umlClass);
             this.parseOperations(classElement, umlClass);
             this.parseAttributes(classElement, umlClass);
             this.parseAssociations(classElement, umlClass);
@@ -298,32 +298,33 @@ class MetaModelQueryFacade {
 
     parseDataTypes() {
         this.metaModel.datatypes.every ((datatype) => {
-            if(! datatype.isObject()) return true;
+            if(! datatype.isObject) return true;
             // TODO Cannot get from NodeMDA the right delmiter in loose-coupling way
             let packagePath = datatype.packageName.split("::"); 
             this.addPackagePath(packagePath);
-            let package = this.rootPackage.getNamespace(packagePath);
-            if(package === null)
-                throw new Error("Cannot add datatype to a package. Package not found.");
-            package.addChildElement(new DataType(datatype));
+            let packageElement = this.rootPackage.getNamespace(packagePath);
+            if(packageElement === null)
+                throw new Error("Cannot add datatype to a packageElement. Package not found.");
+            packageElement.addChildElement(new DataType(datatype));
             return true;
         });
     }
 
     addPackagePath(packagePath) {
+        console.dir(packagePath);
         packagePath = packagePath.slice(0);
         this.addPackage(this.rootPackage, packagePath);
     }
 
     addPackage(parentPackage, pathToAdd) {
         if(pathToAdd.length === 0) return;
-        let packageName = pathToAdd.unshift();
-        let package =  parentPackage.getChildPackage(packageName);
-        if(package === null) {
-            package = new Package(packageName);
-            parentPackage.addChildElement(package);
+        let packageName = pathToAdd.shift();
+        let packageElement =  parentPackage.getChildPackage(packageName);
+        if(packageElement === null) {
+            packageElement = new Package(packageName);
+            parentPackage.addChildElement(packageElement);
         }
-        this.addPackage(package, pathToAdd);
+        this.addPackage(packageElement, pathToAdd);
     }
 }
 

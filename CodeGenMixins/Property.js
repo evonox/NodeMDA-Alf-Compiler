@@ -7,9 +7,12 @@ var PropertyCodeGenMixin = (Base) => class extends Base {
 
     genJson() {
         let json = Object.assign(super.genJson());
-        json.type = "";
+        json.type = "Attribute";
 
+        // Name and multiplicity are resolved in parent classes
         
+        // TODO: Resolve and map type for strongly-typed languages
+                
 
         return json;
     }

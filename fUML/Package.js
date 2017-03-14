@@ -5,11 +5,11 @@ const codeGenMixin = require("../CodeGenMixins/Package");
 
 
 
-class Package extends codeGenMixin(mixin(PackageableElement, Namespace)) {
+class Package extends codeGenMixin(mixin(PackageableElement, new Namespace())) {
 
 	constructor() {
-
 		super();
+
 
 		this.URI = null;
 		this.nestedPackage=null;

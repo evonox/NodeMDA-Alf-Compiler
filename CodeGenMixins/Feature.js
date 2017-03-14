@@ -9,7 +9,7 @@ var FeatureCodeGenMixin = (Base) => class extends Base {
         let json = Object.assign(super.genJson());
         json.type = "";
 
-        
+        json.isStatic = this.isStatic;
 
         return json;
     }
