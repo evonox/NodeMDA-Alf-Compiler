@@ -7,9 +7,10 @@ var ParameterCodeGenMixin = (Base) => class extends Base {
 
     genJson() {
         let json = Object.assign(super.genJson());
-        json.type = "";
+        json.type = "Parameter";
 
-        
+        json.name = this.name;
+        json.direction = this.direction;        
 
         return json;
     }

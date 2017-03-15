@@ -252,8 +252,8 @@ class MetaModelQueryFacade {
                 name: parameter._name,
                 type: parameter._type, // TODO needs to be resolved
                 readOnly: parameter._readOnly,
-                multiplicity: _multiplicity,
-                visibility: _visibility
+                multiplicity: parameter._multiplicity,
+                visibility: parameter._visibility
             };
         });
     }

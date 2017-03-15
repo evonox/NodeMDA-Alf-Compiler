@@ -75,5 +75,16 @@ module.exports = {
         owningClass.ownedOperation.push(operation);
         parseMetaData(operation, parameters);
         return operation;
+    },
+
+    createParameter(owningOperation, name, parameters) {
+        let parameter = new fUML.Parameter();
+        parameter.direction = "in"; // TODO: NodeMDA metamodel needs to be extended
+        parameter.name = name;
+        parameter.multiplicity = parameters.multiplicity;
+        // TODO: Resolving parameter type needs to be done
+        owningOperation.ownedParameter.push(parameter);
+        parameter.owner = owningOperation;
+        return parameter;
     }
 }
