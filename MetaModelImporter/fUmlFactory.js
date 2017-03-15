@@ -12,6 +12,15 @@ function parseUpperBound(multiplicity) {
     return parts[1];
 }
 
+function parseMetaData(fumlElement, parameters) {
+    fumlElement.ownedComment = parameters.comment;
+   
+    // REMARK: The following lines are possible extensions for fUML standard. I could find attributes
+    // to attach tag values and stereotypes
+    fumlElement.stereotypes = parameters.stereotypes;
+    fumlElement.tagValues = parameters.tagValues;
+}
+
 module.exports = {
     createPackage(parentPackage, name, parameters) {
         let packageUML = new fUML.Package();
@@ -22,6 +31,8 @@ module.exports = {
         packageUML.visibility = parameters.visibility;
         if(parentPackage !== null)
             parentPackage.nestedPackage.push(packageUML);
+        // TODO: Package meta-data not supported for now.
+        //parseMetaData(packageUML, parameters);
         return packageUML;
     },
 
@@ -35,6 +46,7 @@ module.exports = {
         classUML.superClass = new Array();
         classUML.owner = parentPackage;
         parentPackage.packagedElement.push(classUML);
+        parseMetaData(classUML, parameters);
         return classUML;
     },
 
@@ -47,6 +59,7 @@ module.exports = {
         attribute.visibility = parameters.visibility;
         attribute.owner = owningClass;
         owningClass.ownedAttribute.push(attribute);
+        parseMetaData(attribute, parameters);
         return attribute;
     },
 
@@ -60,6 +73,7 @@ module.exports = {
         operation.method = new Array();
         operation.owner = owningClass;
         owningClass.ownedOperation.push(operation);
+        parseMetaData(operation, parameters);
         return operation;
     }
 }

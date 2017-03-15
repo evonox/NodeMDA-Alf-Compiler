@@ -188,7 +188,8 @@ class MetaModelQueryFacade {
     }
 
     getElementComment(elementHandle) {
-        return elementHandle.metaElement.comment;
+        let comment = elementHandle.metaElement.comment
+        return comment === undefined ? [] : [comment];
     }
     getElementName(elementHandle) {
         return elementHandle.name;
@@ -216,9 +217,13 @@ class MetaModelQueryFacade {
     getClassAttributes(classHandle) {
         return classHandle.childElements.filter((element) => {
             return element.isAttribute();
-        })
-        .map((element) => element.toJson());
+        });
     }
+
+    getAttributeInfo(attributeHandle) {
+        return attributeHandle.toJson();
+    }
+
     getClassDependencies(classHandle) {
         return classHandle.childElements.filter((element) => {
             return element.isDependency();

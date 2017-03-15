@@ -3,16 +3,25 @@ const mmQueryParser = require("./MetaModelQuery");
 
 let mmQuery = null;
 
+function processMetaData(elementHandle, parameters) {
+    parameters.comment = mmQuery.getElementComment(elementHandle);
+    parameters.stereotypes = mmQuery.getElementStereotypes(elementHandle);
+    parameters.tagValues = mmQuery.getElementTagValues(elementHandle);
+}
+
 function processOperations(parentClass, fumlClass) {
     mmQuery.getClassOperations(parentClass).every((operationHandle) => {
         let operationJSON = mmQuery.getOperationInfo(operationHandle);
+        processMetaData(operationHandle, operationJSON);
         factory.createOperation(fumlClass, operationJSON.name, operationJSON);
         return true;
     });
 }
 
 function processAttributes(parentClass, fumlClass) {
-    mmQuery.getClassAttributes(parentClass).every((attributeJSON) => {
+    mmQuery.getClassAttributes(parentClass).every((attributeHandle) => {
+        let attributeJSON = mmQuery.getAttributeInfo(attributeHandle);
+        processMetaData(attributeHandle, attributeJSON);
         factory.createAttribute(fumlClass, attributeJSON.name, attributeJSON);
         return true;
     });
@@ -21,7 +30,9 @@ function processAttributes(parentClass, fumlClass) {
 function processClasses(parentPackage, fumlPackage) {
     mmQuery.queryClasses(parentPackage).every((classHandle) => {
         let className = mmQuery.getElementName(classHandle);
-        let fumlClass = factory.createClass(fumlPackage, className, {});
+        let parameters = {};
+        processMetaData(classHandle, parameters);
+        let fumlClass = factory.createClass(fumlPackage, className, parameters);
         processAttributes(classHandle, fumlClass);
         processOperations(classHandle, fumlClass);
         return true;
@@ -31,7 +42,10 @@ function processClasses(parentPackage, fumlPackage) {
 function processPackages(parentPackage, fumlPackage) {
     mmQuery.queryChildPackages(parentPackage).every((package) => {
         let packageName = mmQuery.getElementName(package);
-        let fumlChildPackage = factory.createPackage(fumlPackage, packageName, {});
+        let parameters = {};
+        // TODO: Package metadata are not supported currently in NodeMDA
+        //processMetaData(package, parameters);
+        let fumlChildPackage = factory.createPackage(fumlPackage, packageName, parameters);
         processPackageChildElements(package, fumlChildPackage);
         return true;
     });
@@ -49,7 +63,6 @@ function build() {
     return fumlPackage;
 }
 
-// TODO: Tags, comment, stereotypes !!!!!!
 module.exports = {
     import(metaModel) {
         mmQuery = mmQueryParser.parse(metaModel);
