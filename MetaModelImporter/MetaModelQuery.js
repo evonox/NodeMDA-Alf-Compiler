@@ -5,6 +5,7 @@ class UMLElement {
     }
 
     addChildElement(childElement) {
+        if(this.getChildElementByName(childElement.name) !== null) return;
         this.childElements.push(childElement);
     }
 
@@ -80,6 +81,15 @@ class Operation extends UMLElement {
     }
 
     isOperation() { return true; }
+
+    toJson() {
+        return {
+            name: this.name,
+            isAbstract: false, // TODO: This info is missing in NodeMDA metamodel
+            isStatic: this.metaElement._static,
+            visibility: this.metaElement._visibility
+        }
+    }
 }
 
 class Attribute extends UMLElement {
@@ -90,7 +100,12 @@ class Attribute extends UMLElement {
     isAttribute() { return true; }
 
     toJson() {
-        return {};
+        return {
+            name: this.name,
+            multiplicity: this.metaElement._multiplicity,
+            readOnly: this.metaElement._readOnly,
+            visibility: this.metaElement._visibility
+        };
     }
 }
 
@@ -220,6 +235,10 @@ class MetaModelQueryFacade {
         return classHandle.childElements.filter((element) => {
             return element.isOperation();
         });
+    }
+
+    getOperationInfo(operationHandle) {
+        return operationHandle.toJson();
     }
 
     getOperationParameters(operationHandle) {

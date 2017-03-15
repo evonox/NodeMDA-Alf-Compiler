@@ -8,11 +8,11 @@ var PropertyCodeGenMixin = (Base) => class extends Base {
     genJson() {
         let json = Object.assign(super.genJson());
         json.type = "Attribute";
-
-        // Name and multiplicity are resolved in parent classes
-        
+        json.name = this.name;
+        json.isReadOnly = this.isReadOnly;
+        json.visibility = this.visibility;
+      
         // TODO: Resolve and map type for strongly-typed languages
-                
 
         return json;
     }

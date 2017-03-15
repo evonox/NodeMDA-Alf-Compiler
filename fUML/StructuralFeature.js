@@ -6,7 +6,7 @@ const codeGenMixin = require("../CodeGenMixins/StructuralFeature");
 
 
 
-class StructuralFeature extends codeGenMixin(mixin(MultiplicityElement, mixin(TypedElement, Feature))) {
+class StructuralFeature extends codeGenMixin(mixin(MultiplicityElement, new (mixin(TypedElement, new Feature()))())) {
 
 	constructor() {
 

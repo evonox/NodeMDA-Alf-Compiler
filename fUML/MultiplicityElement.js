@@ -33,7 +33,7 @@ class MultiplicityElement extends codeGenMixin(Element) {
 		/// Specifies the upper bound of the multiplicity interval, if it is expressed as
 		/// an unlimited natural.
 		/// </summary>
-		this.upper = new UnlimitedNatural(1);
+		this.upper = 1; //new UnlimitedNatural(1);
 		/**
 		 * The specification of the upper bound for this multiplicity.
 		 */

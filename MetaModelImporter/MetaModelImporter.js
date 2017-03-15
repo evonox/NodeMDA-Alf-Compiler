@@ -3,10 +3,27 @@ const mmQueryParser = require("./MetaModelQuery");
 
 let mmQuery = null;
 
+function processOperations(parentClass, fumlClass) {
+    mmQuery.getClassOperations(parentClass).every((operationHandle) => {
+        let operationJSON = mmQuery.getOperationInfo(operationHandle);
+        factory.createOperation(fumlClass, operationJSON.name, operationJSON);
+        return true;
+    });
+}
+
+function processAttributes(parentClass, fumlClass) {
+    mmQuery.getClassAttributes(parentClass).every((attributeJSON) => {
+        factory.createAttribute(fumlClass, attributeJSON.name, attributeJSON);
+        return true;
+    });
+}
+
 function processClasses(parentPackage, fumlPackage) {
     mmQuery.queryClasses(parentPackage).every((classHandle) => {
         let className = mmQuery.getElementName(classHandle);
         let fumlClass = factory.createClass(fumlPackage, className, {});
+        processAttributes(classHandle, fumlClass);
+        processOperations(classHandle, fumlClass);
         return true;
     });
 }
@@ -32,6 +49,7 @@ function build() {
     return fumlPackage;
 }
 
+// TODO: Tags, comment, stereotypes !!!!!!
 module.exports = {
     import(metaModel) {
         mmQuery = mmQueryParser.parse(metaModel);
