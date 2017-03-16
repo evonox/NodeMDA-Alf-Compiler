@@ -157,8 +157,9 @@ class Generalization extends UMLElement {
 // The job of this class is to provide interface for querying meta-model of NodeMDA
 class MetaModelQueryFacade {
 
-    constructor(metaModel) {
+    constructor(metaModel, options) {
         this.metaModel = metaModel;
+        this.options = options;
         this.parseMetaModel();
     }
 
@@ -323,8 +324,7 @@ class MetaModelQueryFacade {
     parseDataTypes() {
         this.metaModel.datatypes.every ((datatype) => {
             if(! datatype.isObject) return true;
-            // TODO Cannot get from NodeMDA the right delmiter in loose-coupling way
-            let packagePath = datatype.packageName.split(":"); 
+            let packagePath = datatype.packageName.split(this.options.packageDelimeter);
             this.addPackagePath(packagePath);
             let packageElement = this.rootPackage.getNamespace(packagePath);
             if(packageElement === null)
@@ -335,7 +335,6 @@ class MetaModelQueryFacade {
     }
 
     addPackagePath(packagePath) {
-        console.dir(packagePath);
         packagePath = packagePath.slice(0);
         this.addPackage(this.rootPackage, packagePath);
     }
@@ -353,7 +352,7 @@ class MetaModelQueryFacade {
 }
 
 module.exports = {
-    parse(metaModel) {
-        return new MetaModelQueryFacade(metaModel);
+    parse(metaModel, options) {
+        return new MetaModelQueryFacade(metaModel, options);
     }
 }

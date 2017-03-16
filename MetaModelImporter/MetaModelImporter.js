@@ -72,8 +72,9 @@ function build() {
 }
 
 module.exports = {
-    import(metaModel) {
-        mmQuery = mmQueryParser.parse(metaModel);
+    import(metaModel, options) {
+        NodeMDA_Options = options;
+        mmQuery = mmQueryParser.parse(metaModel, options);
         return build();
     }
 }

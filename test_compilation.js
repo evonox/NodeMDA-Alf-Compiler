@@ -2,15 +2,12 @@ const NodeMDA = require('nodemda');
 const fs = require("fs");
 const mmImporter = require("./MetaModelImporter/MetaModelImporter");
 
-function loadUmlModel() {
-    return NodeMDA.Meta.Reader.getMeta(NodeMDA.Options.modelFileName);
-}
-
 module.exports = {
-    compile() {
-        let metaModel = loadUmlModel();
-        console.log("MetaModel loaded...");
-        let fUmlModel = mmImporter.import(metaModel);
+    compile(context) {
+        // TODO: Find out why this method is invoked twice, the sedond time without context
+        if(context === undefined) return;
+
+        let fUmlModel = mmImporter.import(context.model, context.options);
         let json = fUmlModel.genJson();
         json = JSON.stringify(json, null, 4);
         fs.writeFileSync("fUML_JSON.txt", json);
