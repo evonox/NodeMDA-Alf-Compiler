@@ -1,6 +1,7 @@
 const NodeMDA = require('nodemda');
 const fs = require("fs");
 const mmImporter = require("./MetaModelImporter/MetaModelImporter");
+const modelCompiler = require("./ModelCompiler/ModelCompiler");
 
 module.exports = {
     compile(context) {
@@ -9,7 +10,9 @@ module.exports = {
 
         let fUmlModel = mmImporter.import(context.model, context.options);
         let json = fUmlModel.genJson();
+        let appJson = json;
         json = JSON.stringify(json, null, 4);
         fs.writeFileSync("fUML_JSON.txt", json);
+        modelCompiler.compile(appJson, context.options);
     }
 }
