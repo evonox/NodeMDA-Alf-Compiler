@@ -21,7 +21,7 @@ function generateDirectories(packagePath, package) {
 
 module.exports = {
     generate: function(projectDirectory, appJson) {
-        let currentDir = __dirname;
+        let currentDir = process.cwd();
         generateDirectories(projectDirectory, appJson);
         process.chdir(currentDir);
     }

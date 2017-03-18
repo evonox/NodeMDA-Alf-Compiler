@@ -9,6 +9,9 @@ var ClassCodeGenMixin = (Base) => class extends Base {
         let json = Object.assign(super.genJson());
         json.type = "class";
 
+        let namespace = this.qualifiedName.split("::");
+        json.namespace = namespace.slice(0, namespace.length - 1);
+
         if(this.hasSuperclass()) {
             json.superClassName = this.superClass[0].name;
             json.superClassPath = this.superClass[0].qualifiedName;

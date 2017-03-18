@@ -29,10 +29,15 @@ module.exports = {
         packageUML.nestingPackage = parentPackage;
         packageUML.packagedElement = new Array();
         packageUML.visibility = parameters.visibility;
-        if(parentPackage !== null)
+        if(parentPackage !== null && parentPackage.qualifiedName.trim() !== "") {
+            packageUML.qualifiedName = parentPackage.qualifiedName.split("::").concat(name).join("::");
             parentPackage.nestedPackage.push(packageUML);
-        // TODO: Package meta-data not supported for now.
-        //parseMetaData(packageUML, parameters);
+        } else {
+            packageUML.qualifiedName = name;
+            if(parentPackage !== null) {
+                parentPackage.nestedPackage.push(packageUML);            
+            }
+        }
         return packageUML;
     },
 
@@ -44,6 +49,11 @@ module.exports = {
         classUML.ownedOperation = new Array();
         classUML.ownedReception = new Array();
         classUML.superClass = new Array();
+        if(parentPackage.qualifiedName.trim() !== "") {
+            classUML.qualifiedName = parentPackage.qualifiedName.split("::").concat(name).join("::");
+        } else  {
+            classUML.qualifiedName = name;
+        }
         classUML.owner = parentPackage;
         parentPackage.packagedElement.push(classUML);
         parseMetaData(classUML, parameters);
