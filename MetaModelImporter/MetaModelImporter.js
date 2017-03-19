@@ -35,6 +35,13 @@ function processAttributes(parentClass, fumlClass) {
     });
 }
 
+function processAssociations(parentClass, fumlClass) {
+    mmQuery.getClassAssociations(parentClass).every((assocJson) => {
+        factory.createAssociation(fumlClass, assocJson.name, assocJson);
+        return true;
+    });
+}
+
 function processClasses(parentPackage, fumlPackage) {
     mmQuery.queryClasses(parentPackage).every((classHandle) => {
         let className = mmQuery.getElementName(classHandle);
@@ -43,6 +50,7 @@ function processClasses(parentPackage, fumlPackage) {
         let fumlClass = factory.createClass(fumlPackage, className, parameters);
         processAttributes(classHandle, fumlClass);
         processOperations(classHandle, fumlClass);
+        processAssociations(classHandle, fumlClass);
         return true;
     });
 }

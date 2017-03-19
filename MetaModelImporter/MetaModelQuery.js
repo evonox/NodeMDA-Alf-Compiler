@@ -121,7 +121,14 @@ class Association extends UMLElement {
     }
 
     toJson() {
-        return {};
+        return {
+            name: this.name,
+            visibility: this.metaElement.myEnd._visibility,
+            multiplicity: this.metaElement.myEnd._multiplicity,
+            isNavigable: this.metaElement.myEnd._navigable,
+            isAggregation: this.metaElement.myEnd._aggregation,
+            isComposition: this.metaElement.myEnd._composition
+        };
     }
 }
 

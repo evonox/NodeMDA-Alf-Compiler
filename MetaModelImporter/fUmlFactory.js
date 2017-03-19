@@ -2,12 +2,14 @@ const fUML = require("../fUML/fUML");
 
 function parseLowerBound(multiplicity) {
     multiplicity = multiplicity === null || multiplicity === undefined ? "1..1" : multiplicity;
+    if(multiplicity === "1") return 1;
     let parts = multiplicity.split("..");
     return parts[0];
 }
 
 function parseUpperBound(multiplicity) {
     multiplicity = multiplicity === null || multiplicity === undefined ? "1..1" : multiplicity;
+    if(multiplicity === "1") return 1;
     let parts = multiplicity.split("..");
     return parts[1];
 }
@@ -67,6 +69,8 @@ module.exports = {
         attribute.upper = parseUpperBound(parameters.multiplicity);
         attribute.isReadOnly = parameters.readOnly;
         attribute.visibility = parameters.visibility;
+        attribute.association = null;
+        attribute.owningAssociation = null;
         attribute.owner = owningClass;
         owningClass.ownedAttribute.push(attribute);
         parseMetaData(attribute, parameters);
@@ -96,5 +100,22 @@ module.exports = {
         owningOperation.ownedParameter.push(parameter);
         parameter.owner = owningOperation;
         return parameter;
+    },
+
+    createAssociation(owningClass, name, parameters) {
+        let attribute = new fUML.Property();
+        attribute.name = name;
+        attribute.lower = parseLowerBound(parameters.multiplicity);
+        attribute.upper = parseUpperBound(parameters.multiplicity);
+        attribute.visibility = parameters.visibility;
+        attribute.owner = owningClass;
+        owningClass.ownedAttribute.push(attribute);
+
+        // TODO: Do two way binding of fUML Associations, not creating two separate instances
+        let association  = new fUML.Association();
+        association.memberEnd = new Array();
+        association.memberEnd.push(attribute);
+        attribute.association = association;
+        return association;
     }
 }

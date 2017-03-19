@@ -7,7 +7,7 @@ var PropertyCodeGenMixin = (Base) => class extends Base {
 
     genJson() {
         let json = Object.assign(super.genJson());
-        json.type = "Attribute";
+        json.type = this.association === null ? "Attribute" : "AssociationEnd";
         json.name = this.name;
         json.isReadOnly = this.isReadOnly;
         json.visibility = this.visibility;
