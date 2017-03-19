@@ -18,7 +18,7 @@ function parseMetaData(fumlElement, parameters) {
     fumlElement.ownedComment = parameters.comment;
    
     // REMARK: The following lines are possible extensions for fUML standard. I could not find attributes
-    // to attach tag values and stereotypes
+    // to attach tag values and stereotypes 
     fumlElement.stereotypes = parameters.stereotypes;
     fumlElement.tagValues = parameters.tagValues;
 }
