@@ -1,4 +1,16 @@
-Expression = ConditionalExpression / AssignmentExpression
+/*
+    Expressions
+*/
+
+Expression = UnaryExpression  ExpressionCompletion
+
+NonNameExpression = NonNameUnaryExpression ExpressionCompletion
+
+NameToExpressionCompletion = ( NameToPrimaryExpression )? PrimaryToExpressionCompletion
+
+PrimaryToExpressionCompletion = PostfixExpressionCompletion ExpressionCompletion
+
+ExpressionCompletion = AssignmentExpressionCompletion / ConditionalExpressionCompletion
 
 /*
     Assignment expressions

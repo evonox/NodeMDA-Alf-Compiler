@@ -171,6 +171,7 @@ digit = [0-9]
 subTokenSeparator = " "
 tokenSeprator = "\n"
 
+// MOVE THIS TO LEXER
 LineTerminator = "\n" / "\r"
 InputCharacter = !(LineTerminator) character:(.) { return character; }
 

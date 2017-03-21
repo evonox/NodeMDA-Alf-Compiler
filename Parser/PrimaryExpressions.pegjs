@@ -1,11 +1,20 @@
 /*
     Primary expressions
 */
-PrimaryExpression = NameExpression / NonNamePrimaryExpression
-NonNamePrimaryExpression = LiteralExpression / ThisExpression / ParenthesizedExpression // / PropertyAccessExpression
-        / InvocationExpression / InstanceCreationExpression / LinkOperationExpression / ClassExtentExpression
-  /*      / SequenceConstructionExpression / SequenceAccessExpression / SequenceOperationExpression 
-        / SequenceReductionExpression / SequenceExpansionExpression */
+PrimaryExpression = ( NameOrPrimaryExpression / BaseExpression / ParenthesizedExpression ) PrimaryExpressionCompletion
+
+BaseExpression = LiteralExpression / ThisExpression / SuperInvocationExpression 
+                    / InstanceCreationOrSequenceConstructionExpression
+                    / SequenceAnyExpression
+
+NameToPrimaryExpression = pDot ( LinkOperationCompletion / ClassExtentExpressionCompletion )
+                            / SequenceConstructionExpressionCompletion
+                            / BehaviorInvocation
+
+PrimaryExpressionCompletion = ( Feature ( FeatureInvocation )?
+                                / SequenceOperationOrReductionOrExpansion
+                                / Index )*
+
 
 // Literal expressions
 LiteralExpression = BooleanLiteralExpression 
@@ -32,14 +41,14 @@ StringLiteralExpression = image:stringLiteral {
 }
 
 // Name expression
-NameExpression = name:PotentiallyAmbiguousQualifiedName {
+NameOrPrimaryExpression = name:PotentiallyAmbiguousQualifiedName ( NameToPrimaryExpression )? {
     let obj = new alf.NameExpression();
     obj.name = name;
     return obj;
 }
 
 // ThisExpression
-ThisExpression = kwThis {
+ThisExpression = kwThis ( Tuple )? {
     return new alf.ThisExpression();
 }
 
@@ -47,11 +56,14 @@ ThisExpression = kwThis {
 ParenthesizedExpression = pLParen e:Expression pRParen { return e; }
 
 // PropertyAccessExpression - STUDY DISAMBIGUATION RULES
-/*PropertyAccessExpression = featureReference:FeatureReference {
+Feature = pDot NameBinding
+
+/*
+PropertyAccessExpression = featureReference:FeatureReference {
     let obj = new alf.PropertyAccessExpression();
     obj.featureReference = featureReference;
     return obj;
-}*/
+}
 FeatureReference = expression:FeatureTargetExpression pDot nameBinding:NameBinding {
     let obj = new alf.FeatureReference();
     obj.expression = expression;
@@ -63,29 +75,29 @@ NameTargetExpression = name:ColonQualifiedName {
     let obj = new alf.NameExpression();
     obj.name = name;
     return obj;
-}
+}*/
 
 // InvocationExpression
-InvocationExpression = e:InvocationTarget tuple:Tuple { e.tuple = tuple; return e; }
-InvocationTarget = BehaviorInvocationTarget / /* FeatureInvocationTarget /*/  SuperInvocationTarget;
+//InvocationExpression = e:InvocationTarget tuple:Tuple { e.tuple = tuple; return e; }
+//InvocationTarget = BehaviorInvocationTarget / /* FeatureInvocationTarget /*/  SuperInvocationTarget;
 
 // Tuple
-Tuple = PositionalTuple / NamedTuple
+Tuple = pLParen tuple:(NamedTupleExpressionList / ( PositionalTupleExpressionList )? ) pRParen { return tuple; }
 
-PositionalTuple = pLParen tuple:TupleExpressionList? pRParen {
-    return tuple === null ? new alf.PositionalTuple)() : tuple;
-}
-TupleExpressionList = first:Expression other:( pComma e:Expression { return e; } )* {
+PositionalTupleExpressionList = first:Expression other:PositionalTupleExpressionListCompletion {
     let obj = new alf.PositionalTuple();
     obj.expression = [first].concat(other);
     return obj;
 }
 
-NamedTuple = pLParen first:NamedExpression other:( pComma ne:NamedExpression { return ne; } )* pRParen {
+PositionalTupleExpressionListCompletion = ( p.pComma expr:Expression { return expr; } )*
+
+NamedTupleExpressionList = first:NamedExpression other:( pComma ne:NamedExpression { return ne; } )* {
     let obj = new alf.NamedTuple();
     obj.namedExpression = [first].concat(other);
     return obj;
 }
+
 NamedExpression = name:name pFatArrow expression:Expression {
     let obj = new alf.NamedExpression();
     obj.name = name;
@@ -94,6 +106,7 @@ NamedExpression = name:name pFatArrow expression:Expression {
 }
 
 // BehaviorInvocationTarget
+/*
 BehaviorInvocationTarget = target:PotentiallyAmbiguousQualifiedName {
     let obj = new alf.BehaviorInvocationExpression();
     obj.target = target;
@@ -114,6 +127,11 @@ SuperInvocationTarget = kwSuper target:( pDot target:QualifiedName { return targ
     obj.target = target;
     return obj;
 }
+*/
+BehaviorInvocation = Tuple
+FeatureInvocation = Tuple
+SuperInvocationExpression = kwSuper ( pDot qn:QualifiedName { return qn;} )? tuple:Tuple
+
 
 // InstanceCreationExpression
 InstanceCreationExpression = kwNew constructorName:QualifiedName tuple:Tuple {
@@ -153,6 +171,7 @@ IndexedNamedExpression = name:name ( index: Index { return index; })? pFatArrow 
 Index = pLBracket e:Expression pRBracket { return e; }
 
 // ClassExtentExpression
+/*
 ClassExtentExpression = type:QualifiedName pDot kwAllInstances pLParen pRParen {
     let obj = new alf.ClassExtentExpression();
     obj.type = type;
@@ -167,7 +186,55 @@ SequenceConstructionExpression = NullExpression {
 } / SequenceElementsExpression
 
 NullExpression = kwNull
+*/
 
+/* INSTANCE CREATION EXPRESSIONS */
+InstanceCreationOrSequenceConstructionExpression = kwNew qn:QualifiedName 
+                                                ( SequenceConstructionExpressionCompletion
+                                                / Tuple )
+
+/* LINK OPERATION EXPRESSIONS */
+LinkOperationCompletion = LinkOperation LinkOperationTuple
+
+LinkOperation = kwCreateLink / kwDestroyLink / kwClearAssoc
+
+LinkOperationTuple = pLParen ( 
+                                Name
+                                ( Index
+                                    ( pFatArrow IndexedNamedExpressionListCompletion 
+                                        / PrimaryToExpressionCompletion PositionalTupleExpressionListCompletion
+                                    )
+                                    /  pFatArrow IndexedNamedExpressionListCompletion
+                                )
+                                / PositionalTupleExpressionList
+                            )? pLParen
+
+IndexedNamedExpressionListCompletion = Expression ( pComma IndexedNamedExpression )*
+
+IndexedNamedExpression = Name ( Index )? pFatArrow Expression
+
+/* CLASS EXTENT EXPRESSIONS */
+
+ClassExtentExpressionCompletion = kwAllInstances pLParen pRParen
+
+/* SEQUENCE CONSTRUCTION EXPRESSIONS */
+
+SequenceAnyExpression = kwAny SequenceConstructionExpressionCompletion / kwNull
+
+SequenceConstructionExpressionCompletion = ( MultiplicityIndicator )? pLBrace ( SequenceElements )? pRBrace
+
+MultiplicityIndicator = pLBracket pRBracket
+
+SequenceElements = Expression ( pDoubleDot Expression / SequenceElementListCompletion )
+                    / SequenceInitializationExpression SequenceElementListCompletion
+
+SequenceElementListCompletion = ( pComma SequenceElement )* ( pComma )?
+
+SequenceElement = Expression / SequenceInitializationExpression
+
+SequenceInitializationExpression = ( kwNew )? pLBrace SequenceElements pRBrace
+
+/*
 SequenceElementsExpression = ( kwNew )? e:SequenceElementsTypePart pLBrace elements:SequenceElements pRBrace {
     e.elements = elements;
     return e;
@@ -180,7 +247,6 @@ SequenceElementsTypePart = typeName:TypeName multIndication:( MultiplicityIndica
     return obj;
 }
 
-MultiplicityIndicator = pLBracket pRBracket
 
 SequenceInitializationExpression = ( kwNew )? pLBrace elements:SequenceElements pRBrace {
     let obj = new alf.SequenceConstructionExpression();
@@ -208,6 +274,13 @@ SequenceRange = rangeLower:Expression pDoubleDot rangeUpper:Expression {
     return obj;
 }
 
+*/
+
+/* SEQUENCE ACCESS EXPRESSIONS */
+
+Index = pLBracket Expression pRBracket
+
+/*
 // SequenceAccessExpression
 SequenceAccessExpression = primary:PrimaryExpression index:Index {
     let obj = new alf.SequenceAccessExpression();
@@ -215,7 +288,17 @@ SequenceAccessExpression = primary:PrimaryExpression index:Index {
     obj.index = index;
     return obj;
 }
+*/
 
+/* SEQUENCE OPERATION, REDUCTION AND EXPANSION EXPRESSIONS */
+SequenceOperationOrReductionOrExpansion = pSlimArrow ( QualifiedName Tuple
+                                                        / kwReduce ( kwOrdered )? QualifiedName
+                                                        / name name 
+                                                        // TODO: THE FIRST NAME ARGUMENT MAY BE THE OPERATION NAME, FIND OUT
+                                                            pLParen Expression pRParen
+                                                     )
+
+/*
 // SequenceOperationExpression
 SequenceOperationExpression = primary:ExtentOrExpression pSlimArrow operation:QualifiedName tuple:Tuple {
     let obj = new alf.SequenceOperationExpression();
@@ -256,6 +339,7 @@ SequenceExpansionExpression = primary:ExtentOrExpression pSlimArrow e:ExpansionO
     return e;    
 }
 
+
 ExpansionOperation = SelectOrRejectOperation
                     / CollectOrIterateOperation
                     / ForAllOrExistsOrOneOperation
@@ -284,30 +368,48 @@ IsUniqueOperation = operation:fnIsUnique {
     obj.operation = operation;
     return obj;
 }
+*/
 
 /*
     Qualified names
 */
 TypeName = QualifiedName / kwAny
 
-QualifiedName = qn:(ColonQualifiedName / DotQualifiedName / UnqualifiedName) 
-{ qn.isAmbiguous = false; return qn; }
+QualifiedName = uqn:UnqualifiedName uqNames:(ColonQualifiedNameCompletion / DotQualifiedNameCompletion)?
+{ 
+    let qn = new alf.QualifiedName();
+    uqNames = uqNames === null ? [] : uqNames;
+    qn.nameBinding = [uqn].concat(uqNames);
+    qn.isAmbiguous = false; 
+    return qn; 
+}
 
-PotentiallyAmbiguousQualifiedName = qn:ColonQualifiedName { qn.isAmbiguous = false; return qn; }
-        / qn:DotQualifiedName { qn.isAmbiguous = true; return qn; }
-        / qn:UnqualifiedName { qn.isAmbiguous = false; return qn; }
+PotentiallyAmbiguousQualifiedName = uqn:UnqualifiedName uqNames:(ColonQualifiedNameCompletion / DotQualifiedNameCompletion)?
+{ 
+    let qn = new alf.QualifiedName();
+    uqNames = uqNames === null ? [] : uqNames;
+    qn.nameBinding = [uqn].concat(uqNames);
+    qn.isAmbiguous = true; 
+    return qn; 
+}
 
-ColonQualifiedName = first:NameBinding other:(pDoubleColon nb:NameBinding { return nb; } )+ {
+ColonQualifiedName = first:UnqualifiedName other:ColonQualifiedNameCompletion
+{
     let obj = new alf.QualifiedName();
     obj.nameBinding = [first].concat(other);
     return obj;
 }
 
-DotQualifiedName = first:NameBinding other:(pDot nb:NameBinding { return nb; } )+ {
+ColonQualifiedNameCompletion = (pDoubleColon nb:NameBinding { return nb; } )+ 
+
+DotQualifiedName = first:UnqualifiedName other:DotQualifiedNameCompletion
+{
     let obj = new alf.QualifiedName();
     obj.nameBinding = [first].concat(other);
     return obj;
 }
+
+DotQualifiedNameCompletion = (pDot nb:NameBinding { return nb; } )+ 
 
 UnqualifiedName = nameBinding:NameBinding {
     let obj = new alf.QualifiedName();
@@ -322,9 +424,9 @@ NameBinding = name:name binding:(TemplateBinding)? {
     return obj;
 }
 
-TemplateBinding = PositionalTemplateBinding / NamedTemplateBinding
+TemplateBinding = opLess binding:(PositionalTemplateBinding / NamedTemplateBinding) opGreater { return binding; }
 
-PositionalTemplateBinding = opLess first:QualifiedName other:( pComma qn:QualifiedName { return qn; } )* opGreater {
+PositionalTemplateBinding =  first:QualifiedName other:( pComma qn:QualifiedName { return qn; } )*  {
     let obj = new alf.PositionalTemplateBinding();
     obj.argumentName = new Array();
     obj.argumentName.push(first);
@@ -332,7 +434,7 @@ PositionalTemplateBinding = opLess first:QualifiedName other:( pComma qn:Qualifi
     return obj;
 }
 
-NamedTemplateBinding = opLess first:TemplateParameterSubstitution other:( pComma tps:TemplateParameterSubstitution { return tps; } )* opGreater {
+NamedTemplateBinding = first:TemplateParameterSubstitution other:( pComma tps:TemplateParameterSubstitution { return tps; } )* {
     let obj = new alf.NamedTemplateBinding();
     obj.substitution = new Array();
     obj.substitution.push(first);
