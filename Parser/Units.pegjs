@@ -557,7 +557,7 @@ OrderingAndUniqueness = data:(
 }
 
 
-MultiplicityRange = ( naturalLiteralp DoubleDot )? UnlimitedNaturalLiteral
+MultiplicityRange = ( naturalLiteral pDoubleDot )? UnlimitedNaturalLiteral
 UnlimitedNaturalLiteral =naturalLiteral / opMult
 
 /*

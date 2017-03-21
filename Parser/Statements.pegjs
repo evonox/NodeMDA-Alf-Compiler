@@ -61,7 +61,7 @@ Annotation = identifier:name argument:(first:name other:(pComma n:name { return 
      IN-LINE STATEMENTS 
 */
 
-InLineStatement = pSlashStarAT name pLParen name pRParen documentComment
+InLineStatement = pSlashStarAt name pLParen name pRParen documentComment
 
 /*
 InLineStatement = s:InLineHeader code:CommentText opMult opDiv {

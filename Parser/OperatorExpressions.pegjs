@@ -278,7 +278,7 @@ PostfixOrCastExpression = NonNamePostfixOrCastExpression
 NonNameUnaryExpression = NonNamePostfixOrCastExpression / NonPostfixNonCastUnaryExpression
 
 NonNamePostfixOrCastExpression = pLParen
-                                    ( kwNay pRParen CastCompletion
+                                    ( kwAny pRParen CastCompletion
                                     / PotentiallyAmbiguousQualifiedName
                                         ( pRParen CastCompletion
                                         / NameToExpressionCompletion pRParen PostfixExpressionCompletion
@@ -365,7 +365,7 @@ IncrementOrDecrementExpression = e:PostfixExpression { e.isPrefix = false; }
                     / e:PrefixExpression { e.isPrefix = true; }
 */
 
-PostfixExpression = AffixOperator
+PostfixOperation = AffixOperator
 
 /*
 PostfixExpression = operand:LeftHandSide operator:AffixOperator {

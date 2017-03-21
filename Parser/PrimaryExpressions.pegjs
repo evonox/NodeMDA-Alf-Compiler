@@ -90,7 +90,7 @@ PositionalTupleExpressionList = first:Expression other:PositionalTupleExpression
     return obj;
 }
 
-PositionalTupleExpressionListCompletion = ( p.pComma expr:Expression { return expr; } )*
+PositionalTupleExpressionListCompletion = ( pComma expr:Expression { return expr; } )*
 
 NamedTupleExpressionList = first:NamedExpression other:( pComma ne:NamedExpression { return ne; } )* {
     let obj = new alf.NamedTuple();
@@ -132,7 +132,7 @@ BehaviorInvocation = Tuple
 FeatureInvocation = Tuple
 SuperInvocationExpression = kwSuper ( pDot qn:QualifiedName { return qn;} )? tuple:Tuple
 
-
+/*
 // InstanceCreationExpression
 InstanceCreationExpression = kwNew constructorName:QualifiedName tuple:Tuple {
     let obj = new alf.InstanceCreationExpression();
@@ -169,7 +169,7 @@ IndexedNamedExpression = name:name ( index: Index { return index; })? pFatArrow 
 }
 
 Index = pLBracket e:Expression pRBracket { return e; }
-
+*/
 // ClassExtentExpression
 /*
 ClassExtentExpression = type:QualifiedName pDot kwAllInstances pLParen pRParen {

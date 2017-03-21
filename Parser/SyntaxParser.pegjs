@@ -9,7 +9,7 @@
 UnitDefinition = namespaceName:NamespaceDeclaration?
                 importDec:(ImportDeclaration)*
                 documentation:documentComment?
-                annotation:(StereotypeAnnotation)*
+                annotation:StereotypeAnnotations
                 definition:NamespaceDefinition
 {
     let obj = new alf.UnitDefinition();
@@ -21,36 +21,7 @@ UnitDefinition = namespaceName:NamespaceDeclaration?
     return obj;
 }
 
-NamespaceDeclaration = kwNamespace q:QualifiedName pSemiColon { return q; }
-
-ImportDeclaration = visibility:ImportVisibilityIndicator kwImport i:ImportReference pSemiColon {
-    i.visibility = visibility;
-    return i;
-}
-
-ImportVisibilityIndicator = kwPublic / kwPrivate
-
-ImportReference = ElementImportReference / PackageImportReference
-
-ElementImportReference = referentName:QualifiedName alias:AliasDefinition? {
-    let obj = new alf.ElementImportReference();
-    obj.referentName = referentName;
-    obj.alias = alias;
-    return obj;
-}
-
-AliasDefinition = kwAs n:name { return n; }
-
-PackageImportReference = referentName:(
-    rn:ColonQualifiedName pDoubleColon opMult { return rn; }
-    / rn:DotQualifiedName pDot opMult { return rn; }
-    / rn:UnqualifiedName pDoubleColon opMult { return rn; }
-    / rn:UnqualifiedName pDot opMult { return rn; }
-) {
-    let obj = new alf.PackageImportReference();
-    obj.referentName = referentName;
-    return referentName;
-}
+StereotypeAnnotations = StereotypeAnnotation*
 
 StereotypeAnnotation = opAt stereotypeName:QualifiedName s:( pLParen s:TaggedValues pRParen { return s; }  )? {
     if(s === null) s = new alf.StereotypeAnnotation();
@@ -102,24 +73,74 @@ LiteralValue = value:booleanLiteral {
     return value;
 }
 
-// NamespaceDefinition
+
+NamespaceDeclaration = kwNamespace q:QualifiedName pSemiColon { return q; }
+
+ImportDeclaration = visibility:ImportVisibilityIndicator kwImport i:ImportReference pSemiColon {
+    i.visibility = visibility;
+    return i;
+}
+
+ImportVisibilityIndicator = kwPublic / kwPrivate
+
+ImportReference = ColonQualifiedName ( (pDoubleColon opMult)
+                                        / AliasDefinition )?
+                 / DotQualifiedName ( (pDot opMult) / AliasDefinition )?
+                 / Name ( (( pDoubleColon / pDot ) opMult) / AliasDefinition )?
+
+/*
+ImportReference = ElementImportReference / PackageImportReference
+
+ElementImportReference = referentName:QualifiedName alias:AliasDefinition? {
+    let obj = new alf.ElementImportReference();
+    obj.referentName = referentName;
+    obj.alias = alias;
+    return obj;
+}
+*/
+
+/*
+PackageImportReference = referentName:(
+    rn:ColonQualifiedName pDoubleColon opMult { return rn; }
+    / rn:DotQualifiedName pDot opMult { return rn; }
+    / rn:UnqualifiedName pDoubleColon opMult { return rn; }
+    / rn:UnqualifiedName pDot opMult { return rn; }
+) {
+    let obj = new alf.PackageImportReference();
+    obj.referentName = referentName;
+    return referentName;
+}
+*/
+
+AliasDefinition = kwAs n:name { return n; }
+
+/* 
+    NAMESPACES 
+*/
 NamespaceDefinition = PackageDefinition / ClassifierDefinition
 
 VisibilityIndicator = ImportVisibilityIndicator / kwProtected
 
-// PackageDeclaration
+/* 
+    PACKAGES 
+*/
+
 PackageDeclaration = kwPackage name:name {
     let obj = new alf.PackageDefinition();
     obj.name = name;
     return name;
 }
 
-PackageDefinition = d:PackageDeclaration pLBrace ownedMember:(PackagedElement)* pRBrace {
+PackageDefinition = d:PackageDeclaration PackageBody
+
+PackageDefinitionOrStub = PackageDeclaration ( pSemiColon /PackageBody )
+
+PackageBody = pLBrace ownedMember:(PackagedElement)* pRBrace {
     d.ownedMember = ownedMember;
     return d;
 }
 
-PackagedElement = documentation:documentComment? annotation:StereotypeAnnotation*
+PackagedElement = documentation:documentComment? annotation:StereotypeAnnotations
                 visibility:ImportVisibilityIndicator m:PackagedElementDefinition 
 {
     m.visibility = visibility;
@@ -128,6 +149,9 @@ PackagedElement = documentation:documentComment? annotation:StereotypeAnnotation
     return m;
 }
 
+PackagedElementDefinition = PackageDefinitionOrStub / ClassifierDefinitionOrStub
+
+/*
 PackagedElementDefinition = NamespaceDefinition / NamespaceStubDeclaration
 
 NamespaceStubDeclaration = PackageStubDeclaration / ClassifierStubDeclaration
@@ -136,8 +160,13 @@ PackageStubDeclaration = m:PackageDeclaration pSemiColon {
     m.isStub = true;
     return m;
 }
+*/
 
-// ClassifierDefinition
+
+/***************
+* CLASSIFIERS *
+***************/
+
 ClassifierDefinition = ClassDefinition
                     / ActiveClassDefinition
                     / DataTypeDefinition
@@ -146,6 +175,15 @@ ClassifierDefinition = ClassDefinition
                     / SignalDefinition
                     / ActivityDefinition
 
+ClassifierDefinitionOrStub = ClassDefinitionOrStub
+                            / ActiveClassDefinitionOrStub
+                            / DataTypeDefinitionOrStub
+                            / EnumerationDefinitionOrStub
+                            / AssociationDefinitionOrStub
+                            / SignalDefinitionOrStub
+                            / ActivityDefinitionOrStub
+
+/*
 ClassifierDeclaration = ClassDeclaration
                     / ActiveClassDeclaration
                     / DataTypeDeclaration
@@ -155,7 +193,11 @@ ClassifierDeclaration = ClassDeclaration
                     / ActivityDeclaration
 
 ClassifierStubDeclaration = d:ClassifierDeclaration pSemiColon { d.isStub = true; return d; }
+*/
 
+ClassifierSignature = Name ( TemplateParameters )? ( SpecializationClause )?
+
+/*
 ClassifierSignature = type:(kwClass / (a:kwActive kwClass { return a })/ kwDataType / kwAssoc / kwSignal) 
                         name:name d:TemplateParameters? specialization:SpecializationClause? {
     let obj = null;
@@ -172,6 +214,7 @@ ClassifierSignature = type:(kwClass / (a:kwActive kwClass { return a })/ kwDataT
     obj.name = name;
     obj.specialization = specialization;
 }
+*/
 
 TemplateParameters = opLess first:ClassifierTemplateParameter other:(pComma p:ClassifierTemplateParameter { return p; })* opGreater
 {
@@ -180,6 +223,9 @@ TemplateParameters = opLess first:ClassifierTemplateParameter other:(pComma p:Cl
     return obj;
 }
 
+ClassifierTemplateParameter = ( documentComment )? Name ( kwSpecializes QualifiedName )?
+
+/*
 ClassifierTemplateParameter = documentation:documentComment? name:name
                             specialization:TemplateParameterConstraint? 
 {
@@ -197,22 +243,32 @@ TemplateParameterConstraint = kwSpecializes name:QualifiedName {
     qList.name = [name];
     return qList; 
 }
+*/
 
 SpecializationClause = kwSpecializes qList:QualifiedNameList { return qList; }
 
-// ClassDeclaration
-ClassDeclaration = abstract:kwAbstract? d:ClassifierSignature {
+/* 
+    CLASSES 
+*/
+
+ClassDeclaration = abstract:kwAbstract? kwClass d:ClassifierSignature {
     if(abstract !== null) d.isAbstract = true;
     return d;
 }
 
+ClassDefinition = ClassDeclaration ClassBody
+ClassDefinitionOrStub = ClassDeclaration ( pSemiColon / ClassBody )
+ClassBody = pLBrace ( ClassMember )* pRBrace
+
+/*
 ClassDefinition = d:ClassDeclaration pLBrace ownedMember:(ClassMember)* pRBrace {
     d.ownedMember = ownedMember;
     return d;
 }
+*/
 
 ClassMember = documentation:documentComment?
-            annotation:(StereotypeAnnotation)*
+            annotation:StereotypeAnnotations
             visibility:VisibilityIndicator?
             m:ClassMemberDefinition
 {
@@ -222,17 +278,29 @@ ClassMember = documentation:documentComment?
     return m;
 }
 
+ClassMemberDefinition = ClassifierDefinitionOrStub / FeatureDefinitionOrStub
+
+/*
 ClassMemberDefinition = ClassifierDefinition
                     / ClassifierStubDeclaration
                     / FeatureDefinition
                     / FeatureStubDeclaration
+*/
 
-// ActiveClassDeclaration
-ActiveClassDeclaration = abstract:kwAbstract? d:ClassifierSignature {
+/* 
+    ACTIVE CLASSES 
+*/
+
+ActiveClassDeclaration = abstract:kwAbstract? kwActive kwClass d:ClassifierSignature {
     if(abstract !== null) d.isAbstract = true;
     return d;
 }
 
+ActiveClassDefinition = ActiveClassDeclaration ActiveClassBody
+ActiveClassDefinitionOrStub = ActiveClassDeclaration ( pSemiColon / ActiveClassBody )
+ActiveClassBody = pLBrace ( ActiveClassMember )* pRBrace ( kwDo BehaviorClause )?
+
+/*
 ActiveClassDefinition = d:ActiveClassDeclaration pLBrace ownedMember:(ActiveClassMember)* pRBrace
                     classifierBehavior:( kwDo classifierBehavior:BehaviorClause { return classifierBehavior; })?
 {
@@ -244,6 +312,7 @@ ActiveClassDefinition = d:ActiveClassDeclaration pLBrace ownedMember:(ActiveClas
     }
     return d;
 }        
+*/
 
 BehaviorClause = body:Block {
     let obj = new alf.ActivityDefinition();
@@ -258,7 +327,7 @@ BehaviorClause = body:Block {
 }
 
 ActiveClassMember = documentation:documentComment?
-            annotation:(StereotypeAnnotation)*
+            annotation:StereotypeAnnotations
             visibility:VisibilityIndicator?
             m:ActiveClassMemberDefinition
 {
@@ -269,22 +338,29 @@ ActiveClassMember = documentation:documentComment?
 }
 
 ActiveClassMemberDefinition = ClassMemberDefinition
-                            / ActiveFeatureDefinition
-                            / ActiveFeatureStubDeclaration
+                            / ActiveFeatureDefinitionOrStub
 
-// DataTypeDeclaration
-DataTypeDeclaration = abstract:kwAbstract? d:ClassifierSignature {
+/*
+     DATA TYPES 
+*/
+DataTypeDeclaration = abstract:kwAbstract? kwDataType d:ClassifierSignature {
     if(abstract !== null) d.isAbstract = true;
     return d;
 }
 
+DataTypeDefinition = DataTypeDeclaration StructuredBody
+DataTypeDefinitionOrStub = DataTypeDeclaration ( pSemiColon / StructuredBody )
+StructuredBody = pLBrace ( StructuredMember )* pRBrace
+
+/*
 DataTypeDefinition = d:DataTypeDeclaration pLBrace ownedMember:(StructuredMember)* pRBrace {
     d.ownedMember = ownedMember;
     return d;
 }
+*/
 
 StructuredMember = documentation:documentComment?
-            annotation:(StereotypeAnnotation)*
+            annotation:StereotypeAnnotations
             visibility:kwPublic?
             m:PropertyDefinition
 {
@@ -294,20 +370,31 @@ StructuredMember = documentation:documentComment?
     return m;
 }
 
-// AssociationDeclaration
-AssociationDeclaration = abstract:kwAbstract? d:ClassifierSignature {
+/* 
+    ASSOCIATIONS 
+*/
+
+AssociationDeclaration = abstract:kwAbstract? kwAssoc d:ClassifierSignature {
     if(abstract !== null) d.isAbstract = true;
     return d;
 }
 
+AssociationDefinition = AssociationDeclaration StructuredBody
+AssociationDefinitionOrStub = AssociationDeclaration ( pSemiColon / StructuredBody )
+
+/*
 AssociationDefinition =  d:AssociationDeclaration pLBrace
                         first:StructuredMember second:StructuredMember
                         other:(StructuredMember)* pRBrace {
     d.ownedMember = [first, second].concat(other);
     return d;
 }
+*/
 
-// EnumerationDeclaration
+
+/*
+     ENUMERATIONS 
+*/
 EnumerationDeclaration = kwEnum name:name specialization:SpecializationClause? {
     let obj = new alf.EnumerationDefinition();
     obj.name = name;
@@ -315,6 +402,11 @@ EnumerationDeclaration = kwEnum name:name specialization:SpecializationClause? {
     return obj;
 }
 
+EnumerationDefinition = EnumerationDeclaration EnumerationBody
+EnumerationDefinitionOrStub = EnumerationDeclaration ( pSemiColon / EnumerationBody )
+EnumerationBody = pLBrace EnumerationLiteralName ( pComma EnumerationLiteralName )* pRBrace
+
+/*
 EnumerationDefinition = d:EnumerationDeclaration pLBrace 
                         first:EnumerationLiteralName other:(pComma n:EnumerationLiteralName { return n; } )*
                         pRBrace
@@ -322,6 +414,7 @@ EnumerationDefinition = d:EnumerationDeclaration pLBrace
     d.ownedElement = [first].concat(other);
     return d;
 }   
+*/
 
 EnumerationLiteralName = documentation:documentComment? name:name {
     let obj = new alf.EnumerationLiteralName();
@@ -331,18 +424,33 @@ EnumerationLiteralName = documentation:documentComment? name:name {
     return obj;
 }
 
-// SignalDeclaration
-SignalDeclaration = abstract:kwAbstract? d:ClassifierSignature {
+/* 
+    SIGNALS 
+*/
+SignalDeclaration = abstract:kwAbstract? kwSignal d:ClassifierSignature {
     if(abstract !== null) d.isAbstract = true;
     return d;
 }     
 
+SignalDefinition = SignalDeclaration StructuredBody
+SignalDefinitionOrStub = SignalDeclaration ( pSemiColon / StructuredBody )
+
+/*
 SignalDefinition = d:SignalDeclaration pLBrace ownedMember:(StructuredMember)* pRBrace {
     d.ownedMember = ownedMember;
     return d;
 }               
+*/
 
-// ActivityDeclaration
+/* 
+    ACTIVITIES 
+*/
+
+ActivityDeclaration = kwActivity Name ( TemplateParameters )? FormalParameters ( pColon TypePart )?
+ActivityDefinition = ActivityDeclaration Block
+ActivityDefinitionOrStub = ActivityDeclaration ( pSemiColon / Block )
+
+/*
 ActivityDeclaration = kwActivity name:name tp:TemplateParameters? d:FormalParameters retParam:ReturnParameter {
     let obj = new alf.ActivityDefinition();
     obj.name = name;
@@ -357,6 +465,7 @@ ActivityDefinition = d:ActivityDeclaration body:Block {
     d.body = body;
     return d;
 }
+*/
 
 FormalParameters = pLParen d:FormalParameterList? pRParen {
     return d === null ? new alf.NamespaceDefinition() : d;
@@ -369,7 +478,7 @@ FormalParameterList = first:FormalParameter other:(pColon p:FormalParameter { re
 }
 
 FormalParameter = documentation:documentComment?
-                annotation:StereotypeAnnotation*
+                annotation:StereotypeAnnotations
                 direction:ParameterDirection
                 name:name pColon p:TypePart 
 {
@@ -382,14 +491,21 @@ FormalParameter = documentation:documentComment?
 
 ParameterDirection = kwIn / kwInOut / kwOut
 
+/*
 ReturnParameter = pColon p:TypePart {
     p.direction = "return";
     return p;
 }
+*/
 
 /*
-    Feature declarations
+    FEATURES 
 */
+
+FeatureDefinitionOrStub = AttributeDefinition / OperationDefinitionOrStub
+ActiveFeatureDefinitionOrStub = ReceptionDefinition / SignalReceptionDefinitionOrStub
+
+/*
 FeatureDefinition = AttributeDefinition / OperationDefinition
 
 FeatureStubDeclaration = OperationStubDeclaration
@@ -397,8 +513,11 @@ FeatureStubDeclaration = OperationStubDeclaration
 ActiveFeatureDefinition = ReceptionDefinition / SignalReceptionDefinition
 
 ActiveFeatureStubDeclaration = SignalReceptionStubDeclaration
+*/
 
-// PropertyDefinition
+/* 
+    PROPERTIES 
+*/
 PropertyDefinition = d:PropertyDeclaration pSemiColon { return d; }
 
 AttributeDefinition = d:PropertyDeclaration initializer:AttributeInitializer? pSemiColon {
@@ -424,7 +543,7 @@ TypePart = typeName:TypeName d:Multiplicity? {
     return d;
 }
 
-Multiplicity = d:MultiplicityRange oau:OrderingAndUniqueness? {
+Multiplicity = pLBracket d:MultiplicityRange pRBracket oau:OrderingAndUniqueness? {
     if(oau !== null) {
         d = Object.assign(oau);
     }
@@ -442,6 +561,11 @@ OrderingAndUniqueness = data:(
     return obj;
 }
 
+
+MultiplicityRange = ( naturalLiteral pDoubleDot )? UnlimitedNaturalLiteral
+UnlimitedNaturalLiteral =naturalLiteral / opMult
+
+/*
 MultiplicityRange = MultiplicityIndicator {
     let d = new alf.TypedElementDefinition();
     d.upperBound="*";
@@ -457,8 +581,16 @@ MultiplicityRange = MultiplicityIndicator {
 }
 
 UnlimitedNaturalLiteral = naturalLiteral / unboundedNaturalLiteral
+*/
 
-// OperationDeclaration
+/* 
+    OPERATIONS 
+*/
+OperationDeclaration = ( kwAbstract )? Name FormalParameters ( pColon TypePart )? ( RedefinitionClause )?
+OperationDefinitionOrStub = OperationDeclaration ( pSemiColon / Block )
+RedefinitionClause = kwRedefines QualifiedNameList
+
+/*
 OperationDeclaration = isAbstract:kwAbstract? name:name ownedMember:FormalParameters 
                         returnMember:ReturnParameter? redefinition:RedefinitionClause?
 {
@@ -483,7 +615,17 @@ OperationStubDeclaration = d:OperationDeclaration pSemiColon {
 
 RedefinitionClause = kwRedefines qList:QualifiedNameList { return qList; }
 
-// ReceptionDefinition
+*/
+
+/* 
+    RECEPTIONS 
+*/
+
+ReceptionDefinition = kwReceive QualifiedName pSemiColon
+SignalReceptionDeclaration = kwReceive kwSignal Name ( SpecializationClause )?
+SignalReceptionDefinitionOrStub = SignalReceptionDeclaration ( pSemiColon / StructuredBody )
+
+/*
 ReceptionDefinition = kwReceive signalName:QualifiedName pSemiColon {
     let obj = new alf.ReceptionDefinition();
     obj.signalName = signalName;
@@ -507,7 +649,7 @@ SignalReceptionStubDeclaration = d:SignalReceptionDeclaration pSemiColon {
     d.isStub = true;
     return d;
 }
-
+*/
 /*
     Statements
 */
@@ -528,19 +670,27 @@ Statement = AnnotatedStatement
         / InLineStatement
         / BlockStatement
         / EmptyStatement
+        / LocalNameDeclarationOrExpressionStatement
         / LocalNameDeclarationStatement
-        / ExpressionStatement
         / IfStatement
         / SwitchStatement
         / WhileStatement
-        / DoStatement
         / ForStatement
+        / DoStatement
         / BreakStatement
         / ReturnStatement
         / AcceptStatement
         / ClassifyStatement
 
-// AnnotatedStatement
+/* 
+    ANNOTATED STATEMENTS 
+*/
+AnnotatedStatement = pSlashSlashAt Annotations LineTerminator Statement
+Annotations = Annotation ( opAt Annotation )*
+Annotation = name ( pLParen NameList pRParen )?
+NameList = name ( pComma name )*
+
+/*
 AnnotatedStatement = opDiv opDiv opAt first:Annotation other:( opAt a:Annotation { return a; }) 
                     (opDiv opDiv (InputCharacter)* )? LineTerminator 
                     s:Statement
@@ -557,8 +707,15 @@ Annotation = identifier:name argument:(first:name other:(pComma n:name { return 
     let.argument = argument === null ? [] : argument;
     return obj;
 }
+*/
 
-// InLineStatement
+/*
+     IN-LINE STATEMENTS 
+*/
+
+InLineStatement = pSlashStarAt name pLParen name pRParen documentComment
+
+/*
 InLineStatement = s:InLineHeader code:CommentText opMult opDiv {
     s.code = code;
     return s;
@@ -571,6 +728,8 @@ InLineHeader = opDiv opMult opAt annInline pLParen language:name pRParen
     obj.language = language;
     return obj;
 }
+*/
+
 
 // BlockStatement
 BlockStatement = block:Block {
@@ -584,7 +743,25 @@ EmptyStatement = pSemiColon {
     return new alf.EmptyStatement();
 }
 
-// LocalNameDeclarationStatement
+/* 
+    LOCAL NAME DECLARATION AND EXPRESSION STATEMENTS 
+*/
+LocalNameDeclarationOrExpressionStatement = PotentiallyAmbiguousQualifiedName
+                                            ( 
+                                                ( MultiplicityIndicator )? Name LocalNameDeclarationStatementCompletion
+                                                / NameToExpressionCompletion pSemiColon
+                                            )
+                                            / NonNameExpression pSemiColon
+
+LocalNameDeclarationStatement = kwLet Name pColon TypeName ( MultiplicityIndicator )? LocalNameDeclarationStatementCompletion
+
+LocalNameDeclarationStatementCompletion = opAssign InitializationExpression pSemiColon
+
+InitializationExpression = Expression / SequenceInitializationExpression / InstanceInitializationExpression  
+
+InstanceInitializationExpression = kwNew Tuple
+
+/*
 LocalNameDeclarationStatement = s:NameDeclaration pComma expression:InitializationExpression pSemiColon {
     s.expression = expression;
     return s;
@@ -612,15 +789,21 @@ NameDeclaration = kwLet name:name pColon typeName:TypeName m:MultiplicityIndicat
     if(m !== null) obj.hasMultiplicity = true;
     return obj;
 }
+*/
 
+/*
 // ExpressionStatement
 ExpressionStatement = expression:Expression {
     let obj = new alf.ExpressionStatement();
     obj.expression = expression;
     return obj;
 }
+*/
 
-// IfStatement
+/* 
+    IF STATEMENTS 
+*/
+
 IfStatement = kwIf s:SequentialClauses finalClause:FinalClause? {
     s.finalClause = finalClause;
     return s;
@@ -647,7 +830,10 @@ NonFinalClause = pLParen expression:Expression pRParen b:Block {
 
 FinalClause = kwElse b:Block { return b; }
 
-// SwitchStatement
+/* 
+    SWITCH STATEMENTS 
+*/
+
 SwitchStatement = kwSwitch pLParen expression:Expression pRParen 
                   pLBrace nonDefaultClause:SwitchClause*
                   defaultClause:SwitchDefaultClause? pRBrace 
@@ -676,7 +862,10 @@ NonEmptyStatementSequence = statement:DocumentedStatement+ {
     return obj;
 }
 
-// WhileStatement
+/* 
+    WHILE STATEMENTS 
+*/
+
 WhileStatement = kwWhile pLParen condition:Expression pRParen body:Block {
     let obj = new alf.WhileStatement();
     obj.condition = condition;
@@ -684,7 +873,10 @@ WhileStatement = kwWhile pLParen condition:Expression pRParen body:Block {
     return obj;
 }
 
-// DoStatement
+/* 
+    DO STATEMENTS 
+*/
+
 DoStatement = kwDo body:Block kwWhile pLParen condition:Expression pRParen pSemiColon {
     let obj = new alf.DoStatement();
     obj.condition = condition;
@@ -692,7 +884,10 @@ DoStatement = kwDo body:Block kwWhile pLParen condition:Expression pRParen pSemi
     return obj;
 }
 
-// ForStatement
+/* 
+    FOR STATEMENTS
+*/
+
 ForStatement = kwFor pLParen s:ForControl pRParen body:Block {
     s.body = body;
     return s;
@@ -711,7 +906,7 @@ LoopVariableDefinition = variable:name kwIn expression1:Expression expression2:(
     obj.expression2 = expression2;
     return obj;
 }
-/ typeName:TypeName variable:name pColon expression1:Expression {
+/ typeName:QualifiedName variable:name pColon expression1:Expression {
     let obj = new alf.LoopVariableDefinition();
     obj.typeName = typeName;
     obj.variable = variable;
@@ -720,17 +915,40 @@ LoopVariableDefinition = variable:name kwIn expression1:Expression expression2:(
     return obj;
 }
 
-// BreakStatement
+/* 
+    BREAK STATEMENTS 
+*/
 BreakStatement = kwBreak pSemiColon { return new alf.BreakStatement(); }
 
-// ReturnStatement
+/* 
+    RETURN STATEMENTS 
+*/
 ReturnStatement = kwReturn expression:Expression? pSemiColon {
     let obj = new alf.ReturnStatement();
     obj.expression = expression;
     return obj;
 }
 
-// AcceptStatement
+/* 
+    ACCEPT STATEMENTS 
+*/
+
+AcceptStatement = AcceptClause ( SimpleAcceptStatementCompletion / CompoundAcceptStatementCompletion )
+
+SimpleAcceptStatementCompletion = pSemiColon
+
+CompoundAcceptStatementCompletion = Block ( kwOr AcceptBlock )*
+
+AcceptBlock = AcceptClause Block
+
+AcceptClause = kwAccept pLParen name:( n:name pColon { return n; })? signalNames:QualifiedNameList pRParen {
+    let obj = new alf.AcceptBlock();
+    obj.name = name;
+    obj.signalNames = signalNames;
+    return obj;
+}
+
+/*
 AcceptStatement = SimpleAcceptStatement / CompoundAcceptStatement
 
 SimpleAcceptStatement = acceptBlock:AcceptBlock pSemiColon {
@@ -749,21 +967,13 @@ AcceptBlock = a:AcceptClause block:Block {
     a.block = block;
     return a;
 }
+*/
 
-AcceptClause = kwAccept pLParen name:( n:name pColon { return n; })? signalNames:QualifiedNameList pRParen {
-    let obj = new alf.AcceptBlock();
-    obj.name = name;
-    obj.signalNames = signalNames;
-    return obj;
-}
 
-QualifiedNameList = first:QualifiedName other:( pComma qn:QualifiedName )* {
-    let obj = new alf.QualifiedNameList();
-    obj.name = [first].concat(other);
-    return obj;
-} 
+/* 
+    CLASSIFY STATEMENTS 
+*/
 
-// ClassifyStatement
 ClassifyStatement = kwClassify expression:Expression s:ClassificationClause pSemiColon {
     s.expression = expression;
     return s;
@@ -794,12 +1004,38 @@ ReclassifyAllClause = kwFrom opMult {
     return new alf.QualifiedNameList();
 }
 
+QualifiedNameList = first:QualifiedName other:( pComma qn:QualifiedName )* {
+    let obj = new alf.QualifiedNameList();
+    obj.name = [first].concat(other);
+    return obj;
+} 
 
-Expression = ConditionalExpression / AssignmentExpression
 
 /*
-    Assignment expressions
+    Expressions
 */
+
+Expression = UnaryExpression  ExpressionCompletion
+
+NonNameExpression = NonNameUnaryExpression ExpressionCompletion
+
+NameToExpressionCompletion = ( NameToPrimaryExpression )? PrimaryToExpressionCompletion
+
+PrimaryToExpressionCompletion = PostfixExpressionCompletion ExpressionCompletion
+
+ExpressionCompletion = AssignmentExpressionCompletion / ConditionalExpressionCompletion
+
+
+/* 
+    ASSIGNMENT EXPRESSIONS 
+*/
+AssignmentExpressionCompletion = AssignmentOperator Expression
+
+AssignmentOperator = opAssign / opAsgnMod / opAsgnBitXor / opAsgnBitOr
+                    / opAsgnBitAnd / opAsgnDiv / opAsgnMult / opAsgnSub
+                    / opAsgnAdd / opAsgnZeroShiftRight / opAsgnRightShift / opAsgnLeftShift
+
+/*
 AssignmentExpression = leftHandSide:LeftHandSide operator:AssignmentOperator rightHandSide:Expression {
     let obj = new alf.AssignmentExpression();
     obj.leftHandSide = leftHandSide;
@@ -828,14 +1064,17 @@ FeatureLeftHandSide = feature:FeatureReference {
     obj.feature = feature;
     return obj;
 }
-
-AssignmentOperator = opAssign / opAsgnMod / opAsgnBitXor / opAsgnBitOr
-                    / opAsgnBitAnd / opAsgnDiv / opAsgnMult / opAsgnSub
-                    / opAsgnAdd / opAsgnZeroShiftRight / opAsgnRightShift / opAsgnLeftShift
+*/
 
 /*
-    Conditional-Test expressions
+     CONDITIONAL-TEST EXPRESSIONS 
 */
+ConditionalExpression = UnaryExpression ConditionalExpressionCompletion
+
+ConditionalExpressionCompletion = ConditionalOrExpressionCompletion
+                                ( opQuestionMark Expression pColon ConditionalExpression )?
+
+/*
 ConditionalExpression = ConditionalAndOrConditionalOrExpression / ConditionalTestExpression
 ConditionalTestExpression = operand1:ConditionalAndOrConditionalOrExpression opQuestionMark
                             operand2:Expression pColon
@@ -847,10 +1086,20 @@ ConditionalTestExpression = operand1:ConditionalAndOrConditionalOrExpression opQ
     obj.operand3 = operand3;
     return obj;
 }
+*/
+
+/* 
+    CONDITIONAL LOGICAL EXPRESSIONS 
+*/
+ConditionalAndExpression = UnaryExpression ConditionalAndExpressionCompletion
+
+ConditionalAndExpressionCompletion = InclusiveOrExpressionCompletion ( opLogAnd InclusiveOrExpression )*
+
+ConditionalOrExpression = UnaryExpression ConditionalOrExpressionCompletion
+
+ConditionalOrExpressionCompletion = ConditionalAndExpressionCompletion ( opLogOr ConditionalAndExpression )*
 
 /*
-    Binary operator expressions
-*/
 InclusiveOrOrConditionalAndExpression = ExclusiveOrOrInclusiveOrExpression / ConditionalAndExpression
 ConditionalAndExpression = operand1:InclusiveOrOrConditionalAndExpression operator:opLogAnd operand2:ExclusiveOrOrInclusiveOrExpression {
     let obj = new alf.ConditionalLogicalExpression();
@@ -868,7 +1117,25 @@ ConditionalOrExpression = operand1:ConditionalAndOrConditionalOrExpression opera
     obj.operand2 = operand2;
     return obj;
 }
+*/
 
+/* 
+    LOGICAL EXPRESSIONS 
+*/
+
+AndExpression = UnaryExpression AndExpressionCompletion
+
+AndExpressionCompletion = EqualityExpressionCompletion ( opBitLogAnd EqualityExpression )*
+
+ExclusiveOrExpression = UnaryExpression ExclusiveOrExpressionCompletion
+
+ExclusiveOrExpressionCompletion = AndExpressionCompletion ( opBitLogXor AndExpression )*
+
+InclusiveOrExpression = UnaryExpression InclusiveOrExpressionCompletion
+
+InclusiveOrExpressionCompletion = ExclusiveOrExpressionCompletion ( opBitLogOr ExclusiveOrExpression )*
+
+/*
 EqualityOrAndExpression = ClassificationOrEqualityExpression / AndExpression
 AndExpression = operand1:EqualityOrAndExpression operator:opBitLogAnd operand2:ClassificationOrEqualityExpression {
     let obj = new alf.LogicalExpression();
@@ -895,7 +1162,18 @@ InclusiveOrExpression = operand1:ExclusiveOrOrInclusiveOrExpression operator:opB
     obj.operand2 = operand2;
     return obj;
 }
+*/
 
+/* 
+    EQUALITY EXPRESSIONS 
+*/
+EqualityExpression = UnaryExpression ClassificationExpressionCompletion
+
+EqualityExpressionCompletion = ClassificationExpressionCompletion ( EqualityOperator ClassificationExpression)*
+
+EqualityOperator = opEqual / opNotEqual
+
+/*
 ClassificationOrEqualityExpression = RelationalOrClassificationExpression / EqualityExpression
 EqualityExpression = operand1:ClassificationOrEqualityExpression operator:EqualityOperator operand2:RelationalOrClassificationExpression {
     let obj = new alf.EqualityExpression();
@@ -904,9 +1182,19 @@ EqualityExpression = operand1:ClassificationOrEqualityExpression operator:Equali
     obj.operand2 = operand2;
     return obj;
 }
-EqualityOperator = opEqual / opNotEqual
 EqualityOrAndExpression = ClassificationOrEqualityExpression / AndExpression
+*/
 
+/* 
+    CLASSIFICATION EXPRESSIONS 
+*/
+ClassificationExpression = UnaryExpression ClassificationExpressionCompletion
+
+ClassificationExpressionCompletion = RelationalExpressionCompletion ( ClassificationOperator QualifiedName )?
+
+ClassificationOperator = kwInstanceOf / kwHasType
+
+/*
 RelationalOrClassificationExpression = ShiftOrRelationalExpression / ClassificationExpression
 ClassificationExpression = operand:ShiftOrRelationalExpression operator:ClassificationOperator typeName:QualifiedName {
     let obj = new alf.ClassificationExpression();
@@ -915,8 +1203,18 @@ ClassificationExpression = operand:ShiftOrRelationalExpression operator:Classifi
     obj.typeName = typeName;
     return obj;
 }
-ClassificationOperator = kwInstanceOf / kwHasType
+*/
 
+/* 
+    RELATIONAL EXPRESSIONS 
+*/
+RelationalExpression = UnaryExpression RelationalExpressionCompletion
+
+RelationalExpressionCompletion = ShiftExpressionCompletion ( RelationalOperator ShiftExpression )?
+
+RelationalOperator = opLessOrEqual / opGreaterOrEqual / opGreater / opLess
+
+/*
 ShiftOrRelationalExpression = ArithmeticOrShiftExpression / RelationalExpression
 RelationalExpression = operand1:ArithmeticOrShiftExpression operator:RelationalOperator operand2:ArithmeticOrShiftExpression {
     let obj = new alf.RelationalExpression();
@@ -925,8 +1223,17 @@ RelationalExpression = operand1:ArithmeticOrShiftExpression operator:RelationalO
     obj.operand2 = operand2;
     return obj;
 }
-RelationalOperator = opLessOrEqual / opGreaterOrEqual / opGreater / opLess
+*/
+/* 
+    SHIFT EXPRESSIONS 
+*/
+ShiftExpression = UnaryExpression ShiftExpressionCompletion
 
+ShiftExpressionCompletion = AdditiveExpressionCompletion ( ShiftOperator AdditiveExpression )*
+
+ShiftOperator = opLeftShift / opRightShift / opZeroShiftRight
+
+/*
 ArithmeticOrShiftExpression = UnaryOrArithmeticExpression / ShiftExpression
 ShiftExpression = operand1:ArithmeticOrShiftExpression operator:ShiftOperator operand2:UnaryOrArithmeticExpression {
     let obj = new alf.ShiftExpression();
@@ -935,8 +1242,25 @@ ShiftExpression = operand1:ArithmeticOrShiftExpression operator:ShiftOperator op
     obj.operand2 = operand2;
     return obj;
 }
-ShiftOperator = opLeftShift / opRightShift / opZeroShiftRight
+*/
 
+
+/*
+    ARITHMETIC EXPRESSIONS
+*/
+MultiplicativeExpression = UnaryExpression MultiplicativeExpressionCompletion
+
+MultiplicativeExpressionCompletion = ( MultiplicativeOperator UnaryExpression )*
+
+MultiplicativeOperator = opMult / opDiv / opMod
+
+AdditiveExpression = UnaryExpression AdditiveExpressionCompletion
+
+AdditiveExpressionCompletion = MultiplicativeExpressionCompletion ( AdditiveOperator MultiplicativeExpression)*
+
+AdditiveOperator = opAdd / opSub
+
+/*
 UnaryOrArithmeticExpression = UnaryOrMultiplicativeExpression / AdditiveExpression
 AdditiveExpression = operand1:UnaryOrMultiplicativeExpression operator:AdditiveOperator operand2:UnaryOrMultiplicativeExpression {
     let obj = new alf.ArithmeticExpression();
@@ -945,7 +1269,6 @@ AdditiveExpression = operand1:UnaryOrMultiplicativeExpression operator:AdditiveO
     obj.operand2 = operand2;
     return obj;
 }
-AdditiveOperator = opAdd / opSub
 
 UnaryOrMultiplicativeExpression = UnaryExpression / MultiplicativeExpression
 MultiplicativeExpression = operand1:UnaryOrMultiplicativeExpression operator:MultiplicativeOperator operand2:UnaryExpression {
@@ -955,20 +1278,50 @@ MultiplicativeExpression = operand1:UnaryOrMultiplicativeExpression operator:Mul
     obj.operand2 = operand2;
     return obj;
 }
-MultiplicativeOperator = opMult / opDiv / opMod
+*/
 
 /*
     Unary operator expressions
 */
-UnaryExpression = PrimaryExpression
-            / IncrementOrDecrementExpression
-            / BooleanUnaryExpression
-            / BitStringUnaryExpression
-            / NumericUnaryExpression
-            / CastExpression
-            / IsolationExpression
+UnaryExpression = PostfixOrCastExpression / NonPostfixNonCastUnaryExpression
 
+PostfixOrCastExpression = NonNamePostfixOrCastExpression
+                        / NameOrPrimaryExpression PostfixExpressionCompletion
 
+NonNameUnaryExpression = NonNamePostfixOrCastExpression / NonPostfixNonCastUnaryExpression
+
+NonNamePostfixOrCastExpression = pLParen
+                                    ( kwAny pRParen CastCompletion
+                                    / PotentiallyAmbiguousQualifiedName
+                                        ( pRParen CastCompletion
+                                        / NameToExpressionCompletion pRParen PostfixExpressionCompletion
+                                        )
+                                    / NonNameExpression pRParen PostfixExpressionCompletion
+                                    )
+                                    / BaseExpression PostfixExpressionCompletion
+
+NonPostfixNonCastUnaryExpression = PrefixExpression
+                                / NumericUnaryExpression
+                                / BooleanNegationExpression
+                                / BitStringComplementExpression
+                                / IsolationExpression
+
+BooleanNegationExpression = opLogNot UnaryExpression
+BitStringComplementExpression = opBitNot UnaryExpression
+
+NumericUnaryExpression = NumericUnaryOperator UnaryExpression
+NumericUnaryOperator = opAdd / opSub
+
+IsolationExpression = opDollar UnaryExpression
+
+CastExpression = pLParen TypeName pRParen CastCompletion
+
+CastCompletion = PostfixOrCastExpression
+                / BooleanNegationExpression
+                / BitStringComplementExpression
+                / IsolationExpression
+
+/*
 IsolationExpression = operator:opDollar operand:UnaryExpression {
     let obj = new alf.IsolationExpression();
     obj.operator = operator;
@@ -1012,27 +1365,40 @@ BooleanUnaryExpression = operator:opLogNot operand:UnaryExpression {
     obj.operand = operand;
     return obj;
 }
+*/
 
 /*
     Increment and decrement operators
 */
 
+PostfixExpressionCompletion = PrimaryExpressionCompletion ( PostfixOperation )?
+
+/*
 IncrementOrDecrementExpression = e:PostfixExpression { e.isPrefix = false; }
                     / e:PrefixExpression { e.isPrefix = true; }
+*/
 
+PostfixOperation = AffixOperator
+
+/*
 PostfixExpression = operand:LeftHandSide operator:AffixOperator {
     let obj = new alf.IncrementOrDecrementExpression();
     obj.operator = operator;
     obj.operand = operand;
     return obj;
 }
+*/
 
+PrefixExpression = AffixOperator PrimaryExpression
+
+/*
 PrefixExpression = operator:AffixOperator operand:LeftHandSide {
     let obj = new alf.IncrementOrDecrementExpression();
     obj.operator = operator;
     obj.operand = operand;
     return obj;
 }
+*/
 
 AffixOperator = opIncrement / opDecrement
 
@@ -1040,11 +1406,20 @@ AffixOperator = opIncrement / opDecrement
 /*
     Primary expressions
 */
-PrimaryExpression = NameExpression / NonNamePrimaryExpression
-NonNamePrimaryExpression = LiteralExpression / ThisExpression / ParenthesizedExpression // / PropertyAccessExpression
-        / InvocationExpression / InstanceCreationExpression / LinkOperationExpression / ClassExtentExpression
-  /*      / SequenceConstructionExpression / SequenceAccessExpression / SequenceOperationExpression 
-        / SequenceReductionExpression / SequenceExpansionExpression */
+PrimaryExpression = ( NameOrPrimaryExpression / BaseExpression / ParenthesizedExpression ) PrimaryExpressionCompletion
+
+BaseExpression = LiteralExpression / ThisExpression / SuperInvocationExpression 
+                    / InstanceCreationOrSequenceConstructionExpression
+                    / SequenceAnyExpression
+
+NameToPrimaryExpression = pDot ( LinkOperationCompletion / ClassExtentExpressionCompletion )
+                            / SequenceConstructionExpressionCompletion
+                            / BehaviorInvocation
+
+PrimaryExpressionCompletion = ( Feature ( FeatureInvocation )?
+                                / SequenceOperationOrReductionOrExpansion
+                                / Index )*
+
 
 // Literal expressions
 LiteralExpression = BooleanLiteralExpression 
@@ -1071,14 +1446,14 @@ StringLiteralExpression = image:stringLiteral {
 }
 
 // Name expression
-NameExpression = name:PotentiallyAmbiguousQualifiedName {
+NameOrPrimaryExpression = name:PotentiallyAmbiguousQualifiedName ( NameToPrimaryExpression )? {
     let obj = new alf.NameExpression();
     obj.name = name;
     return obj;
 }
 
 // ThisExpression
-ThisExpression = kwThis {
+ThisExpression = kwThis ( Tuple )? {
     return new alf.ThisExpression();
 }
 
@@ -1086,11 +1461,14 @@ ThisExpression = kwThis {
 ParenthesizedExpression = pLParen e:Expression pRParen { return e; }
 
 // PropertyAccessExpression - STUDY DISAMBIGUATION RULES
-/*PropertyAccessExpression = featureReference:FeatureReference {
+Feature = pDot NameBinding
+
+/*
+PropertyAccessExpression = featureReference:FeatureReference {
     let obj = new alf.PropertyAccessExpression();
     obj.featureReference = featureReference;
     return obj;
-}*/
+}
 FeatureReference = expression:FeatureTargetExpression pDot nameBinding:NameBinding {
     let obj = new alf.FeatureReference();
     obj.expression = expression;
@@ -1102,29 +1480,29 @@ NameTargetExpression = name:ColonQualifiedName {
     let obj = new alf.NameExpression();
     obj.name = name;
     return obj;
-}
+}*/
 
 // InvocationExpression
-InvocationExpression = e:InvocationTarget tuple:Tuple { e.tuple = tuple; return e; }
-InvocationTarget = BehaviorInvocationTarget / /* FeatureInvocationTarget /*/  SuperInvocationTarget;
+//InvocationExpression = e:InvocationTarget tuple:Tuple { e.tuple = tuple; return e; }
+//InvocationTarget = BehaviorInvocationTarget / /* FeatureInvocationTarget /*/  SuperInvocationTarget;
 
 // Tuple
-Tuple = PositionalTuple / NamedTuple
+Tuple = pLParen tuple:(NamedTupleExpressionList / ( PositionalTupleExpressionList )? ) pRParen { return tuple; }
 
-PositionalTuple = pLParen tuple:TupleExpressionList? pRParen {
-    return tuple === null ? new alf.PositionalTuple)() : tuple;
-}
-TupleExpressionList = first:Expression other:( pComma e:Expression { return e; } )* {
+PositionalTupleExpressionList = first:Expression other:PositionalTupleExpressionListCompletion {
     let obj = new alf.PositionalTuple();
     obj.expression = [first].concat(other);
     return obj;
 }
 
-NamedTuple = pLParen first:NamedExpression other:( pComma ne:NamedExpression { return ne; } )* pRParen {
+PositionalTupleExpressionListCompletion = ( pComma expr:Expression { return expr; } )*
+
+NamedTupleExpressionList = first:NamedExpression other:( pComma ne:NamedExpression { return ne; } )* {
     let obj = new alf.NamedTuple();
     obj.namedExpression = [first].concat(other);
     return obj;
 }
+
 NamedExpression = name:name pFatArrow expression:Expression {
     let obj = new alf.NamedExpression();
     obj.name = name;
@@ -1133,6 +1511,7 @@ NamedExpression = name:name pFatArrow expression:Expression {
 }
 
 // BehaviorInvocationTarget
+/*
 BehaviorInvocationTarget = target:PotentiallyAmbiguousQualifiedName {
     let obj = new alf.BehaviorInvocationExpression();
     obj.target = target;
@@ -1153,7 +1532,12 @@ SuperInvocationTarget = kwSuper target:( pDot target:QualifiedName { return targ
     obj.target = target;
     return obj;
 }
+*/
+BehaviorInvocation = Tuple
+FeatureInvocation = Tuple
+SuperInvocationExpression = kwSuper ( pDot qn:QualifiedName { return qn;} )? tuple:Tuple
 
+/*
 // InstanceCreationExpression
 InstanceCreationExpression = kwNew constructorName:QualifiedName tuple:Tuple {
     let obj = new alf.InstanceCreationExpression();
@@ -1190,8 +1574,9 @@ IndexedNamedExpression = name:name ( index: Index { return index; })? pFatArrow 
 }
 
 Index = pLBracket e:Expression pRBracket { return e; }
-
+*/
 // ClassExtentExpression
+/*
 ClassExtentExpression = type:QualifiedName pDot kwAllInstances pLParen pRParen {
     let obj = new alf.ClassExtentExpression();
     obj.type = type;
@@ -1206,7 +1591,55 @@ SequenceConstructionExpression = NullExpression {
 } / SequenceElementsExpression
 
 NullExpression = kwNull
+*/
 
+/* INSTANCE CREATION EXPRESSIONS */
+InstanceCreationOrSequenceConstructionExpression = kwNew qn:QualifiedName 
+                                                ( SequenceConstructionExpressionCompletion
+                                                / Tuple )
+
+/* LINK OPERATION EXPRESSIONS */
+LinkOperationCompletion = LinkOperation LinkOperationTuple
+
+LinkOperation = kwCreateLink / kwDestroyLink / kwClearAssoc
+
+LinkOperationTuple = pLParen ( 
+                                Name
+                                ( Index
+                                    ( pFatArrow IndexedNamedExpressionListCompletion 
+                                        / PrimaryToExpressionCompletion PositionalTupleExpressionListCompletion
+                                    )
+                                    /  pFatArrow IndexedNamedExpressionListCompletion
+                                )
+                                / PositionalTupleExpressionList
+                            )? pLParen
+
+IndexedNamedExpressionListCompletion = Expression ( pComma IndexedNamedExpression )*
+
+IndexedNamedExpression = Name ( Index )? pFatArrow Expression
+
+/* CLASS EXTENT EXPRESSIONS */
+
+ClassExtentExpressionCompletion = kwAllInstances pLParen pRParen
+
+/* SEQUENCE CONSTRUCTION EXPRESSIONS */
+
+SequenceAnyExpression = kwAny SequenceConstructionExpressionCompletion / kwNull
+
+SequenceConstructionExpressionCompletion = ( MultiplicityIndicator )? pLBrace ( SequenceElements )? pRBrace
+
+MultiplicityIndicator = pLBracket pRBracket
+
+SequenceElements = Expression ( pDoubleDot Expression / SequenceElementListCompletion )
+                    / SequenceInitializationExpression SequenceElementListCompletion
+
+SequenceElementListCompletion = ( pComma SequenceElement )* ( pComma )?
+
+SequenceElement = Expression / SequenceInitializationExpression
+
+SequenceInitializationExpression = ( kwNew )? pLBrace SequenceElements pRBrace
+
+/*
 SequenceElementsExpression = ( kwNew )? e:SequenceElementsTypePart pLBrace elements:SequenceElements pRBrace {
     e.elements = elements;
     return e;
@@ -1219,7 +1652,6 @@ SequenceElementsTypePart = typeName:TypeName multIndication:( MultiplicityIndica
     return obj;
 }
 
-MultiplicityIndicator = pLBracket pRBracket
 
 SequenceInitializationExpression = ( kwNew )? pLBrace elements:SequenceElements pRBrace {
     let obj = new alf.SequenceConstructionExpression();
@@ -1247,6 +1679,13 @@ SequenceRange = rangeLower:Expression pDoubleDot rangeUpper:Expression {
     return obj;
 }
 
+*/
+
+/* SEQUENCE ACCESS EXPRESSIONS */
+
+Index = pLBracket Expression pRBracket
+
+/*
 // SequenceAccessExpression
 SequenceAccessExpression = primary:PrimaryExpression index:Index {
     let obj = new alf.SequenceAccessExpression();
@@ -1254,7 +1693,17 @@ SequenceAccessExpression = primary:PrimaryExpression index:Index {
     obj.index = index;
     return obj;
 }
+*/
 
+/* SEQUENCE OPERATION, REDUCTION AND EXPANSION EXPRESSIONS */
+SequenceOperationOrReductionOrExpansion = pSlimArrow ( QualifiedName Tuple
+                                                        / kwReduce ( kwOrdered )? QualifiedName
+                                                        / name name 
+                                                        // TODO: THE FIRST NAME ARGUMENT MAY BE THE OPERATION NAME, FIND OUT
+                                                            pLParen Expression pRParen
+                                                     )
+
+/*
 // SequenceOperationExpression
 SequenceOperationExpression = primary:ExtentOrExpression pSlimArrow operation:QualifiedName tuple:Tuple {
     let obj = new alf.SequenceOperationExpression();
@@ -1295,6 +1744,7 @@ SequenceExpansionExpression = primary:ExtentOrExpression pSlimArrow e:ExpansionO
     return e;    
 }
 
+
 ExpansionOperation = SelectOrRejectOperation
                     / CollectOrIterateOperation
                     / ForAllOrExistsOrOneOperation
@@ -1323,30 +1773,48 @@ IsUniqueOperation = operation:fnIsUnique {
     obj.operation = operation;
     return obj;
 }
+*/
 
 /*
     Qualified names
 */
 TypeName = QualifiedName / kwAny
 
-QualifiedName = qn:(ColonQualifiedName / DotQualifiedName / UnqualifiedName) 
-{ qn.isAmbiguous = false; return qn; }
+QualifiedName = uqn:UnqualifiedName uqNames:(ColonQualifiedNameCompletion / DotQualifiedNameCompletion)?
+{ 
+    let qn = new alf.QualifiedName();
+    uqNames = uqNames === null ? [] : uqNames;
+    qn.nameBinding = [uqn].concat(uqNames);
+    qn.isAmbiguous = false; 
+    return qn; 
+}
 
-PotentiallyAmbiguousQualifiedName = qn:ColonQualifiedName { qn.isAmbiguous = false; return qn; }
-        / qn:DotQualifiedName { qn.isAmbiguous = true; return qn; }
-        / qn:UnqualifiedName { qn.isAmbiguous = false; return qn; }
+PotentiallyAmbiguousQualifiedName = uqn:UnqualifiedName uqNames:(ColonQualifiedNameCompletion / DotQualifiedNameCompletion)?
+{ 
+    let qn = new alf.QualifiedName();
+    uqNames = uqNames === null ? [] : uqNames;
+    qn.nameBinding = [uqn].concat(uqNames);
+    qn.isAmbiguous = true; 
+    return qn; 
+}
 
-ColonQualifiedName = first:NameBinding other:(pDoubleColon nb:NameBinding { return nb; } )+ {
+ColonQualifiedName = first:UnqualifiedName other:ColonQualifiedNameCompletion
+{
     let obj = new alf.QualifiedName();
     obj.nameBinding = [first].concat(other);
     return obj;
 }
 
-DotQualifiedName = first:NameBinding other:(pDot nb:NameBinding { return nb; } )+ {
+ColonQualifiedNameCompletion = (pDoubleColon nb:NameBinding { return nb; } )+ 
+
+DotQualifiedName = first:UnqualifiedName other:DotQualifiedNameCompletion
+{
     let obj = new alf.QualifiedName();
     obj.nameBinding = [first].concat(other);
     return obj;
 }
+
+DotQualifiedNameCompletion = (pDot nb:NameBinding { return nb; } )+ 
 
 UnqualifiedName = nameBinding:NameBinding {
     let obj = new alf.QualifiedName();
@@ -1361,9 +1829,9 @@ NameBinding = name:name binding:(TemplateBinding)? {
     return obj;
 }
 
-TemplateBinding = PositionalTemplateBinding / NamedTemplateBinding
+TemplateBinding = opLess binding:(PositionalTemplateBinding / NamedTemplateBinding) opGreater { return binding; }
 
-PositionalTemplateBinding = opLess first:QualifiedName other:( pComma qn:QualifiedName { return qn; } )* opGreater {
+PositionalTemplateBinding =  first:QualifiedName other:( pComma qn:QualifiedName { return qn; } )*  {
     let obj = new alf.PositionalTemplateBinding();
     obj.argumentName = new Array();
     obj.argumentName.push(first);
@@ -1371,7 +1839,7 @@ PositionalTemplateBinding = opLess first:QualifiedName other:( pComma qn:Qualifi
     return obj;
 }
 
-NamedTemplateBinding = opLess first:TemplateParameterSubstitution other:( pComma tps:TemplateParameterSubstitution { return tps; } )* opGreater {
+NamedTemplateBinding = first:TemplateParameterSubstitution other:( pComma tps:TemplateParameterSubstitution { return tps; } )* {
     let obj = new alf.NamedTemplateBinding();
     obj.substitution = new Array();
     obj.substitution.push(first);
@@ -1405,6 +1873,8 @@ pSemiColon = punPrefix ";"  tokenSuffix
 pComma = punPrefix ","  tokenSuffix
 pDot = punPrefix "."  tokenSuffix
 pColon = punPrefix ":"  tokenSuffix
+pSlashSlashAt = punPrefix "//@" tokenSuffix
+pSlashStarAt = punPrefix "/*@" tokenSuffix
 
 /*
     Operators
@@ -1523,6 +1993,7 @@ annInline = namePrefix '"' content:"inline" '"' tokenSuffix { return content; }
 /*
     Remaining lexical elements
 */
+Name = name
 name = namePrefix content:tokenContent tokenSuffix { return content; }
 documentComment = docCommentPrefix content:tokenStringContent tokenSuffix { return content; }
 
@@ -1560,6 +2031,7 @@ digit = [0-9]
 subTokenSeparator = " "
 tokenSeprator = "\n"
 
+// MOVE THIS TO LEXER
 LineTerminator = "\n" / "\r"
 InputCharacter = !(LineTerminator) character:(.) { return character; }
 
