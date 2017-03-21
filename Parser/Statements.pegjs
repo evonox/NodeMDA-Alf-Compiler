@@ -18,19 +18,27 @@ Statement = AnnotatedStatement
         / InLineStatement
         / BlockStatement
         / EmptyStatement
+        / LocalNameDeclarationOrExpressionStatement
         / LocalNameDeclarationStatement
-        / ExpressionStatement
         / IfStatement
         / SwitchStatement
         / WhileStatement
-        / DoStatement
         / ForStatement
+        / DoStatement
         / BreakStatement
         / ReturnStatement
         / AcceptStatement
         / ClassifyStatement
 
-// AnnotatedStatement
+/* 
+    ANNOTATED STATEMENTS 
+*/
+AnnotatedStatement = pSlashSlashAt Annotations LineTerminator Statement
+Annotations = Annotation ( opAt Annotation )*
+Annotation = name ( pLParen NameList pRParen )?
+NameList = name ( pComma name )*
+
+/*
 AnnotatedStatement = opDiv opDiv opAt first:Annotation other:( opAt a:Annotation { return a; }) 
                     (opDiv opDiv (InputCharacter)* )? LineTerminator 
                     s:Statement
@@ -47,8 +55,15 @@ Annotation = identifier:name argument:(first:name other:(pComma n:name { return 
     let.argument = argument === null ? [] : argument;
     return obj;
 }
+*/
 
-// InLineStatement
+/*
+     IN-LINE STATEMENTS 
+*/
+
+InLineStatement = pSlashStarAT name pLParen name pRParen documentComment
+
+/*
 InLineStatement = s:InLineHeader code:CommentText opMult opDiv {
     s.code = code;
     return s;
@@ -61,6 +76,8 @@ InLineHeader = opDiv opMult opAt annInline pLParen language:name pRParen
     obj.language = language;
     return obj;
 }
+*/
+
 
 // BlockStatement
 BlockStatement = block:Block {
@@ -74,7 +91,25 @@ EmptyStatement = pSemiColon {
     return new alf.EmptyStatement();
 }
 
-// LocalNameDeclarationStatement
+/* 
+    LOCAL NAME DECLARATION AND EXPRESSION STATEMENTS 
+*/
+LocalNameDeclarationOrExpressionStatement = PotentiallyAmbiguousQualifiedName
+                                            ( 
+                                                ( MultiplicityIndicator )? Name LocalNameDeclarationStatementCompletion
+                                                / NameToExpressionCompletion pSemiColon
+                                            )
+                                            / NonNameExpression pSemiColon
+
+LocalNameDeclarationStatement = kwLet Name pColon TypeName ( MultiplicityIndicator )? LocalNameDeclarationStatementCompletion
+
+LocalNameDeclarationStatementCompletion = opAssign InitializationExpression pSemiColon
+
+InitializationExpression = Expression / SequenceInitializationExpression / InstanceInitializationExpression  
+
+InstanceInitializationExpression = kwNew Tuple
+
+/*
 LocalNameDeclarationStatement = s:NameDeclaration pComma expression:InitializationExpression pSemiColon {
     s.expression = expression;
     return s;
@@ -102,15 +137,21 @@ NameDeclaration = kwLet name:name pColon typeName:TypeName m:MultiplicityIndicat
     if(m !== null) obj.hasMultiplicity = true;
     return obj;
 }
+*/
 
+/*
 // ExpressionStatement
 ExpressionStatement = expression:Expression {
     let obj = new alf.ExpressionStatement();
     obj.expression = expression;
     return obj;
 }
+*/
 
-// IfStatement
+/* 
+    IF STATEMENTS 
+*/
+
 IfStatement = kwIf s:SequentialClauses finalClause:FinalClause? {
     s.finalClause = finalClause;
     return s;
@@ -137,7 +178,10 @@ NonFinalClause = pLParen expression:Expression pRParen b:Block {
 
 FinalClause = kwElse b:Block { return b; }
 
-// SwitchStatement
+/* 
+    SWITCH STATEMENTS 
+*/
+
 SwitchStatement = kwSwitch pLParen expression:Expression pRParen 
                   pLBrace nonDefaultClause:SwitchClause*
                   defaultClause:SwitchDefaultClause? pRBrace 
@@ -166,7 +210,10 @@ NonEmptyStatementSequence = statement:DocumentedStatement+ {
     return obj;
 }
 
-// WhileStatement
+/* 
+    WHILE STATEMENTS 
+*/
+
 WhileStatement = kwWhile pLParen condition:Expression pRParen body:Block {
     let obj = new alf.WhileStatement();
     obj.condition = condition;
@@ -174,7 +221,10 @@ WhileStatement = kwWhile pLParen condition:Expression pRParen body:Block {
     return obj;
 }
 
-// DoStatement
+/* 
+    DO STATEMENTS 
+*/
+
 DoStatement = kwDo body:Block kwWhile pLParen condition:Expression pRParen pSemiColon {
     let obj = new alf.DoStatement();
     obj.condition = condition;
@@ -182,7 +232,10 @@ DoStatement = kwDo body:Block kwWhile pLParen condition:Expression pRParen pSemi
     return obj;
 }
 
-// ForStatement
+/* 
+    FOR STATEMENTS
+*/
+
 ForStatement = kwFor pLParen s:ForControl pRParen body:Block {
     s.body = body;
     return s;
@@ -201,7 +254,7 @@ LoopVariableDefinition = variable:name kwIn expression1:Expression expression2:(
     obj.expression2 = expression2;
     return obj;
 }
-/ typeName:TypeName variable:name pColon expression1:Expression {
+/ typeName:QualifiedName variable:name pColon expression1:Expression {
     let obj = new alf.LoopVariableDefinition();
     obj.typeName = typeName;
     obj.variable = variable;
@@ -210,17 +263,40 @@ LoopVariableDefinition = variable:name kwIn expression1:Expression expression2:(
     return obj;
 }
 
-// BreakStatement
+/* 
+    BREAK STATEMENTS 
+*/
 BreakStatement = kwBreak pSemiColon { return new alf.BreakStatement(); }
 
-// ReturnStatement
+/* 
+    RETURN STATEMENTS 
+*/
 ReturnStatement = kwReturn expression:Expression? pSemiColon {
     let obj = new alf.ReturnStatement();
     obj.expression = expression;
     return obj;
 }
 
-// AcceptStatement
+/* 
+    ACCEPT STATEMENTS 
+*/
+
+AcceptStatement = AcceptClause ( SimpleAcceptStatementCompletion / CompoundAcceptStatementCompletion )
+
+SimpleAcceptStatementCompletion = pSemiColon
+
+CompoundAcceptStatementCompletion = Block ( kwOr AcceptBlock )*
+
+AcceptBlock = AcceptClause Block
+
+AcceptClause = kwAccept pLParen name:( n:name pColon { return n; })? signalNames:QualifiedNameList pRParen {
+    let obj = new alf.AcceptBlock();
+    obj.name = name;
+    obj.signalNames = signalNames;
+    return obj;
+}
+
+/*
 AcceptStatement = SimpleAcceptStatement / CompoundAcceptStatement
 
 SimpleAcceptStatement = acceptBlock:AcceptBlock pSemiColon {
@@ -239,21 +315,13 @@ AcceptBlock = a:AcceptClause block:Block {
     a.block = block;
     return a;
 }
+*/
 
-AcceptClause = kwAccept pLParen name:( n:name pColon { return n; })? signalNames:QualifiedNameList pRParen {
-    let obj = new alf.AcceptBlock();
-    obj.name = name;
-    obj.signalNames = signalNames;
-    return obj;
-}
 
-QualifiedNameList = first:QualifiedName other:( pComma qn:QualifiedName )* {
-    let obj = new alf.QualifiedNameList();
-    obj.name = [first].concat(other);
-    return obj;
-} 
+/* 
+    CLASSIFY STATEMENTS 
+*/
 
-// ClassifyStatement
 ClassifyStatement = kwClassify expression:Expression s:ClassificationClause pSemiColon {
     s.expression = expression;
     return s;
@@ -283,5 +351,11 @@ ClassificationToClause = kwTo qList:QualifiedNameList {
 ReclassifyAllClause = kwFrom opMult {
     return new alf.QualifiedNameList();
 }
+
+QualifiedNameList = first:QualifiedName other:( pComma qn:QualifiedName )* {
+    let obj = new alf.QualifiedNameList();
+    obj.name = [first].concat(other);
+    return obj;
+} 
 
 

@@ -16,6 +16,8 @@ pSemiColon = punPrefix ";"  tokenSuffix
 pComma = punPrefix ","  tokenSuffix
 pDot = punPrefix "."  tokenSuffix
 pColon = punPrefix ":"  tokenSuffix
+pSlashSlashAt = punPrefix "//@" tokenSuffix
+pSlashStarAt = punPrefix "/*@" tokenSuffix
 
 /*
     Operators

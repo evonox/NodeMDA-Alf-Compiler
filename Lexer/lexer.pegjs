@@ -49,7 +49,7 @@ Operator
 */
 
 Punctuation
-= punctuationName:( ".." / "::" / "=>" / "->" / "(" / ")" / "{" / "}" / "[" / "]" / ";" / "," / "." / ":" ) {
+= punctuationName:( "//@" / "/*@" / ".." / "::" / "=>" / "->" / "(" / ")" / "{" / "}" / "[" / "]" / ";" / "," / "." / ":" ) {
     return addTokenType("p", punctuationName);
 }
 
