@@ -12,9 +12,17 @@ PrimaryToExpressionCompletion = PostfixExpressionCompletion ExpressionCompletion
 
 ExpressionCompletion = AssignmentExpressionCompletion / ConditionalExpressionCompletion
 
-/*
-    Assignment expressions
+
+/* 
+    ASSIGNMENT EXPRESSIONS 
 */
+AssignmentExpressionCompletion = AssignmentOperator Expression
+
+AssignmentOperator = opAssign / opAsgnMod / opAsgnBitXor / opAsgnBitOr
+                    / opAsgnBitAnd / opAsgnDiv / opAsgnMult / opAsgnSub
+                    / opAsgnAdd / opAsgnZeroShiftRight / opAsgnRightShift / opAsgnLeftShift
+
+/*
 AssignmentExpression = leftHandSide:LeftHandSide operator:AssignmentOperator rightHandSide:Expression {
     let obj = new alf.AssignmentExpression();
     obj.leftHandSide = leftHandSide;
@@ -43,14 +51,17 @@ FeatureLeftHandSide = feature:FeatureReference {
     obj.feature = feature;
     return obj;
 }
-
-AssignmentOperator = opAssign / opAsgnMod / opAsgnBitXor / opAsgnBitOr
-                    / opAsgnBitAnd / opAsgnDiv / opAsgnMult / opAsgnSub
-                    / opAsgnAdd / opAsgnZeroShiftRight / opAsgnRightShift / opAsgnLeftShift
+*/
 
 /*
-    Conditional-Test expressions
+     CONDITIONAL-TEST EXPRESSIONS 
 */
+ConditionalExpression = UnaryExpression ConditionalExpressionCompletion
+
+ConditionalExpressionCompletion = ConditionalOrExpressionCompletion
+                                ( opQuestionMark Expression pColon ConditionalExpression )?
+
+/*
 ConditionalExpression = ConditionalAndOrConditionalOrExpression / ConditionalTestExpression
 ConditionalTestExpression = operand1:ConditionalAndOrConditionalOrExpression opQuestionMark
                             operand2:Expression pColon
@@ -62,10 +73,20 @@ ConditionalTestExpression = operand1:ConditionalAndOrConditionalOrExpression opQ
     obj.operand3 = operand3;
     return obj;
 }
+*/
+
+/* 
+    CONDITIONAL LOGICAL EXPRESSIONS 
+*/
+ConditionalAndExpression = UnaryExpression ConditionalAndExpressionCompletion
+
+ConditionalAndExpressionCompletion = InclusiveOrExpressionCompletion ( opLogAnd InclusiveOrExpression )*
+
+ConditionalOrExpression = UnaryExpression ConditionalOrExpressionCompletion
+
+ConditionalOrExpressionCompletion = ConditionalAndExpressionCompletion ( opLogOr ConditionalAndExpression )*
 
 /*
-    Binary operator expressions
-*/
 InclusiveOrOrConditionalAndExpression = ExclusiveOrOrInclusiveOrExpression / ConditionalAndExpression
 ConditionalAndExpression = operand1:InclusiveOrOrConditionalAndExpression operator:opLogAnd operand2:ExclusiveOrOrInclusiveOrExpression {
     let obj = new alf.ConditionalLogicalExpression();
@@ -83,7 +104,25 @@ ConditionalOrExpression = operand1:ConditionalAndOrConditionalOrExpression opera
     obj.operand2 = operand2;
     return obj;
 }
+*/
 
+/* 
+    LOGICAL EXPRESSIONS 
+*/
+
+AndExpression = UnaryExpression AndExpressionCompletion
+
+AndExpressionCompletion = EqualityExpressionCompletion ( opBitLogAnd EqualityExpression )*
+
+ExclusiveOrExpression = UnaryExpression ExclusiveOrExpressionCompletion
+
+ExclusiveOrExpressionCompletion = AndExpressionCompletion ( opBitLogXor AndExpression )*
+
+InclusiveOrExpression = UnaryExpression InclusiveOrExpressionCompletion
+
+InclusiveOrExpressionCompletion = ExclusiveOrExpressionCompletion ( opBitLogOr ExclusiveOrExpression )*
+
+/*
 EqualityOrAndExpression = ClassificationOrEqualityExpression / AndExpression
 AndExpression = operand1:EqualityOrAndExpression operator:opBitLogAnd operand2:ClassificationOrEqualityExpression {
     let obj = new alf.LogicalExpression();
@@ -110,7 +149,18 @@ InclusiveOrExpression = operand1:ExclusiveOrOrInclusiveOrExpression operator:opB
     obj.operand2 = operand2;
     return obj;
 }
+*/
 
+/* 
+    EQUALITY EXPRESSIONS 
+*/
+EqualityExpression = UnaryExpression ClassificationExpressionCompletion
+
+EqualityExpressionCompletion = ClassificationExpressionCompletion ( EqualityOperator ClassificationExpression)*
+
+EqualityOperator = opEqual / opNotEqual
+
+/*
 ClassificationOrEqualityExpression = RelationalOrClassificationExpression / EqualityExpression
 EqualityExpression = operand1:ClassificationOrEqualityExpression operator:EqualityOperator operand2:RelationalOrClassificationExpression {
     let obj = new alf.EqualityExpression();
@@ -119,9 +169,19 @@ EqualityExpression = operand1:ClassificationOrEqualityExpression operator:Equali
     obj.operand2 = operand2;
     return obj;
 }
-EqualityOperator = opEqual / opNotEqual
 EqualityOrAndExpression = ClassificationOrEqualityExpression / AndExpression
+*/
 
+/* 
+    CLASSIFICATION EXPRESSIONS 
+*/
+ClassificationExpression = UnaryExpression ClassificationExpressionCompletion
+
+ClassificationExpressionCompletion = RelationalExpressionCompletion ( ClassificationOperator QualifiedName )?
+
+ClassificationOperator = kwInstanceOf / kwHasType
+
+/*
 RelationalOrClassificationExpression = ShiftOrRelationalExpression / ClassificationExpression
 ClassificationExpression = operand:ShiftOrRelationalExpression operator:ClassificationOperator typeName:QualifiedName {
     let obj = new alf.ClassificationExpression();
@@ -130,8 +190,18 @@ ClassificationExpression = operand:ShiftOrRelationalExpression operator:Classifi
     obj.typeName = typeName;
     return obj;
 }
-ClassificationOperator = kwInstanceOf / kwHasType
+*/
 
+/* 
+    RELATIONAL EXPRESSIONS 
+*/
+RelationalExpression = UnaryExpression RelationalExpressionCompletion
+
+RelationalExpressionCompletion = ShiftExpressionCompletion ( RelationalOperator ShiftExpression )?
+
+RelationalOperator = opLessOrEqual / opGreaterOrEqual / opGreater / opLess
+
+/*
 ShiftOrRelationalExpression = ArithmeticOrShiftExpression / RelationalExpression
 RelationalExpression = operand1:ArithmeticOrShiftExpression operator:RelationalOperator operand2:ArithmeticOrShiftExpression {
     let obj = new alf.RelationalExpression();
@@ -140,8 +210,17 @@ RelationalExpression = operand1:ArithmeticOrShiftExpression operator:RelationalO
     obj.operand2 = operand2;
     return obj;
 }
-RelationalOperator = opLessOrEqual / opGreaterOrEqual / opGreater / opLess
+*/
+/* 
+    SHIFT EXPRESSIONS 
+*/
+ShiftExpression = UnaryExpression ShiftExpressionCompletion
 
+ShiftExpressionCompletion = AdditiveExpressionCompletion ( ShiftOperator AdditiveExpression )*
+
+ShiftOperator = opLeftShift / opRightShift / opZeroShiftRight
+
+/*
 ArithmeticOrShiftExpression = UnaryOrArithmeticExpression / ShiftExpression
 ShiftExpression = operand1:ArithmeticOrShiftExpression operator:ShiftOperator operand2:UnaryOrArithmeticExpression {
     let obj = new alf.ShiftExpression();
@@ -150,8 +229,25 @@ ShiftExpression = operand1:ArithmeticOrShiftExpression operator:ShiftOperator op
     obj.operand2 = operand2;
     return obj;
 }
-ShiftOperator = opLeftShift / opRightShift / opZeroShiftRight
+*/
 
+
+/*
+    ARITHMETIC EXPRESSIONS
+*/
+MultiplicativeExpression = UnaryExpression MultiplicativeExpressionCompletion
+
+MultiplicativeExpressionCompletion = ( MultiplicativeOperator UnaryExpression )*
+
+MultiplicativeOperator = opMult / opDiv / opMod
+
+AdditiveExpression = UnaryExpression AdditiveExpressionCompletion
+
+AdditiveExpressionCompletion = MultiplicativeExpressionCompletion ( AdditiveOperator MultiplicativeExpression)*
+
+AdditiveOperator = opAdd / opSub
+
+/*
 UnaryOrArithmeticExpression = UnaryOrMultiplicativeExpression / AdditiveExpression
 AdditiveExpression = operand1:UnaryOrMultiplicativeExpression operator:AdditiveOperator operand2:UnaryOrMultiplicativeExpression {
     let obj = new alf.ArithmeticExpression();
@@ -160,7 +256,6 @@ AdditiveExpression = operand1:UnaryOrMultiplicativeExpression operator:AdditiveO
     obj.operand2 = operand2;
     return obj;
 }
-AdditiveOperator = opAdd / opSub
 
 UnaryOrMultiplicativeExpression = UnaryExpression / MultiplicativeExpression
 MultiplicativeExpression = operand1:UnaryOrMultiplicativeExpression operator:MultiplicativeOperator operand2:UnaryExpression {
@@ -170,20 +265,50 @@ MultiplicativeExpression = operand1:UnaryOrMultiplicativeExpression operator:Mul
     obj.operand2 = operand2;
     return obj;
 }
-MultiplicativeOperator = opMult / opDiv / opMod
+*/
 
 /*
     Unary operator expressions
 */
-UnaryExpression = PrimaryExpression
-            / IncrementOrDecrementExpression
-            / BooleanUnaryExpression
-            / BitStringUnaryExpression
-            / NumericUnaryExpression
-            / CastExpression
-            / IsolationExpression
+UnaryExpression = PostfixOrCastExpression / NonPostfixNonCastUnaryExpression
 
+PostfixOrCastExpression = NonNamePostfixOrCastExpression
+                        / NameOrPrimaryExpression PostfixExpressionCompletion
 
+NonNameUnaryExpression = NonNamePostfixOrCastExpression / NonPostfixNonCastUnaryExpression
+
+NonNamePostfixOrCastExpression = pLParen
+                                    ( kwNay pRParen CastCompletion
+                                    / PotentiallyAmbiguousQualifiedName
+                                        ( pRParen CastCompletion
+                                        / NameToExpressionCompletion pRParen PostfixExpressionCompletion
+                                        )
+                                    / NonNameExpression pRParen PostfixExpressionCompletion
+                                    )
+                                    / BaseExpression PostfixExpressionCompletion
+
+NonPostfixNonCastUnaryExpression = PrefixExpression
+                                / NumericUnaryExpression
+                                / BooleanNegationExpression
+                                / BitStringComplementExpression
+                                / IsolationExpression
+
+BooleanNegationExpression = opLogNot UnaryExpression
+BitStringComplementExpression = opBitNot UnaryExpression
+
+NumericUnaryExpression = NumericUnaryOperator UnaryExpression
+NumericUnaryOperator = opAdd / opSub
+
+IsolationExpression = opDollar UnaryExpression
+
+CastExpression = pLParen TypeName pRParen CastCompletion
+
+CastCompletion = PostfixOrCastExpression
+                / BooleanNegationExpression
+                / BitStringComplementExpression
+                / IsolationExpression
+
+/*
 IsolationExpression = operator:opDollar operand:UnaryExpression {
     let obj = new alf.IsolationExpression();
     obj.operator = operator;
@@ -227,27 +352,40 @@ BooleanUnaryExpression = operator:opLogNot operand:UnaryExpression {
     obj.operand = operand;
     return obj;
 }
+*/
 
 /*
     Increment and decrement operators
 */
 
+PostfixExpressionCompletion = PrimaryExpressionCompletion ( PostfixOperation )?
+
+/*
 IncrementOrDecrementExpression = e:PostfixExpression { e.isPrefix = false; }
                     / e:PrefixExpression { e.isPrefix = true; }
+*/
 
+PostfixExpression = AffixOperator
+
+/*
 PostfixExpression = operand:LeftHandSide operator:AffixOperator {
     let obj = new alf.IncrementOrDecrementExpression();
     obj.operator = operator;
     obj.operand = operand;
     return obj;
 }
+*/
 
+PrefixExpression = AffixOperator PrimaryExpression
+
+/*
 PrefixExpression = operator:AffixOperator operand:LeftHandSide {
     let obj = new alf.IncrementOrDecrementExpression();
     obj.operator = operator;
     obj.operand = operand;
     return obj;
 }
+*/
 
 AffixOperator = opIncrement / opDecrement
 
