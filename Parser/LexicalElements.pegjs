@@ -136,6 +136,7 @@ annInline = namePrefix '"' content:"inline" '"' tokenSuffix { return content; }
 /*
     Remaining lexical elements
 */
+Name = name
 name = namePrefix content:tokenContent tokenSuffix { return content; }
 documentComment = docCommentPrefix content:tokenStringContent tokenSuffix { return content; }
 

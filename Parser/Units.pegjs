@@ -4,7 +4,7 @@
 UnitDefinition = namespaceName:NamespaceDeclaration?
                 importDec:(ImportDeclaration)*
                 documentation:documentComment?
-                annotation:(StereotypeAnnotation)*
+                annotation:StereotypeAnnotations
                 definition:NamespaceDefinition
 {
     let obj = new alf.UnitDefinition();
@@ -16,36 +16,7 @@ UnitDefinition = namespaceName:NamespaceDeclaration?
     return obj;
 }
 
-NamespaceDeclaration = kwNamespace q:QualifiedName pSemiColon { return q; }
-
-ImportDeclaration = visibility:ImportVisibilityIndicator kwImport i:ImportReference pSemiColon {
-    i.visibility = visibility;
-    return i;
-}
-
-ImportVisibilityIndicator = kwPublic / kwPrivate
-
-ImportReference = ElementImportReference / PackageImportReference
-
-ElementImportReference = referentName:QualifiedName alias:AliasDefinition? {
-    let obj = new alf.ElementImportReference();
-    obj.referentName = referentName;
-    obj.alias = alias;
-    return obj;
-}
-
-AliasDefinition = kwAs n:name { return n; }
-
-PackageImportReference = referentName:(
-    rn:ColonQualifiedName pDoubleColon opMult { return rn; }
-    / rn:DotQualifiedName pDot opMult { return rn; }
-    / rn:UnqualifiedName pDoubleColon opMult { return rn; }
-    / rn:UnqualifiedName pDot opMult { return rn; }
-) {
-    let obj = new alf.PackageImportReference();
-    obj.referentName = referentName;
-    return referentName;
-}
+StereotypeAnnotations = StereotypeAnnotation*
 
 StereotypeAnnotation = opAt stereotypeName:QualifiedName s:( pLParen s:TaggedValues pRParen { return s; }  )? {
     if(s === null) s = new alf.StereotypeAnnotation();
@@ -97,24 +68,74 @@ LiteralValue = value:booleanLiteral {
     return value;
 }
 
-// NamespaceDefinition
+
+NamespaceDeclaration = kwNamespace q:QualifiedName pSemiColon { return q; }
+
+ImportDeclaration = visibility:ImportVisibilityIndicator kwImport i:ImportReference pSemiColon {
+    i.visibility = visibility;
+    return i;
+}
+
+ImportVisibilityIndicator = kwPublic / kwPrivate
+
+ImportReference = ColonQualifiedName ( (pDoubleColon opMult)
+                                        / AliasDefinition )?
+                 / DotQualifiedName ( (pDot opMult) / AliasDefinition )?
+                 / Name ( (( pDoubleColon / pDot ) opMult) / AliasDefinition )?
+
+/*
+ImportReference = ElementImportReference / PackageImportReference
+
+ElementImportReference = referentName:QualifiedName alias:AliasDefinition? {
+    let obj = new alf.ElementImportReference();
+    obj.referentName = referentName;
+    obj.alias = alias;
+    return obj;
+}
+*/
+
+/*
+PackageImportReference = referentName:(
+    rn:ColonQualifiedName pDoubleColon opMult { return rn; }
+    / rn:DotQualifiedName pDot opMult { return rn; }
+    / rn:UnqualifiedName pDoubleColon opMult { return rn; }
+    / rn:UnqualifiedName pDot opMult { return rn; }
+) {
+    let obj = new alf.PackageImportReference();
+    obj.referentName = referentName;
+    return referentName;
+}
+*/
+
+AliasDefinition = kwAs n:name { return n; }
+
+/* 
+    NAMESPACES 
+*/
 NamespaceDefinition = PackageDefinition / ClassifierDefinition
 
 VisibilityIndicator = ImportVisibilityIndicator / kwProtected
 
-// PackageDeclaration
+/* 
+    PACKAGES 
+*/
+
 PackageDeclaration = kwPackage name:name {
     let obj = new alf.PackageDefinition();
     obj.name = name;
     return name;
 }
 
-PackageDefinition = d:PackageDeclaration pLBrace ownedMember:(PackagedElement)* pRBrace {
+PackageDefinition = d:PackageDeclaration PackageBody
+
+PackageDefinitionOrStub = PackageDeclaration ( pSemiColon /PackageBody )
+
+PackageBody = pLBrace ownedMember:(PackagedElement)* pRBrace {
     d.ownedMember = ownedMember;
     return d;
 }
 
-PackagedElement = documentation:documentComment? annotation:StereotypeAnnotation*
+PackagedElement = documentation:documentComment? annotation:StereotypeAnnotations
                 visibility:ImportVisibilityIndicator m:PackagedElementDefinition 
 {
     m.visibility = visibility;
@@ -123,6 +144,9 @@ PackagedElement = documentation:documentComment? annotation:StereotypeAnnotation
     return m;
 }
 
+PackagedElementDefinition = PackageDefinitionOrStub / ClassifierDefinitionOrStub
+
+/*
 PackagedElementDefinition = NamespaceDefinition / NamespaceStubDeclaration
 
 NamespaceStubDeclaration = PackageStubDeclaration / ClassifierStubDeclaration
@@ -131,8 +155,13 @@ PackageStubDeclaration = m:PackageDeclaration pSemiColon {
     m.isStub = true;
     return m;
 }
+*/
 
-// ClassifierDefinition
+
+/***************
+* CLASSIFIERS *
+***************/
+
 ClassifierDefinition = ClassDefinition
                     / ActiveClassDefinition
                     / DataTypeDefinition
@@ -141,6 +170,15 @@ ClassifierDefinition = ClassDefinition
                     / SignalDefinition
                     / ActivityDefinition
 
+ClassifierDefinitionOrStub = ClassDefinitionOrStub
+                            / ActiveClassDefinitionOrStub
+                            / DataTypeDefinitionOrStub
+                            / EnumerationDefinitionOrStub
+                            / AssociationDefinitionOrStub
+                            / SignalDefinitionOrStub
+                            / ActivityDefinitionOrStub
+
+/*
 ClassifierDeclaration = ClassDeclaration
                     / ActiveClassDeclaration
                     / DataTypeDeclaration
@@ -150,7 +188,11 @@ ClassifierDeclaration = ClassDeclaration
                     / ActivityDeclaration
 
 ClassifierStubDeclaration = d:ClassifierDeclaration pSemiColon { d.isStub = true; return d; }
+*/
 
+ClassifierSignature = Name ( TemplateParameters )? ( SpecializationClause )?
+
+/*
 ClassifierSignature = type:(kwClass / (a:kwActive kwClass { return a })/ kwDataType / kwAssoc / kwSignal) 
                         name:name d:TemplateParameters? specialization:SpecializationClause? {
     let obj = null;
@@ -167,6 +209,7 @@ ClassifierSignature = type:(kwClass / (a:kwActive kwClass { return a })/ kwDataT
     obj.name = name;
     obj.specialization = specialization;
 }
+*/
 
 TemplateParameters = opLess first:ClassifierTemplateParameter other:(pComma p:ClassifierTemplateParameter { return p; })* opGreater
 {
@@ -175,6 +218,9 @@ TemplateParameters = opLess first:ClassifierTemplateParameter other:(pComma p:Cl
     return obj;
 }
 
+ClassifierTemplateParameter = ( documentComment )? Name ( kwSpecializes QualifiedName )?
+
+/*
 ClassifierTemplateParameter = documentation:documentComment? name:name
                             specialization:TemplateParameterConstraint? 
 {
@@ -192,22 +238,32 @@ TemplateParameterConstraint = kwSpecializes name:QualifiedName {
     qList.name = [name];
     return qList; 
 }
+*/
 
 SpecializationClause = kwSpecializes qList:QualifiedNameList { return qList; }
 
-// ClassDeclaration
-ClassDeclaration = abstract:kwAbstract? d:ClassifierSignature {
+/* 
+    CLASSES 
+*/
+
+ClassDeclaration = abstract:kwAbstract? kwClass d:ClassifierSignature {
     if(abstract !== null) d.isAbstract = true;
     return d;
 }
 
+ClassDefinition = ClassDeclaration ClassBody
+ClassDefinitionOrStub = ClassDeclaration ( pSemiColon / ClassBody )
+ClassBody = pLBrace ( ClassMember )* pRBrace
+
+/*
 ClassDefinition = d:ClassDeclaration pLBrace ownedMember:(ClassMember)* pRBrace {
     d.ownedMember = ownedMember;
     return d;
 }
+*/
 
 ClassMember = documentation:documentComment?
-            annotation:(StereotypeAnnotation)*
+            annotation:StereotypeAnnotations
             visibility:VisibilityIndicator?
             m:ClassMemberDefinition
 {
@@ -217,17 +273,29 @@ ClassMember = documentation:documentComment?
     return m;
 }
 
+ClassMemberDefinition = ClassifierDefinitionOrStub / FeatureDefinitionOrStub
+
+/*
 ClassMemberDefinition = ClassifierDefinition
                     / ClassifierStubDeclaration
                     / FeatureDefinition
                     / FeatureStubDeclaration
+*/
 
-// ActiveClassDeclaration
-ActiveClassDeclaration = abstract:kwAbstract? d:ClassifierSignature {
+/* 
+    ACTIVE CLASSES 
+*/
+
+ActiveClassDeclaration = abstract:kwAbstract? kwActive kwClass d:ClassifierSignature {
     if(abstract !== null) d.isAbstract = true;
     return d;
 }
 
+ActiveClassDefinition = ActiveClassDeclaration ActiveClassBody
+ActiveClassDefinitionOrStub = ActiveClassDeclaration ( pSemiColon / ActiveClassBody )
+ActiveClassBody = pLBrace ( ActiveClassMember )* pRBrace ( kwDo BehaviorClause )?
+
+/*
 ActiveClassDefinition = d:ActiveClassDeclaration pLBrace ownedMember:(ActiveClassMember)* pRBrace
                     classifierBehavior:( kwDo classifierBehavior:BehaviorClause { return classifierBehavior; })?
 {
@@ -239,6 +307,7 @@ ActiveClassDefinition = d:ActiveClassDeclaration pLBrace ownedMember:(ActiveClas
     }
     return d;
 }        
+*/
 
 BehaviorClause = body:Block {
     let obj = new alf.ActivityDefinition();
@@ -253,7 +322,7 @@ BehaviorClause = body:Block {
 }
 
 ActiveClassMember = documentation:documentComment?
-            annotation:(StereotypeAnnotation)*
+            annotation:StereotypeAnnotations
             visibility:VisibilityIndicator?
             m:ActiveClassMemberDefinition
 {
@@ -264,22 +333,29 @@ ActiveClassMember = documentation:documentComment?
 }
 
 ActiveClassMemberDefinition = ClassMemberDefinition
-                            / ActiveFeatureDefinition
-                            / ActiveFeatureStubDeclaration
+                            / ActiveFeatureDefinitionOrStub
 
-// DataTypeDeclaration
-DataTypeDeclaration = abstract:kwAbstract? d:ClassifierSignature {
+/*
+     DATA TYPES 
+*/
+DataTypeDeclaration = abstract:kwAbstract? kwDataType d:ClassifierSignature {
     if(abstract !== null) d.isAbstract = true;
     return d;
 }
 
+DataTypeDefinition = DataTypeDeclaration StructuredBody
+DataTypeDefinitionOrStub = DataTypeDeclaration ( pSemiColon / StructuredBody )
+StructuredBody = pLBrace ( StructuredMember )* pRBrace
+
+/*
 DataTypeDefinition = d:DataTypeDeclaration pLBrace ownedMember:(StructuredMember)* pRBrace {
     d.ownedMember = ownedMember;
     return d;
 }
+*/
 
 StructuredMember = documentation:documentComment?
-            annotation:(StereotypeAnnotation)*
+            annotation:StereotypeAnnotations
             visibility:kwPublic?
             m:PropertyDefinition
 {
@@ -289,20 +365,31 @@ StructuredMember = documentation:documentComment?
     return m;
 }
 
-// AssociationDeclaration
-AssociationDeclaration = abstract:kwAbstract? d:ClassifierSignature {
+/* 
+    ASSOCIATIONS 
+*/
+
+AssociationDeclaration = abstract:kwAbstract? kwAssoc d:ClassifierSignature {
     if(abstract !== null) d.isAbstract = true;
     return d;
 }
 
+AssociationDefinition = AssociationDeclaration StructuredBody
+AssociationDefinitionOrStub = AssociationDeclaration ( pSemiColon / StructuredBody )
+
+/*
 AssociationDefinition =  d:AssociationDeclaration pLBrace
                         first:StructuredMember second:StructuredMember
                         other:(StructuredMember)* pRBrace {
     d.ownedMember = [first, second].concat(other);
     return d;
 }
+*/
 
-// EnumerationDeclaration
+
+/*
+     ENUMERATIONS 
+*/
 EnumerationDeclaration = kwEnum name:name specialization:SpecializationClause? {
     let obj = new alf.EnumerationDefinition();
     obj.name = name;
@@ -310,6 +397,11 @@ EnumerationDeclaration = kwEnum name:name specialization:SpecializationClause? {
     return obj;
 }
 
+EnumerationDefinition = EnumerationDeclaration EnumerationBody
+EnumerationDefinitionOrStub = EnumerationDeclaration ( pSemiColon / EnumerationBody )
+EnumerationBody = pLBrace EnumerationLiteralName ( pComma EnumerationLiteralName )* pRBrace
+
+/*
 EnumerationDefinition = d:EnumerationDeclaration pLBrace 
                         first:EnumerationLiteralName other:(pComma n:EnumerationLiteralName { return n; } )*
                         pRBrace
@@ -317,6 +409,7 @@ EnumerationDefinition = d:EnumerationDeclaration pLBrace
     d.ownedElement = [first].concat(other);
     return d;
 }   
+*/
 
 EnumerationLiteralName = documentation:documentComment? name:name {
     let obj = new alf.EnumerationLiteralName();
@@ -326,18 +419,33 @@ EnumerationLiteralName = documentation:documentComment? name:name {
     return obj;
 }
 
-// SignalDeclaration
-SignalDeclaration = abstract:kwAbstract? d:ClassifierSignature {
+/* 
+    SIGNALS 
+*/
+SignalDeclaration = abstract:kwAbstract? kwSignal d:ClassifierSignature {
     if(abstract !== null) d.isAbstract = true;
     return d;
 }     
 
+SignalDefinition = SignalDeclaration StructuredBody
+SignalDefinitionOrStub = SignalDeclaration ( pSemiColon / StructuredBody )
+
+/*
 SignalDefinition = d:SignalDeclaration pLBrace ownedMember:(StructuredMember)* pRBrace {
     d.ownedMember = ownedMember;
     return d;
 }               
+*/
 
-// ActivityDeclaration
+/* 
+    ACTIVITIES 
+*/
+
+ActivityDeclaration = kwActivity Name ( TemplateParameters )? FormalParameters ( pColon TypePart )?
+ActivityDefinition = ActivityDeclaration Block
+ActivityDefinitionOrStub = ActivityDeclaration ( pSemiColon / Block )
+
+/*
 ActivityDeclaration = kwActivity name:name tp:TemplateParameters? d:FormalParameters retParam:ReturnParameter {
     let obj = new alf.ActivityDefinition();
     obj.name = name;
@@ -352,6 +460,7 @@ ActivityDefinition = d:ActivityDeclaration body:Block {
     d.body = body;
     return d;
 }
+*/
 
 FormalParameters = pLParen d:FormalParameterList? pRParen {
     return d === null ? new alf.NamespaceDefinition() : d;
@@ -364,7 +473,7 @@ FormalParameterList = first:FormalParameter other:(pColon p:FormalParameter { re
 }
 
 FormalParameter = documentation:documentComment?
-                annotation:StereotypeAnnotation*
+                annotation:StereotypeAnnotations
                 direction:ParameterDirection
                 name:name pColon p:TypePart 
 {
@@ -377,14 +486,21 @@ FormalParameter = documentation:documentComment?
 
 ParameterDirection = kwIn / kwInOut / kwOut
 
+/*
 ReturnParameter = pColon p:TypePart {
     p.direction = "return";
     return p;
 }
+*/
 
 /*
-    Feature declarations
+    FEATURES 
 */
+
+FeatureDefinitionOrStub = AttributeDefinition / OperationDefinitionOrStub
+ActiveFeatureDefinitionOrStub = ReceptionDefinition / SignalReceptionDefinitionOrStub
+
+/*
 FeatureDefinition = AttributeDefinition / OperationDefinition
 
 FeatureStubDeclaration = OperationStubDeclaration
@@ -392,8 +508,11 @@ FeatureStubDeclaration = OperationStubDeclaration
 ActiveFeatureDefinition = ReceptionDefinition / SignalReceptionDefinition
 
 ActiveFeatureStubDeclaration = SignalReceptionStubDeclaration
+*/
 
-// PropertyDefinition
+/* 
+    PROPERTIES 
+*/
 PropertyDefinition = d:PropertyDeclaration pSemiColon { return d; }
 
 AttributeDefinition = d:PropertyDeclaration initializer:AttributeInitializer? pSemiColon {
@@ -419,7 +538,7 @@ TypePart = typeName:TypeName d:Multiplicity? {
     return d;
 }
 
-Multiplicity = d:MultiplicityRange oau:OrderingAndUniqueness? {
+Multiplicity = pLBracket d:MultiplicityRange pRBracket oau:OrderingAndUniqueness? {
     if(oau !== null) {
         d = Object.assign(oau);
     }
@@ -437,6 +556,11 @@ OrderingAndUniqueness = data:(
     return obj;
 }
 
+
+MultiplicityRange = ( naturalLiteralp DoubleDot )? UnlimitedNaturalLiteral
+UnlimitedNaturalLiteral =naturalLiteral / opMult
+
+/*
 MultiplicityRange = MultiplicityIndicator {
     let d = new alf.TypedElementDefinition();
     d.upperBound="*";
@@ -452,8 +576,16 @@ MultiplicityRange = MultiplicityIndicator {
 }
 
 UnlimitedNaturalLiteral = naturalLiteral / unboundedNaturalLiteral
+*/
 
-// OperationDeclaration
+/* 
+    OPERATIONS 
+*/
+OperationDeclaration = ( kwAbstract )? Name FormalParameters ( pColon TypePart )? ( RedefinitionClause )?
+OperationDefinitionOrStub = OperationDeclaration ( pSemiColon / Block )
+RedefinitionClause = kwRedefines QualifiedNameList
+
+/*
 OperationDeclaration = isAbstract:kwAbstract? name:name ownedMember:FormalParameters 
                         returnMember:ReturnParameter? redefinition:RedefinitionClause?
 {
@@ -478,7 +610,17 @@ OperationStubDeclaration = d:OperationDeclaration pSemiColon {
 
 RedefinitionClause = kwRedefines qList:QualifiedNameList { return qList; }
 
-// ReceptionDefinition
+*/
+
+/* 
+    RECEPTIONS 
+*/
+
+ReceptionDefinition = kwReceive QualifiedName pSemiColon
+SignalReceptionDeclaration = kwReceive kwSignal Name ( SpecializationClause )?
+SignalReceptionDefinitionOrStub = SignalReceptionDeclaration ( pSemiColon / StructuredBody )
+
+/*
 ReceptionDefinition = kwReceive signalName:QualifiedName pSemiColon {
     let obj = new alf.ReceptionDefinition();
     obj.signalName = signalName;
@@ -502,4 +644,4 @@ SignalReceptionStubDeclaration = d:SignalReceptionDeclaration pSemiColon {
     d.isStub = true;
     return d;
 }
-
+*/
