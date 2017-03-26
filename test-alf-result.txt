@@ -1,0 +1,104 @@
+[
+    {
+        "documentation": " The comment ",
+        "isModelLibrary": null,
+        "import": [
+            [
+                null,
+                [
+                    {
+                        "isAmbiguous": false,
+                        "isFeatureReference": null,
+                        "pathName": null,
+                        "disambiguation": null,
+                        "nameBinding": [
+                            {
+                                "name": "A",
+                                "qualifiedName": null,
+                                "binding": null
+                            },
+                            {
+                                "name": "B",
+                                "qualifiedName": null,
+                                "binding": null
+                            }
+                        ],
+                        "unqualifiedName": null,
+                        "qualification": null,
+                        "templateName": null,
+                        "referent": null
+                    },
+                    null
+                ]
+            ]
+        ],
+        "namespaceName": {
+            "isAmbiguous": false,
+            "isFeatureReference": null,
+            "pathName": null,
+            "disambiguation": null,
+            "nameBinding": [
+                {
+                    "name": "App",
+                    "qualifiedName": null,
+                    "binding": null
+                },
+                {
+                    "name": "OrderingService",
+                    "qualifiedName": null,
+                    "binding": null
+                },
+                {
+                    "name": "Order",
+                    "qualifiedName": null,
+                    "binding": null
+                }
+            ],
+            "unqualifiedName": null,
+            "qualification": null,
+            "templateName": null,
+            "referent": null
+        },
+        "definition": {
+            "documentation": [],
+            "isExternal": null,
+            "isFeature": null,
+            "isPrimitive": null,
+            "isStub": false,
+            "name": "Order",
+            "visibility": null,
+            "subunit": null,
+            "annotation": [],
+            "member": null,
+            "ownedMember": [
+                {
+                    "documentation": null,
+                    "isExternal": null,
+                    "isFeature": null,
+                    "isPrimitive": null,
+                    "isStub": false,
+                    "name": "OrderItem",
+                    "visibility": "private",
+                    "subunit": null,
+                    "annotation": [],
+                    "member": null,
+                    "ownedMember": []
+                },
+                {
+                    "documentation": null,
+                    "isExternal": null,
+                    "isFeature": null,
+                    "isPrimitive": null,
+                    "isStub": true,
+                    "name": "Supply",
+                    "visibility": "public",
+                    "subunit": null,
+                    "annotation": [],
+                    "member": null,
+                    "ownedMember": null
+                }
+            ]
+        },
+        "namespace": null
+    }
+]

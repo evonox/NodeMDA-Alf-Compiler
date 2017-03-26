@@ -102,9 +102,9 @@ kwOr = kwPrefix "or"  tokenSuffix
 kwOrdered = kwPrefix "ordered"  tokenSuffix
 kwOut = kwPrefix "out"  tokenSuffix
 kwPackage = kwPrefix "package"  tokenSuffix
-kwPrivate = kwPrefix "private"  tokenSuffix
-kwProtected = kwPrefix "protected"  tokenSuffix
-kwPublic = kwPrefix "public" tokenSuffix
+kwPrivate = kwPrefix "private"  tokenSuffix { return "private"; }
+kwProtected = kwPrefix "protected"  tokenSuffix { return "proected"; }
+kwPublic = kwPrefix "public" tokenSuffix { return "public"; }
 kwReceive = kwPrefix "receive"  tokenSuffix
 kwRedefines = kwPrefix "redefines"  tokenSuffix
 kwReduce = kwPrefix "reduce"  tokenSuffix
@@ -137,7 +137,7 @@ annInline = namePrefix '"' content:"inline" '"' tokenSuffix { return content; }
     Remaining lexical elements
 */
 Name = name
-name = namePrefix content:tokenContent tokenSuffix { return content; }
+name = namePrefix content:tokenContent tokenSuffix { return content.slice(1, content.length - 1); }
 documentComment = docCommentPrefix content:tokenStringContent tokenSuffix { return content; }
 
 booleanLiteral = booleanLiteralPrefix content:tokenContentInCommas tokenSuffix { return content; }
@@ -162,7 +162,9 @@ stringLiteralPrefix = "slt" subTokenSeparator
 tokenStringContent = content:tokenContentInCommas {
     return content.replace(/\\n/g, "\n");
 }
-tokenContentInCommas = '"' content:tokenContent '"' { return content; }
+tokenContentInCommas = '"' content:tokenStringCharacter* '"' { return content.join(""); }
+tokenStringCharacter = !('"') character:. { return character; }
+
 tokenContent = content:tokenCharacter+ { return content.join(""); }
 tokenCharacter = !(subTokenSeparator) character:. { return character; }
 

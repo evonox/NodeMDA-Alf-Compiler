@@ -1,3 +1,4 @@
+const fs = require("fs");
 const lexer = require("./Lexer/lexer");
 const parser = require("./Parser/SyntaxParser");
 
@@ -16,11 +17,12 @@ module.exports = {
             return null;
             
         }
+        fs.writeFileSync("./lexer-output.txt", lexerOutput);
 
         // Syntax parsing
         let parserOutput = null;
         try {
-            parserOutput = parser.parse(JSON.stringify(lexerOutput));
+            parserOutput = parser.parse(lexerOutput);
         }
         catch(e) {
             // TODO: Format output of syntax parser exception

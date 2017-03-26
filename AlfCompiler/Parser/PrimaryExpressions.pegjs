@@ -22,12 +22,12 @@ LiteralExpression = BooleanLiteralExpression
                     / UnboundedLiteralExpression
                     / StringLiteralExpression
 BooleanLiteralExpression = image:booleanLiteral {
-    let obj = new alf.BooleanLiteralExpression)();
+    let obj = new alf.BooleanLiteralExpression();
     obj.image = image;
     return obj;
 }
 NaturalLiteralExpression = image:naturalLiteral {
-    let obj = new alf.NaturalLiteralExpression)();
+    let obj = new alf.NaturalLiteralExpression();
     obj.image = image;
     return obj;
 }
@@ -35,7 +35,7 @@ UnboundedLiteralExpression = unboundedNaturalLiteral {
     return new alf.UnboundedLiteralExpression();
 }
 StringLiteralExpression = image:stringLiteral {
-    let obj = new alf.StringLiteralExpression)();
+    let obj = new alf.StringLiteralExpression();
     obj.image = image;
     return obj;
 }
@@ -379,7 +379,7 @@ QualifiedName = uqn:UnqualifiedName uqNames:(ColonQualifiedNameCompletion / DotQ
 { 
     let qn = new alf.QualifiedName();
     uqNames = uqNames === null ? [] : uqNames;
-    qn.nameBinding = [uqn].concat(uqNames);
+    qn.nameBinding = uqn.nameBinding.concat(uqNames);
     qn.isAmbiguous = false; 
     return qn; 
 }
@@ -388,7 +388,7 @@ PotentiallyAmbiguousQualifiedName = uqn:UnqualifiedName uqNames:(ColonQualifiedN
 { 
     let qn = new alf.QualifiedName();
     uqNames = uqNames === null ? [] : uqNames;
-    qn.nameBinding = [uqn].concat(uqNames);
+    qn.nameBinding = uqn.nameBinding.concat(uqNames);
     qn.isAmbiguous = true; 
     return qn; 
 }
@@ -396,24 +396,27 @@ PotentiallyAmbiguousQualifiedName = uqn:UnqualifiedName uqNames:(ColonQualifiedN
 ColonQualifiedName = first:UnqualifiedName other:ColonQualifiedNameCompletion
 {
     let obj = new alf.QualifiedName();
-    obj.nameBinding = [first].concat(other);
+    obj.isAmbiguous = false; 
+    obj.nameBinding = first.nameBinding.concat(other);
     return obj;
 }
 
-ColonQualifiedNameCompletion = (pDoubleColon nb:NameBinding { return nb; } )+ 
+ColonQualifiedNameCompletion = nameBindings:(pDoubleColon nb:NameBinding { return nb; } )+ { return nameBindings; } 
 
 DotQualifiedName = first:UnqualifiedName other:DotQualifiedNameCompletion
 {
     let obj = new alf.QualifiedName();
-    obj.nameBinding = [first].concat(other);
+    obj.isAmbiguous = false; 
+    obj.nameBinding = first.nameBinding.concat(other);
     return obj;
 }
 
-DotQualifiedNameCompletion = (pDot nb:NameBinding { return nb; } )+ 
+DotQualifiedNameCompletion = nameBindings:(pDot nb:NameBinding { return nb; } )+ { return nameBindings; }
 
 UnqualifiedName = nameBinding:NameBinding {
     let obj = new alf.QualifiedName();
     obj.nameBinding = [nameBinding];
+    obj.isAmbiguous = false; 
     return obj;
 }
 

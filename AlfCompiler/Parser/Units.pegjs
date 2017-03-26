@@ -1,9 +1,11 @@
+Start = UnitDefinition*
+
 /*
     UnitDefinition
 */
 UnitDefinition = namespaceName:NamespaceDeclaration?
-                importDec:(ImportDeclaration)*
-                documentation:documentComment?
+                importDec:(! (documentComment) ImportDeclaration)*
+                documentation:(documentComment)?
                 annotation:StereotypeAnnotations
                 definition:NamespaceDefinition
 {
@@ -123,16 +125,29 @@ VisibilityIndicator = ImportVisibilityIndicator / kwProtected
 PackageDeclaration = kwPackage name:name {
     let obj = new alf.PackageDefinition();
     obj.name = name;
-    return name;
+    return obj;
 }
 
-PackageDefinition = d:PackageDeclaration PackageBody
+PackageDefinition = d:PackageDeclaration ownedMember:PackageBody {
+    d.ownedMember = ownedMember;
+    d.isStub = false;
+    return d;
+}
 
-PackageDefinitionOrStub = PackageDeclaration ( pSemiColon /PackageBody )
+PackageDefinitionOrStub = d:PackageDeclaration 
+                            data:( pSemiColon { return "isStub"} / ownedMember:PackageBody {  return ownedMember; } ) {
+    if(data === "isStub") {
+        d.isStub = true;
+    } else {
+        d.isStub = false;
+        d.ownedMember = data;
+
+    }
+    return d;
+}
 
 PackageBody = pLBrace ownedMember:(PackagedElement)* pRBrace {
-    d.ownedMember = ownedMember;
-    return d;
+    return ownedMember;
 }
 
 PackagedElement = documentation:documentComment? annotation:StereotypeAnnotations

@@ -19,7 +19,7 @@ facadeContent += "module.exports = {\n";
 alfFiles.every( (filename, index) => {
     let className = path.basename(filename, ".js");
     if(className == "Alf") return true;
-    facadeContent += `\t${className}: ${className}`;
+    facadeContent += `\t${className}: ${className}.${className}`;
     if(index != alfFiles.length - 1) facadeContent += ",";
     facadeContent += "\n";
     return true;

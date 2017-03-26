@@ -1,0 +1,12 @@
+namespace App::OrderingService::Order;
+private import A::B;
+/** The comment */
+package Order {
+
+    private package OrderItem {
+
+    }
+
+    public package Supply;
+}
+

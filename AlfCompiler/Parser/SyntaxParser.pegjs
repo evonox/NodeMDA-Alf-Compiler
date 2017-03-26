@@ -3,12 +3,14 @@
 }
 
 
+Start = UnitDefinition*
+
 /*
     UnitDefinition
 */
 UnitDefinition = namespaceName:NamespaceDeclaration?
-                importDec:(ImportDeclaration)*
-                documentation:documentComment?
+                importDec:(! (documentComment) ImportDeclaration)*
+                documentation:(documentComment)?
                 annotation:StereotypeAnnotations
                 definition:NamespaceDefinition
 {
@@ -128,16 +130,29 @@ VisibilityIndicator = ImportVisibilityIndicator / kwProtected
 PackageDeclaration = kwPackage name:name {
     let obj = new alf.PackageDefinition();
     obj.name = name;
-    return name;
+    return obj;
 }
 
-PackageDefinition = d:PackageDeclaration PackageBody
+PackageDefinition = d:PackageDeclaration ownedMember:PackageBody {
+    d.ownedMember = ownedMember;
+    d.isStub = false;
+    return d;
+}
 
-PackageDefinitionOrStub = PackageDeclaration ( pSemiColon /PackageBody )
+PackageDefinitionOrStub = d:PackageDeclaration 
+                            data:( pSemiColon { return "isStub"} / ownedMember:PackageBody {  return ownedMember; } ) {
+    if(data === "isStub") {
+        d.isStub = true;
+    } else {
+        d.isStub = false;
+        d.ownedMember = data;
+
+    }
+    return d;
+}
 
 PackageBody = pLBrace ownedMember:(PackagedElement)* pRBrace {
-    d.ownedMember = ownedMember;
-    return d;
+    return ownedMember;
 }
 
 PackagedElement = documentation:documentComment? annotation:StereotypeAnnotations
@@ -1427,12 +1442,12 @@ LiteralExpression = BooleanLiteralExpression
                     / UnboundedLiteralExpression
                     / StringLiteralExpression
 BooleanLiteralExpression = image:booleanLiteral {
-    let obj = new alf.BooleanLiteralExpression)();
+    let obj = new alf.BooleanLiteralExpression();
     obj.image = image;
     return obj;
 }
 NaturalLiteralExpression = image:naturalLiteral {
-    let obj = new alf.NaturalLiteralExpression)();
+    let obj = new alf.NaturalLiteralExpression();
     obj.image = image;
     return obj;
 }
@@ -1440,7 +1455,7 @@ UnboundedLiteralExpression = unboundedNaturalLiteral {
     return new alf.UnboundedLiteralExpression();
 }
 StringLiteralExpression = image:stringLiteral {
-    let obj = new alf.StringLiteralExpression)();
+    let obj = new alf.StringLiteralExpression();
     obj.image = image;
     return obj;
 }
@@ -1784,7 +1799,7 @@ QualifiedName = uqn:UnqualifiedName uqNames:(ColonQualifiedNameCompletion / DotQ
 { 
     let qn = new alf.QualifiedName();
     uqNames = uqNames === null ? [] : uqNames;
-    qn.nameBinding = [uqn].concat(uqNames);
+    qn.nameBinding = uqn.nameBinding.concat(uqNames);
     qn.isAmbiguous = false; 
     return qn; 
 }
@@ -1793,7 +1808,7 @@ PotentiallyAmbiguousQualifiedName = uqn:UnqualifiedName uqNames:(ColonQualifiedN
 { 
     let qn = new alf.QualifiedName();
     uqNames = uqNames === null ? [] : uqNames;
-    qn.nameBinding = [uqn].concat(uqNames);
+    qn.nameBinding = uqn.nameBinding.concat(uqNames);
     qn.isAmbiguous = true; 
     return qn; 
 }
@@ -1801,24 +1816,27 @@ PotentiallyAmbiguousQualifiedName = uqn:UnqualifiedName uqNames:(ColonQualifiedN
 ColonQualifiedName = first:UnqualifiedName other:ColonQualifiedNameCompletion
 {
     let obj = new alf.QualifiedName();
-    obj.nameBinding = [first].concat(other);
+    obj.isAmbiguous = false; 
+    obj.nameBinding = first.nameBinding.concat(other);
     return obj;
 }
 
-ColonQualifiedNameCompletion = (pDoubleColon nb:NameBinding { return nb; } )+ 
+ColonQualifiedNameCompletion = nameBindings:(pDoubleColon nb:NameBinding { return nb; } )+ { return nameBindings; } 
 
 DotQualifiedName = first:UnqualifiedName other:DotQualifiedNameCompletion
 {
     let obj = new alf.QualifiedName();
-    obj.nameBinding = [first].concat(other);
+    obj.isAmbiguous = false; 
+    obj.nameBinding = first.nameBinding.concat(other);
     return obj;
 }
 
-DotQualifiedNameCompletion = (pDot nb:NameBinding { return nb; } )+ 
+DotQualifiedNameCompletion = nameBindings:(pDot nb:NameBinding { return nb; } )+ { return nameBindings; }
 
 UnqualifiedName = nameBinding:NameBinding {
     let obj = new alf.QualifiedName();
     obj.nameBinding = [nameBinding];
+    obj.isAmbiguous = false; 
     return obj;
 }
 
@@ -1959,9 +1977,9 @@ kwOr = kwPrefix "or"  tokenSuffix
 kwOrdered = kwPrefix "ordered"  tokenSuffix
 kwOut = kwPrefix "out"  tokenSuffix
 kwPackage = kwPrefix "package"  tokenSuffix
-kwPrivate = kwPrefix "private"  tokenSuffix
-kwProtected = kwPrefix "protected"  tokenSuffix
-kwPublic = kwPrefix "public" tokenSuffix
+kwPrivate = kwPrefix "private"  tokenSuffix { return "private"; }
+kwProtected = kwPrefix "protected"  tokenSuffix { return "proected"; }
+kwPublic = kwPrefix "public" tokenSuffix { return "public"; }
 kwReceive = kwPrefix "receive"  tokenSuffix
 kwRedefines = kwPrefix "redefines"  tokenSuffix
 kwReduce = kwPrefix "reduce"  tokenSuffix
@@ -1994,7 +2012,7 @@ annInline = namePrefix '"' content:"inline" '"' tokenSuffix { return content; }
     Remaining lexical elements
 */
 Name = name
-name = namePrefix content:tokenContent tokenSuffix { return content; }
+name = namePrefix content:tokenContent tokenSuffix { return content.slice(1, content.length - 1); }
 documentComment = docCommentPrefix content:tokenStringContent tokenSuffix { return content; }
 
 booleanLiteral = booleanLiteralPrefix content:tokenContentInCommas tokenSuffix { return content; }
@@ -2019,7 +2037,9 @@ stringLiteralPrefix = "slt" subTokenSeparator
 tokenStringContent = content:tokenContentInCommas {
     return content.replace(/\\n/g, "\n");
 }
-tokenContentInCommas = '"' content:tokenContent '"' { return content; }
+tokenContentInCommas = '"' content:tokenStringCharacter* '"' { return content.join(""); }
+tokenStringCharacter = !('"') character:. { return character; }
+
 tokenContent = content:tokenCharacter+ { return content.join(""); }
 tokenCharacter = !(subTokenSeparator) character:. { return character; }
 
