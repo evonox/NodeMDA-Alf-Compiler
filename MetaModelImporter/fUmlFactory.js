@@ -107,7 +107,10 @@ module.exports = {
         attribute.name = name;
         attribute.lower = parseLowerBound(parameters.multiplicity);
         attribute.upper = parseUpperBound(parameters.multiplicity);
-        attribute.visibility = parameters.visibility;
+        console.dir(parameters.multiplicity);
+        // attribute.visibility = parameters.visibility;
+        // TODO: Not supported right now?
+        attribute.visibility = "public"; // WORKAROUND for now
         attribute.owner = owningClass;
         owningClass.ownedAttribute.push(attribute);
 

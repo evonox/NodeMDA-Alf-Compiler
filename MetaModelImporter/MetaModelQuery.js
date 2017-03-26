@@ -121,13 +121,17 @@ class Association extends UMLElement {
     }
 
     toJson() {
+        console.dir(["myEnd", this.metaElement.myEnd._multiplicity]);
+        console.dir(["otherEnd", this.metaElement.otherEnd._multiplicity]);
         return {
-            name: this.name,
-            visibility: this.metaElement.myEnd._visibility,
-            multiplicity: this.metaElement.myEnd._multiplicity,
-            isNavigable: this.metaElement.myEnd._navigable,
+            name: this.metaElement.otherEnd.name,
+            // TODO: Does have Association visibility?
+            //visibility: this.metaElement.myEnd._visibility, 
+            multiplicity: this.metaElement.otherEnd._multiplicity,
+            /*  TODO: Are these properties important for code-generation?
+            isNavigable: this.metaElement.myEnd._navigable, 
             isAggregation: this.metaElement.myEnd._aggregation,
-            isComposition: this.metaElement.myEnd._composition
+            isComposition: this.metaElement.myEnd._composition*/
         };
     }
 }
@@ -309,6 +313,7 @@ class MetaModelQueryFacade {
 
     parseAssociations(metaClass, umlClass) {
         metaClass.associations.every((assoc) => {
+            console.dir(assoc);
             umlClass.addChildElement(new Association(assoc));
             return true;
         });
